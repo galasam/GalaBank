@@ -2,10 +2,12 @@ package com.gala.sam.tradeEngine.domain;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Value;
 
 @Value
-@EqualsAndHashCode(callSuper=false)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper    = false)
 public class LimitOrder extends ReadyOrder {
 
     float limit;
