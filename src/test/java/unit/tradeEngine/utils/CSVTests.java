@@ -6,12 +6,13 @@ import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
 import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-import com.gala.sam.tradeEngine.utils.CSVParser;
+import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 
 public class CSVTests {
 
@@ -37,7 +38,7 @@ public class CSVTests {
         csvInput.add(csvInputHeader);
         csvInput.add(limitOrderInput);
 
-        List<Order> orders = CSVParser.decodeCSV(csvInput);
+        List<Order> orders = OrderCSVParser.decodeCSV(csvInput);
 
         Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
         Assert.assertEquals("Decoder should decode a stop limit order correctly", orders.get(0),
@@ -62,7 +63,7 @@ public class CSVTests {
         final List<Trade> inputTrades = new LinkedList<>();
         inputTrades.add(tradeInput);
 
-        final List<String> output = CSVParser.encodeCSV(inputTrades);
+        final List<String> output = TradeCSVParser.encodeCSV(inputTrades);
 
         Assert.assertEquals("Encoder should encode a trade correctly", output, outputTest);
     }
