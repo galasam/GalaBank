@@ -1,7 +1,6 @@
 package com.gala.sam.tradeEngine;
 
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.service.OrderMatchingService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,9 +12,4 @@ public class AppConfig {
     return new MarketService();
   }
 
-  @Bean
-  public OrderMatchingService orderMatchingService() {
-    return new OrderMatchingService(marketService());
-  }
-  
 }

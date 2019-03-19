@@ -33,10 +33,16 @@ public class MarketService {
     stopOrders = new LinkedList<>();
   }
 
-  public void completeTimestep(Order order) {
+  public void enterOrder(Order order) {
     log.info("Processing Triggered Stop Orders");
     processOrder(order);
     processTriggeredStopOrders();
+  }
+
+
+
+  public List<Trade> getAllMatchedTrades() {
+    return trades;
   }
 
   private void processOrder(Order order) {
@@ -200,10 +206,5 @@ public class MarketService {
       makeTrade(marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
     }
   }
-
-  public List<Trade> getAllMatchedTrades() {
-    return trades;
-  }
-
 
 }
