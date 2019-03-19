@@ -1,11 +1,5 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 import java.util.List;
 import java.util.Map;
@@ -15,17 +9,12 @@ import java.util.stream.Stream;
 
 public class TradeCSVParser {
 
-  private final static Map<String, Integer> INPUT_HEADINGS = new TreeMap<>();
+  private final static Map<String, Integer> HEADINGS = new TreeMap<>();
   static {
-    INPUT_HEADINGS.put("ORDER ID", 0);
-    INPUT_HEADINGS.put("GROUP ID", 1);
-    INPUT_HEADINGS.put("DIRECTION", 2);
-    INPUT_HEADINGS.put("QUANTITY", 3);
-    INPUT_HEADINGS.put("TICKER", 4);
-    INPUT_HEADINGS.put("TYPE", 5);
-    INPUT_HEADINGS.put("LIMIT PRICE", 6);
-    INPUT_HEADINGS.put("TIME IN FORCE", 7);
-    INPUT_HEADINGS.put("TRIGGER PRICE", 8);
+    HEADINGS.put("BUY ORDER", 0);
+    HEADINGS.put("SELL ORDER", 1);
+    HEADINGS.put("MATCH QTY", 2);
+    HEADINGS.put("MATCH PRICE", 3);
   }
   private final static String OUTPUT_HEADER = String.join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE");
 
@@ -49,5 +38,28 @@ public class TradeCSVParser {
   }
 
 
+  public static List<Trade> decodeCSV(List<String> inputText) {
+    return decodeCSV(inputText.stream());
+  }
 
+  private static List<Trade> decodeCSV(Stream<String> input) {
+    return input.skip(1)
+        .map(TradeCSVParser::decodeCSVRow)
+        .collect(Collectors.toList());
+  }
+
+  private static Trade decodeCSVRow(String input) {
+    final String[] values = input.split(",");
+
+    final int buyOrderId = Integer.parseInt(values[HEADINGS.get("BUY ORDER")]);
+    final int sellOrderId = Integer.parseInt(values[HEADINGS.get("SELL ORDER")]);
+    final int quantity = Integer.parseInt(values[HEADINGS.get("MATCH QTY")]);
+    final float price = Float.parseFloat(values[HEADINGS.get("MATCH PRICE")]);
+    return Trade.builder()
+        .buyOrder(buyOrderId)
+        .sellOrder(sellOrderId)
+        .matchQuantity(quantity)
+        .matchPrice(price)
+        .build();
+  }
 }

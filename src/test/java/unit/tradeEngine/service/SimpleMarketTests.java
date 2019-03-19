@@ -10,7 +10,7 @@ import com.gala.sam.tradeEngine.service.MarketService;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MarketTests {
+public class SimpleMarketTests {
 
     @Test
     public void testSimpleTimeStep() {
