@@ -14,6 +14,17 @@ class OrderForm extends React.Component {
   }
 
   handleSubmit(event) {
+    $.ajax("http://localhost:3333/enter-order", {
+        method: "POST",
+        dataType: "json",
+        contentType: "text/plain",
+        processData: false,
+        data: this.state.value,
+    }).done( (ret) =>
+        console.log(ret)
+    ).fail( (ret) =>
+        console.log(ret)
+    );
     alert('Order Definition Was Submitted: ' + this.state.value);
     event.preventDefault();
   }
