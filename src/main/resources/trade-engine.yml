@@ -2,6 +2,10 @@
 spring:
   application:
     name: trade-engine
+  thymeleaf:
+    enabled: false
+    freemarker:
+      enabled: false
 
 # Discovery Server Access
 eureka:

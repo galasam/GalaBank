@@ -1,3 +1,9 @@
+spring:
+  thymeleaf:
+    enabled: false
+  freemarker:
+    enabled: true
+
 # Discovery Server Setup
 eureka:
   instance:

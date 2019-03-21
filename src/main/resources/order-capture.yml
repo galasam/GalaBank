@@ -2,6 +2,12 @@
 spring:
   application:
     name: order-capture
+  thymeleaf:
+    enabled: true
+    cache: false
+    prefix: classpath:/templates/
+    freemarker:
+      enabled: false
 
 # Discovery Server Access
 eureka:
