@@ -32,8 +32,8 @@ class OrderForm extends React.Component {
   render() {
     return (
         <form onSubmit={this.handleSubmit}>
-          <textarea class="form-control" value={this.state.value} onChange={this.handleChange} ></textarea>
-          <input type="submit" class="form-control" value="Enter Order" disabled={!this.state.canSubmit}/>
+          <textarea className="form-control" value={this.state.value} onChange={this.handleChange} ></textarea>
+          <input type="submit" className="form-control" value="Enter Order" disabled={!this.state.canSubmit}/>
         </form>
     );
   }
