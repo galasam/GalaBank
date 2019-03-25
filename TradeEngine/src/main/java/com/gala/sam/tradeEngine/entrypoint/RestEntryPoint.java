@@ -1,6 +1,7 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
 import com.gala.sam.tradeEngine.domain.Order;
+import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
@@ -36,6 +37,11 @@ public class RestEntryPoint {
   @GetMapping("trades")
   public List<Trade> trades() {
     return marketService.getAllMatchedTrades();
+  }
+
+  @GetMapping("status")
+  public PublicMarketStatus status() {
+    return marketService.getStatus();
   }
 
 }

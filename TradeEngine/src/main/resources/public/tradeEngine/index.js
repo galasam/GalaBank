@@ -1,52 +1,118 @@
 
+class Order extends React.Component {
+  render() {
+    let order=this.props.order
+    console.log(order)
+    if (order.limit == null) {
+      return (
+        <li className="order market">#{order.orderId} Market Order for {order.quantity} shares with {order.timeInForce}</li>
+      );
+    } else {
+      return (
+        <li className="order limit">#{order.orderId} Limit Order for {order.quantity} shares at {order.limit} with {order.timeInForce}</li>
+      );
+    }
+  }
+}
+
+class OrderList extends React.Component {
+  render() {
+    if (this.props.orders.length == 0) {
+      return null
+    } else {
+      return (
+        <div>
+          <h4>{this.props.direction}</h4>
+          <ul>
+            {this.props.orders.map((order) => <Order key={order.orderId} order={order} />)}
+          </ul>
+        </div>
+        );
+    }
+  }
+}
+
+class OrderLists extends React.Component {
+  render() {
+    return (
+      <div>
+        <OrderList direction={"Buy"} orders={this.props.buy} />
+        <OrderList direction={"Sell"} orders={this.props.sell} />
+      </div>
+      );
+  }
+}
+
+class Ticker extends React.Component {
+  render() {
+    return (
+      <div>
+        <h3>{this.props.ticker.name}</h3>
+        <OrderLists buy={this.props.ticker.buy} sell={this.props.ticker.sell} />
+      </div>
+      );
+  }
+}
+
+class OrderView extends React.Component {
+  render() {
+    if (this.props.tickers == null || this.props.tickers.length == 0) {
+      return (<div className="positive-feedback">No Orders yet.</div>)
+    } else {
+      return (
+        <div>
+          <h2>Unmatched Orders</h2>
+          {this.props.tickers.map((ticker) =>
+            <Ticker key={ticker.name} ticker={ticker} />)}
+        </div>
+      )
+    }
+  }
+}
+
 class Trade extends React.Component {
   render() {
     let trade=this.props.trade
     return (
-      <li>{trade.buyOrder} {trade.sellOrder} {trade.matchQuantity} {trade.matchPrice}</li>
+      <li className="trade">#{trade.buyOrder} sold to #{trade.sellOrder} {trade.matchQuantity} shares at {trade.matchPrice}</li>
       );
   }
 }
 
 class TradeList extends React.Component {
   render() {
-    return (
-      <div>
-        {this.props.tradeList.map((trade) => <Trade key={trade.buyOrder} trade={trade} />)}
-      </div>
-      );
+    if (this.props.trades.length == 0) {
+      return (<div className="positive-feedback">No trades yet.</div>)
+    } else {
+      return (
+        <div>
+          <h2>Trades</h2>
+          {this.props.trades.map((trade) => <Trade key={trade.buyOrder} trade={trade} />)}
+        </div>
+        );
+    }
   }
 }
 
-class TradesView extends React.Component {
+class TradeEngineView extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       message: {
         type: "info",
-        text: "Fetching trades"
+        text: "Fetching Trade Engine Status"
       }
     }
-    $.ajax("http://localhost:2222/trades", {
+    $.ajax("http://localhost:2222/status", {
           method: "GET",
           contentType: "application/json"
-        }).done( (trades) => {
-          console.log(trades)
-          if (trades.length == 0) {
-            this.setState({
-              message: {
-                type: "info",
-                text: "No Trades available"
-              }
-            })
-          } else {
-            this.setState({
-              trades: trades,
-              message: null
-            })
-          }
-
+        }).done( (ret) => {
+          console.log(ret)
+          this.setState({
+            status: ret,
+            message: null
+          })
         }).fail( (ret) => {
           this.setState({
             message: {
@@ -61,16 +127,19 @@ class TradesView extends React.Component {
     let message = this.state.message
     if (message == null) {
       return (
-        <TradeList tradeList={this.state.trades} />
+        <div>
+          <OrderView tickers={this.state.status.orders} />
+          <TradeList trades={this.state.status.trades} />
+        </div>
       );
     } else {
       if (message.type == "error") {
         return (
-          <span className="negative-feedback">Could not fetch trades: {message.text}</span>
+          <div className="negative-feedback">Could not fetch Trade Engine Status: {message.text}</div>
         );
       } else if (message.type == "info") {
         return (
-          <span className="positive-feedback">{message.text}</span>
+          <div className="positive-feedback">{message.text}</div>
         );
       }
 
@@ -79,6 +148,6 @@ class TradesView extends React.Component {
 }
 
 ReactDOM.render(
-  <TradesView />,
+  <TradeEngineView />,
   document.getElementById('root')
 );

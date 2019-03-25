@@ -196,4 +196,34 @@ public class MarketService {
     }
   }
 
+    public PublicMarketStatus getStatus() {
+        class TickerProcessorHelper {
+            List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
+
+            void processTicker(String name, TickerData data) {
+                SortedSet<ReadyOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ReadyOrder::getOrderId));
+                buyOrders.addAll(data.getBuyLimitOrders());
+                buyOrders.addAll(data.getBuyMarketOrders());
+
+                SortedSet<ReadyOrder> sellOrders = new TreeSet<>(Comparator.comparingInt(ReadyOrder::getOrderId));
+                sellOrders.addAll(data.getSellLimitOrders());
+                sellOrders.addAll(data.getSellMarketOrders());
+
+                if (!(buyOrders.isEmpty() && sellOrders.isEmpty())) {
+                    tickers.add(PublicMarketStatus.Ticker.builder()
+                            .name(name)
+                            .buy(new ArrayList<>(buyOrders))
+                            .sell(new ArrayList<>(sellOrders))
+                            .build());
+                }
+            }
+        }
+        TickerProcessorHelper h = new TickerProcessorHelper();
+        tickerQueues.forEach(h::processTicker);
+        return PublicMarketStatus.builder()
+                .trades(getAllMatchedTrades())
+                .orders(h.tickers)
+                .build();
+    }
+
 }
