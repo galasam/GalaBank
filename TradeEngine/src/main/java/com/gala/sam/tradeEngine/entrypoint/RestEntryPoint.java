@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
-import com.gala.sam.tradeEngine.domain.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
@@ -24,13 +24,13 @@ public class RestEntryPoint {
   final MarketService marketService;
 
   @PostMapping("/enter-order")
-  public Order enterOrder(@RequestBody String csvInput) {
+  public com.gala.sam.tradeEngine.domain.ConcreteOrder.Order enterOrder(@RequestBody String csvInput) {
     final Stream<String> inputRows = Pattern.compile("\n").splitAsStream(csvInput);
     final List<Order> orders = OrderCSVParser.decodeCSV(inputRows);
     final Order order = orders.get(0);
-    marketService.enterOrder(order);
-    log.info("Order entered into Trading Engine: {}", order);
-    return order;
+    com.gala.sam.tradeEngine.domain.ConcreteOrder.Order enteredOrder = marketService.enterOrder(order);
+    log.info("Order entered into Trading Engine: {}", enteredOrder);
+    return enteredOrder;
   }
 
   @GetMapping("trades")

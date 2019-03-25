@@ -1,8 +1,10 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -15,20 +17,24 @@ public class MarketService {
   private List<Trade> trades = new ArrayList<>();
   private Map<String, TickerData> tickerQueues = new TreeMap<>();
   private List<StopOrder> stopOrders = new LinkedList<>();
+  private ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
 
   public void clear() {
+    concreteOrderGenerator = new ConcreteOrderGenerator();
     trades = new ArrayList<>();
     tickerQueues = new TreeMap<>();
     stopOrders = new LinkedList<>();
   }
 
-  public void enterOrder(Order order) {
+  public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
     log.info("Processing Triggered Stop Orders");
+
+    Order order = concreteOrderGenerator.getConcreteOrder(orderReq);
+
     processOrder(order);
     processTriggeredStopOrders();
+    return order;
   }
-
-
 
   public List<Trade> getAllMatchedTrades() {
     return trades;

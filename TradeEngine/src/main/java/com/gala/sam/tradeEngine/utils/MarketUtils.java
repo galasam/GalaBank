@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.ReadyOrder;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.TIME_IN_FORCE;
 import lombok.extern.java.Log;
 
 import java.util.SortedSet;

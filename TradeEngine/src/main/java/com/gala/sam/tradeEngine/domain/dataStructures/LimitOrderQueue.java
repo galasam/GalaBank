@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.domain.dataStructures;
 
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
 
 import java.util.Comparator;
 import java.util.TreeSet;

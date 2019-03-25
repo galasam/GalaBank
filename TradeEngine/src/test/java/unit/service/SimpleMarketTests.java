@@ -1,9 +1,9 @@
 package unit.service;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
 import org.junit.Assert;
@@ -19,7 +19,6 @@ public class SimpleMarketTests {
         MarketService marketService = new MarketService();
 
         LimitOrder limitOrder = LimitOrder.builder()
-            .orderId(1)
             .direction(DIRECTION.BUY)
             .quantity(999)
             .ticker("Fred")
@@ -28,24 +27,23 @@ public class SimpleMarketTests {
             .build();
 
         MarketOrder marketOrder = MarketOrder.builder()
-            .orderId(2)
             .direction(DIRECTION.SELL)
             .quantity(999)
             .ticker("Fred")
             .timeInForce(TIME_IN_FORCE.GTC)
             .build();
 
-        Trade tradeOutputTest = Trade.builder()
-            .buyOrder(limitOrder.getOrderId())
-            .sellOrder(marketOrder.getOrderId())
-            .matchQuantity(marketOrder.getQuantity())
-            .matchPrice(limitOrder.getLimit())
-            .build();
-
-        marketService.enterOrder(limitOrder);
-        marketService.enterOrder(marketOrder);
+        int limitOrderId = marketService.enterOrder(limitOrder).getOrderId();
+        int marketOrderId = marketService.enterOrder(marketOrder).getOrderId();
 
         List<Trade> trades = marketService.getAllMatchedTrades();
+
+        Trade tradeOutputTest = Trade.builder()
+                .buyOrder(limitOrderId)
+                .sellOrder(marketOrderId)
+                .matchQuantity(marketOrder.getQuantity())
+                .matchPrice(limitOrder.getLimit())
+                .build();
 
         Assert.assertEquals("Should be able to match a buy limit and sell market order", 1,
             trades.size());
@@ -58,7 +56,6 @@ public class SimpleMarketTests {
         MarketService marketService = new MarketService();
 
         LimitOrder limitOrderA = LimitOrder.builder()
-            .orderId(1)
             .direction(DIRECTION.BUY)
             .quantity(999)
             .ticker("Fred")
@@ -67,7 +64,6 @@ public class SimpleMarketTests {
             .build();
 
         LimitOrder limitOrderBMatchingA = LimitOrder.builder()
-            .orderId(2)
             .direction(DIRECTION.SELL)
             .quantity(999)
             .ticker("Fred")
@@ -75,17 +71,16 @@ public class SimpleMarketTests {
             .timeInForce(TIME_IN_FORCE.GTC)
             .build();
 
-        Trade tradeOutputTest = Trade.builder()
-            .buyOrder(limitOrderA.getOrderId())
-            .sellOrder(limitOrderBMatchingA.getOrderId())
-            .matchQuantity(limitOrderA.getQuantity())
-            .matchPrice(limitOrderA.getLimit())
-            .build();
-
-
-        marketService.enterOrder(limitOrderA);
-        marketService.enterOrder(limitOrderBMatchingA);
+        int orderIdA = marketService.enterOrder(limitOrderA).getOrderId();
+        int orderIdB = marketService.enterOrder(limitOrderBMatchingA).getOrderId();
         List<Trade> trades = marketService.getAllMatchedTrades();
+
+        Trade tradeOutputTest = Trade.builder()
+                .buyOrder(orderIdA)
+                .sellOrder(orderIdB)
+                .matchQuantity(limitOrderA.getQuantity())
+                .matchPrice(limitOrderA.getLimit())
+                .build();
 
         Assert.assertEquals("Should be able to match a buy and sell matching limit orders", 1,
             trades.size());
@@ -99,7 +94,6 @@ public class SimpleMarketTests {
         MarketService marketService = new MarketService();
 
         LimitOrder limitOrderA = LimitOrder.builder()
-            .orderId(1)
             .direction(DIRECTION.BUY)
             .quantity(999)
             .ticker("Fred")
@@ -108,7 +102,6 @@ public class SimpleMarketTests {
             .build();
 
         LimitOrder limitOrderBNotMatchingA = LimitOrder.builder()
-            .orderId(2)
             .direction(DIRECTION.SELL)
             .quantity(999)
             .ticker("Fred")

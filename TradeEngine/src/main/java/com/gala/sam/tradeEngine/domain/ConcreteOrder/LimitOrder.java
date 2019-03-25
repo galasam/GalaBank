@@ -1,9 +1,10 @@
-package com.gala.sam.tradeEngine.domain;
+package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.*;
 
 @Value
 @ToString(callSuper = true)
@@ -13,8 +14,7 @@ public class LimitOrder extends ReadyOrder {
     float limit;
 
     @Builder
-    public LimitOrder(int orderId, DIRECTION direction, int quantity,
-        TIME_IN_FORCE timeInForce, String ticker, float limit) {
+    public LimitOrder(int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float limit) {
         super(orderId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }

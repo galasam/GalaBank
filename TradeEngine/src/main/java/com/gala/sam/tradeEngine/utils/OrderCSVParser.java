@@ -1,11 +1,11 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.StopOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.StopOrder;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +52,6 @@ public class OrderCSVParser {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         return LimitOrder.builder()
-            .orderId(orderId)
             .direction(direction)
             .quantity(quantity)
             .timeInForce(tif)
@@ -61,7 +60,6 @@ public class OrderCSVParser {
             .build();
       case "MARKET":
         return MarketOrder.builder()
-            .orderId(orderId)
             .direction(direction)
             .quantity(quantity)
             .timeInForce(tif)
@@ -72,7 +70,6 @@ public class OrderCSVParser {
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopOrder.builder()
             .readyOrder(LimitOrder.builder()
-                .orderId(orderId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
@@ -85,7 +82,6 @@ public class OrderCSVParser {
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopOrder.builder()
             .readyOrder(MarketOrder.builder()
-                .orderId(orderId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)

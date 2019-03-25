@@ -1,7 +1,7 @@
 package unit.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;
 import org.junit.Assert;
