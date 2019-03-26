@@ -4,14 +4,18 @@ import com.gala.sam.tradeEngine.domain.*;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
 import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
 @Slf4j
+@Service
 public class MarketService {
 
   private List<Trade> trades = new ArrayList<>();
@@ -19,9 +23,22 @@ public class MarketService {
   private List<StopOrder> stopOrders = new LinkedList<>();
   private ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
 
+  private final TradeRepository tradeRepository;
+
+  public MarketService(TradeRepository tradeRepository) {
+    this.tradeRepository = tradeRepository;
+  }
+
+  @PostConstruct
+  void init() {
+    log.info("Getting existing trades from database");
+    trades.addAll((Collection<? extends Trade>) tradeRepository.findAll());
+  }
+
   public void clear() {
     concreteOrderGenerator = new ConcreteOrderGenerator();
     trades = new ArrayList<>();
+    tradeRepository.deleteAll();
     tickerQueues = new TreeMap<>();
     stopOrders = new LinkedList<>();
   }
@@ -140,6 +157,7 @@ public class MarketService {
           .build();
       log.debug("Making Buy trade: " + trade.toString());
       trades.add(trade);
+      tradeRepository.save(trade);
     } else if(a.getDirection().equals(DIRECTION.SELL)) {
       Trade trade = Trade.builder()
           .buyOrder(b.getOrderId())
@@ -149,6 +167,7 @@ public class MarketService {
           .build();
       log.debug("Making Sell trade: " + trade.toString());
       trades.add(trade);
+      tradeRepository.save(trade);
     } else {
       throw new UnsupportedOperationException("Order direction not supported");
     }

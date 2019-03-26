@@ -1,15 +1,8 @@
 package com.gala.sam.tradeEngine;
 
-import com.gala.sam.tradeEngine.service.MarketService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
-
-  @Bean
-  public MarketService marketService() {
-    return new MarketService();
-  }
 
 }

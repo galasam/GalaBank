@@ -2,6 +2,7 @@ package unit.service;
 
 import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
@@ -9,9 +10,11 @@ import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,7 +38,10 @@ public class AdvancedMarketTests {
     log.info(String.format("Running test %d", testNumber));
     final List<Order> orders = readOrders(phase, testNumber);
 
-    MarketService marketService = new MarketService();
+    TradeRepository tradeRepository = mock(TradeRepository.class);
+    when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
+
+    MarketService marketService = new MarketService(tradeRepository);
     orders.stream().forEach(marketService::enterOrder);
 
     final List<Trade> trades = marketService.getAllMatchedTrades();

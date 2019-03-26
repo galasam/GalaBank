@@ -5,18 +5,25 @@ import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrder;
 import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.ReadyOrder.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SimpleMarketTests {
 
     @Test
     public void testSimpleTimeStep() {
 
-        MarketService marketService = new MarketService();
+        TradeRepository tradeRepository = mock(TradeRepository.class);
+        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
+        MarketService marketService = new MarketService(tradeRepository);
 
         LimitOrder limitOrder = LimitOrder.builder()
             .direction(DIRECTION.BUY)
@@ -53,7 +60,9 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithMatchingLimits() {
 
-        MarketService marketService = new MarketService();
+        TradeRepository tradeRepository = mock(TradeRepository.class);
+        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
+        MarketService marketService = new MarketService(tradeRepository);
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(DIRECTION.BUY)
@@ -91,7 +100,9 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithNonMatchingLimits() {
 
-        MarketService marketService = new MarketService();
+        TradeRepository tradeRepository = mock(TradeRepository.class);
+        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
+        MarketService marketService = new MarketService(tradeRepository);
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(DIRECTION.BUY)
