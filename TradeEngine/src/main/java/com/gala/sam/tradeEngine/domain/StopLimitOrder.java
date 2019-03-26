@@ -9,8 +9,8 @@ public class StopLimitOrder extends StopOrder {
     float limit;
 
     @Builder
-    public StopLimitOrder(int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice, float limit) {
-        super(orderId, direction, quantity, timeInForce, ticker, triggerPrice);
+    public StopLimitOrder(int orderId, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice, float limit) {
+        super(orderId, groupId, direction, quantity, timeInForce, ticker, triggerPrice);
         this.limit = limit;
     }
 

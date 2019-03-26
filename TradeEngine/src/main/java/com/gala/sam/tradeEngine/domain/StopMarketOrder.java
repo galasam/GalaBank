@@ -7,8 +7,8 @@ import lombok.Value;
 public class StopMarketOrder extends StopOrder {
 
     @Builder
-    public StopMarketOrder(int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
-        super(orderId, direction, quantity, timeInForce, ticker, triggerPrice);
+    public StopMarketOrder(int orderId, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
+        super(orderId, groupId, direction, quantity, timeInForce, ticker, triggerPrice);
     }
 
     @Override

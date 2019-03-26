@@ -13,9 +13,9 @@ public class LimitOrder extends ReadyOrder {
     float limit;
 
     @Builder
-    public LimitOrder(int orderId, DIRECTION direction, int quantity,
+    public LimitOrder(int orderId, int groupId, DIRECTION direction, int quantity,
         TIME_IN_FORCE timeInForce, String ticker, float limit) {
-        super(orderId, direction, quantity, timeInForce, ticker);
+        super(orderId, groupId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }
 

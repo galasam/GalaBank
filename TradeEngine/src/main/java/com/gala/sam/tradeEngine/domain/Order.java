@@ -11,6 +11,7 @@ public abstract class Order {
     public enum TIME_IN_FORCE {FOK, GTC}
 
     int orderId;
+    int groupId;
     DIRECTION direction;
     int quantity;
     TIME_IN_FORCE timeInForce;
