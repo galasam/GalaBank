@@ -118,13 +118,22 @@ public class MarketService {
     } else {
       LimitOrder limitOrder = limitOrders.first();
       log.debug("Limit Order queue not empty, so trading with best limit order: " + limitOrder.toString());
-      limitOrders.remove(limitOrder);
       makeTrade(marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+      log.debug("Removing limit order if limit order fully satisfied.");
+      if (limitOrder.isFullyFulfilled()) {
+        limitOrders.remove(limitOrder);
+      }
+      if (!marketOrder.isFullyFulfilled()) {
+        processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
+      }
     }
   }
 
   private void makeTrade(ReadyOrder a, ReadyOrder b, float limit, TickerData ticketData) {
     ticketData.setLastExecutedTradePrice(limit);
+    int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
+    a.reduceQuantityRemaining(tradeQuantity);
+    b.reduceQuantityRemaining(tradeQuantity);
     if(a.getDirection().equals(DIRECTION.BUY)) {
       Trade trade = Trade.builder()
           .buyOrder(a.getOrderId())
