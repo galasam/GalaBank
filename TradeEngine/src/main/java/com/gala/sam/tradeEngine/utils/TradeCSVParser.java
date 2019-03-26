@@ -16,8 +16,9 @@ public class TradeCSVParser {
     HEADINGS.put("SELL ORDER", 1);
     HEADINGS.put("MATCH QTY", 2);
     HEADINGS.put("MATCH PRICE", 3);
+    HEADINGS.put("TICKER", 4);
   }
-  private final static String OUTPUT_HEADER = String.join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE");
+  private final static String OUTPUT_HEADER = String.join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE", "TICKER");
 
   public static List<String> encodeCSV(List<Trade> output) {
     return encodeCSV(output.stream());
@@ -35,7 +36,8 @@ public class TradeCSVParser {
         Integer.toString(output.getBuyOrder()),
         Integer.toString(output.getSellOrder()),
         Integer.toString(output.getMatchQuantity()),
-        Float.toString(output.getMatchPrice()));
+        Float.toString(output.getMatchPrice()),
+        output.getTicker());
   }
 
 
@@ -56,11 +58,13 @@ public class TradeCSVParser {
     final int sellOrderId = Integer.parseInt(values[HEADINGS.get("SELL ORDER")]);
     final int quantity = Integer.parseInt(values[HEADINGS.get("MATCH QTY")]);
     final float price = Float.parseFloat(values[HEADINGS.get("MATCH PRICE")]);
+    final String ticker = values[HEADINGS.get("TICKER")];
     return Trade.builder()
         .buyOrder(buyOrderId)
         .sellOrder(sellOrderId)
         .matchQuantity(quantity)
         .matchPrice(price)
+        .ticker(ticker)
         .build();
   }
 }

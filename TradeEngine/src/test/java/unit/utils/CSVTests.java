@@ -15,7 +15,7 @@ import java.util.List;
 public class CSVTests {
 
     private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
-    private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE";
+    private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
 
     @Test
     public void canDecodeCSVStopLimitOrder() {
@@ -49,9 +49,10 @@ public class CSVTests {
             .sellOrder(118)
             .matchPrice(1.5f)
             .matchQuantity(451)
+            .ticker("FRED")
             .build();
 
-        final String tradeOutput = "64,118,451,1.5";
+        final String tradeOutput = "64,118,451,1.5,FRED";
 
         final List<String> outputTest = new ArrayList<>();
         outputTest.add(csvOutputHeader);

@@ -40,6 +40,7 @@ public class SimpleMarketTests {
             .sellOrder(marketOrder.getOrderId())
             .matchQuantity(marketOrder.getQuantity())
             .matchPrice(limitOrder.getLimit())
+            .ticker(limitOrder.getTicker())
             .build();
 
         marketService.enterOrder(limitOrder);
@@ -80,6 +81,7 @@ public class SimpleMarketTests {
             .sellOrder(limitOrderBMatchingA.getOrderId())
             .matchQuantity(limitOrderA.getQuantity())
             .matchPrice(limitOrderA.getLimit())
+            .ticker(limitOrderA.getTicker())
             .build();
 
 

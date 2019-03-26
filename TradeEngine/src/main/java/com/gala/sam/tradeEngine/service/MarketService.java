@@ -131,6 +131,7 @@ public class MarketService {
           .sellOrder(b.getOrderId())
           .matchQuantity(a.getQuantity())
           .matchPrice(limit)
+          .ticker(a.getTicker())
           .build();
       log.debug("Making Buy trade: " + trade.toString());
       trades.add(trade);
@@ -140,6 +141,7 @@ public class MarketService {
           .sellOrder(a.getOrderId())
           .matchQuantity(a.getQuantity())
           .matchPrice(limit)
+          .ticker(a.getTicker())
           .build();
       log.debug("Making Sell trade: " + trade.toString());
       trades.add(trade);

@@ -22,12 +22,31 @@ public class AdvancedMarketTests {
       .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
 
   @Test
-  public void correctlyHandlesTestCases() throws IOException {
-    for (int phase = 1; phase<=4; phase++) {
-      int testNumber = 1;
-      while(testFileExists(phase, testNumber)) {
-        runTest(phase, testNumber++);
-      }
+  public void correctlyHandlesPhase1TestCases() throws IOException {
+    runPhaseTests(1);
+  }
+
+
+  @Test
+  public void correctlyHandlesPhase2TestCases() throws IOException {
+    runPhaseTests(2);
+  }
+
+  @Test
+  public void correctlyHandlesPhase3TestCases() throws IOException {
+    runPhaseTests(3);
+  }
+
+  @Test
+  public void correctlyHandlesPhase4TestCases() throws IOException {
+    runPhaseTests(4);
+  }
+
+
+  private void runPhaseTests(int phase) throws IOException {
+    int testNumber = 1;
+    while(testFileExists(phase, testNumber)) {
+      runTest(phase, testNumber++);
     }
   }
 
@@ -40,7 +59,8 @@ public class AdvancedMarketTests {
 
     final List<Trade> trades = marketService.getAllMatchedTrades();
     final List<Trade> tradesReference = readTrades(phase, testNumber);
-    Assert.assertEquals("Trades should be the same as the reference", tradesReference, trades);
+    Assert.assertEquals("#" + Integer.toString(testNumber) + " Trades should be the same as the reference",
+            tradesReference, trades);
   }
 
   private List<Trade> readTrades(int phase, int testNumber) throws IOException {
