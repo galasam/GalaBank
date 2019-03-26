@@ -1,11 +1,8 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.StopOrder;
+import com.gala.sam.tradeEngine.domain.*;
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
 
 import java.util.List;
 import java.util.Map;
@@ -70,29 +67,25 @@ public class OrderCSVParser {
       case "STOP-LIMIT":
         limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopOrder.builder()
-            .readyOrder(LimitOrder.builder()
+        return StopLimitOrder.builder()
                 .orderId(orderId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
                 .ticker(ticker)
                 .limit(limit)
-                .build())
-            .triggerPrice(triggerPrice)
-            .build();
+                .triggerPrice(triggerPrice)
+                .build();
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopOrder.builder()
-            .readyOrder(MarketOrder.builder()
+        return StopMarketOrder.builder()
                 .orderId(orderId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
                 .ticker(ticker)
-                .build())
-            .triggerPrice(triggerPrice)
-            .build();
+                .triggerPrice(triggerPrice)
+                .build();
 
       default:
         throw new UnsupportedOperationException(" Unsupported order type");

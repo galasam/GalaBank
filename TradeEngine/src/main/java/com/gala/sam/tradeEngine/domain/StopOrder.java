@@ -1,23 +1,18 @@
 package com.gala.sam.tradeEngine.domain;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
-@Value
-@EqualsAndHashCode(callSuper=false)
-@Builder
-public class StopOrder extends Order {
+public abstract class StopOrder extends Order {
 
     float triggerPrice;
-    protected ReadyOrder readyOrder;
+
+    public StopOrder(int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
+        super(orderId, direction, quantity, timeInForce, ticker);
+        this.triggerPrice = triggerPrice;
+    }
 
     public float getTriggerPrice() {
         return triggerPrice;
     }
 
-    public ReadyOrder getReadyOrder() {
-        return  readyOrder;
-    }
+    public abstract ReadyOrder getReadyOrder();
 
 }

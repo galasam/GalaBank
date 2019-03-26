@@ -1,20 +1,8 @@
 package com.gala.sam.tradeEngine.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-import lombok.experimental.NonFinal;
+public abstract class ReadyOrder extends Order {
 
-@NonFinal
-@Value
-@EqualsAndHashCode(callSuper=false)
-public class ReadyOrder extends Order {
-    public enum DIRECTION {SELL, BUY}
-    public enum TIME_IN_FORCE {FOK, GTC}
-
-    int orderId;
-    DIRECTION direction;
-    int quantity;
-    TIME_IN_FORCE timeInForce;
-    String ticker;
-
+    public ReadyOrder(int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
+        super(orderId, direction, quantity, timeInForce, ticker);
+    }
 }

@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import lombok.extern.slf4j.Slf4j;
 
