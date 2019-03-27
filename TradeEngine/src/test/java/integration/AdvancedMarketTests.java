@@ -1,4 +1,4 @@
-package unit.service;
+package integration;
 
 import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;

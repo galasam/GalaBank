@@ -1,4 +1,4 @@
-package unit.utils;
+package unit;
 
 import com.gala.sam.tradeEngine.utils.FileIO;
 import org.junit.Assert;
