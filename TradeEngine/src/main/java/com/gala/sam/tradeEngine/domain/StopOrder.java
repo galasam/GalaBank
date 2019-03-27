@@ -12,6 +12,12 @@ public class StopOrder extends Order {
     float triggerPrice;
     protected ReadyOrder readyOrder;
 
+    public StopOrder(float triggerPrice, ReadyOrder readyOrder) {
+        super(OrderType.STOP);
+        this.triggerPrice = triggerPrice;
+        this.readyOrder = readyOrder;
+    }
+
     public float getTriggerPrice() {
         return triggerPrice;
     }
