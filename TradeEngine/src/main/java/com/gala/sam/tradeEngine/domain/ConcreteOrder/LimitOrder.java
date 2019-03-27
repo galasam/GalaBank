@@ -11,14 +11,14 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 @Value
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper    = false)
-public class LimitOrder extends ReadyOrder {
+public class LimitOrder extends ActiveOrder {
 
     float limit;
 
     @Builder
     public LimitOrder(int orderId, int groupId, DIRECTION direction, int quantity,
         TIME_IN_FORCE timeInForce, String ticker, float limit) {
-        super(OrderType.READY_LIMIT, orderId, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_LIMIT, orderId, groupId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }
 

@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.domain;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 import lombok.Builder;
 import lombok.Value;
 
@@ -17,8 +17,8 @@ public class PublicMarketStatus {
     @Builder
     public static class Ticker {
         String name;
-        List<ReadyOrder> buy;
-        List<ReadyOrder> sell;
+        List<ActiveOrder> buy;
+        List<ActiveOrder> sell;
     }
 
 }

@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-public class MarketOrder extends ReadyOrder {
+public class MarketOrder extends ActiveOrder {
 
     @Builder
     public MarketOrder(int groupId, DIRECTION direction, int quantity,
                        TIME_IN_FORCE timeInForce, String ticker) {
-        super(OrderType.READY_MARKET, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_MARKET, groupId, direction, quantity, timeInForce, ticker);
     }
 
     @Override

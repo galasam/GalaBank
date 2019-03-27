@@ -16,7 +16,7 @@ import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
 @AllArgsConstructor
 @Slf4j
-public class ReadyMarketOrderProcessor implements OrderProcessor {
+public class ActiveMarketOrderProcessor implements OrderProcessor {
 
     final MarketState marketState;
 

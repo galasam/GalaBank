@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.domain.dataStructures;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 
@@ -27,7 +27,7 @@ public class MarketState {
         return trades;
     }
 
-    public TickerData getTickerQueueGroup(ReadyOrder marketOrder) {
+    public TickerData getTickerQueueGroup(ActiveOrder marketOrder) {
         TickerData queues = tickerQueues.get(marketOrder.getTicker());
         if (queues == null) {
             queues = new TickerData();

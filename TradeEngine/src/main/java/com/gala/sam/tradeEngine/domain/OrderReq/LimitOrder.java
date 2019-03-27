@@ -9,14 +9,14 @@ import lombok.Value;
 @Value
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper    = false)
-public class LimitOrder extends ReadyOrder {
+public class LimitOrder extends ActiveOrder {
 
     float limit;
 
     @Builder
     public LimitOrder(int groupId, DIRECTION direction, int quantity,
         TIME_IN_FORCE timeInForce, String ticker, float limit) {
-        super(OrderType.READY_LIMIT, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_LIMIT, groupId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }
 

@@ -2,7 +2,7 @@ package com.gala.sam.tradeEngine.domain.dataStructures;
 
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;
 
 import java.util.Comparator;
@@ -14,9 +14,9 @@ public class TickerData {
     private final SortedSet<LimitOrder> sellLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_ASC);
     private final SortedSet<LimitOrder> buyLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_DECS);
     private final SortedSet<MarketOrder> buyMarketOrders = new TreeSet<>(
-        Comparator.comparingInt(ReadyOrder::getOrderId));
+        Comparator.comparingInt(ActiveOrder::getOrderId));
     private final SortedSet<MarketOrder> sellMarketOrders = new TreeSet<>(
-        Comparator.comparingInt(ReadyOrder ::getOrderId));
+        Comparator.comparingInt(ActiveOrder::getOrderId));
 
     private Optional<Float> lastExecutedTradePrice = Optional.empty();
 

@@ -7,7 +7,7 @@ import lombok.experimental.NonFinal;
 @NonFinal
 public abstract class Order {
 
-    public enum OrderType {STOP, READY_LIMIT, READY_MARKET}
+    public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
     final OrderType type;
 
     public enum DIRECTION {SELL, BUY}

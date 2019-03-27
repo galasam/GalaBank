@@ -17,6 +17,6 @@ public abstract class StopOrder extends Order {
         return triggerPrice;
     }
 
-    public abstract ReadyOrder getReadyOrder();
+    public abstract ActiveOrder getActiveOrder();
 
 }

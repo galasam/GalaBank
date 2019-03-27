@@ -5,15 +5,15 @@ import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import lombok.extern.slf4j.Slf4j;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 
 import java.util.SortedSet;
 
 @Slf4j
 public class MarketUtils {
 
-    public static <T extends ReadyOrder> void queueIfTimeInForce(T order,
-                                                                 SortedSet<T> sameTypeLimitOrders) {
+    public static <T extends ActiveOrder> void queueIfTimeInForce(T order,
+                                                                  SortedSet<T> sameTypeLimitOrders) {
         if(order.getTimeInForce().equals(Order.TIME_IN_FORCE.GTC)) {
             log.debug("Time in force is GTC so add to queue");
             sameTypeLimitOrders.add(order);
@@ -24,7 +24,7 @@ public class MarketUtils {
         }
     }
 
-    public static void makeTrade(MarketState marketState, ReadyOrder a, ReadyOrder b, float limit, TickerData ticketData) {
+    public static void makeTrade(MarketState marketState, ActiveOrder a, ActiveOrder b, float limit, TickerData ticketData) {
         ticketData.setLastExecutedTradePrice(limit);
         int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
         a.reduceQuantityRemaining(tradeQuantity);

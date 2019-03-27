@@ -2,7 +2,7 @@ package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
@@ -77,8 +77,8 @@ public class MarketService {
       if(isStopLossTriggered(stopOrder)) {
         log.info("Stop Order Triggered");
         it.remove();
-        ReadyOrder readyOrder = stopOrder.getReadyOrder();
-        processOrder(readyOrder);
+        ActiveOrder activeOrder = stopOrder.getActiveOrder();
+        processOrder(activeOrder);
       } else {
         log.info("Stop Order not Triggered");
       }
@@ -86,15 +86,15 @@ public class MarketService {
   }
 
   private boolean isStopLossTriggered(StopOrder stopOrder) {
-    ReadyOrder readyOrder = stopOrder.getReadyOrder();
-    Optional<Float> lastExec = marketState.getTickerQueueGroup(readyOrder).getLastExecutedTradePrice();
+    ActiveOrder activeOrder = stopOrder.getActiveOrder();
+    Optional<Float> lastExec = marketState.getTickerQueueGroup(activeOrder).getLastExecutedTradePrice();
     log.debug("Checking if there has been a previous trade");
     if(lastExec.isPresent()) {
       log.debug("Previous trade found, checking direction");
-      if(readyOrder.getDirection().equals(DIRECTION.BUY)) {
+      if(activeOrder.getDirection().equals(DIRECTION.BUY)) {
         log.debug("Buy direction: testing trigger");
         return stopOrder.getTriggerPrice() <= lastExec.get();
-      } else if(readyOrder.getDirection().equals(DIRECTION.SELL)) {
+      } else if(activeOrder.getDirection().equals(DIRECTION.SELL)) {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {
@@ -111,11 +111,11 @@ public class MarketService {
             List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
 
             void processTicker(String name, TickerData data) {
-                SortedSet<ReadyOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ReadyOrder::getOrderId));
+                SortedSet<ActiveOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
                 buyOrders.addAll(data.getBuyLimitOrders());
                 buyOrders.addAll(data.getBuyMarketOrders());
 
-                SortedSet<ReadyOrder> sellOrders = new TreeSet<>(Comparator.comparingInt(ReadyOrder::getOrderId));
+                SortedSet<ActiveOrder> sellOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
                 sellOrders.addAll(data.getSellLimitOrders());
                 sellOrders.addAll(data.getSellMarketOrders());
 

@@ -15,7 +15,7 @@ public class StopMarketOrder extends StopOrder {
     }
 
     @Override
-    public MarketOrder getReadyOrder() {
+    public MarketOrder getActiveOrder() {
         return MarketOrder.builder()
                 .orderId(getOrderId())
                 .direction(getDirection())
