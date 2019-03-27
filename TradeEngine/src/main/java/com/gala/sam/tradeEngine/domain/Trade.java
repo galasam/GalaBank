@@ -9,6 +9,7 @@ public class Trade {
 
     int buyOrder;
     int sellOrder;
+    String ticker;
     int matchQuantity;
     float matchPrice;
 

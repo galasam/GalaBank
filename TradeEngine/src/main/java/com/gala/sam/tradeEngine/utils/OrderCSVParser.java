@@ -1,11 +1,8 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.StopOrder;
+import com.gala.sam.tradeEngine.domain.*;
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +39,7 @@ public class OrderCSVParser {
     final String[] values = input.split(",");
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);
+    final int groupId = Integer.parseInt(values[INPUT_HEADINGS.get("GROUP ID")]);
     final DIRECTION direction = DIRECTION.valueOf(values[INPUT_HEADINGS.get("DIRECTION")]);
     final int quantity = Integer.parseInt(values[INPUT_HEADINGS.get("QUANTITY")]);
     final String type = values[INPUT_HEADINGS.get("TYPE")];
@@ -52,47 +50,46 @@ public class OrderCSVParser {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         return LimitOrder.builder()
-            .orderId(orderId)
-            .direction(direction)
-            .quantity(quantity)
-            .timeInForce(tif)
-            .ticker(ticker)
-            .limit(limit)
-            .build();
-      case "MARKET":
-        return MarketOrder.builder()
-            .orderId(orderId)
-            .direction(direction)
-            .quantity(quantity)
-            .timeInForce(tif)
-            .ticker(ticker)
-            .build();
-      case "STOP-LIMIT":
-        limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
-        float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopOrder.builder()
-            .readyOrder(LimitOrder.builder()
                 .orderId(orderId)
+                .groupId(groupId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
                 .ticker(ticker)
                 .limit(limit)
-                .build())
-            .triggerPrice(triggerPrice)
-            .build();
+                .build();
+      case "MARKET":
+        return MarketOrder.builder()
+                .orderId(orderId)
+                .groupId(groupId)
+                .direction(direction)
+                .quantity(quantity)
+                .timeInForce(tif)
+                .ticker(ticker)
+                .build();
+      case "STOP-LIMIT":
+        limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
+        float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
+        return StopLimitOrder.builder()
+                .orderId(orderId)
+                .groupId(groupId)
+                .direction(direction)
+                .quantity(quantity)
+                .timeInForce(tif)
+                .ticker(ticker)
+                .limit(limit)
+                .triggerPrice(triggerPrice)
+                .build();
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopOrder.builder()
-            .readyOrder(MarketOrder.builder()
+        return StopMarketOrder.builder()
                 .orderId(orderId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
                 .ticker(ticker)
-                .build())
-            .triggerPrice(triggerPrice)
-            .build();
+                .triggerPrice(triggerPrice)
+                .build();
 
       default:
         throw new UnsupportedOperationException(" Unsupported order type");

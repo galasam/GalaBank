@@ -1,15 +1,12 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import lombok.extern.slf4j.Slf4j;
-
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
 import java.util.*;
-
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
 @Slf4j
 public class MarketService {

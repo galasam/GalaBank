@@ -58,8 +58,9 @@ public class ReadyLimitOrderProcessor implements OrderProcessor {
 
                 if(limitOrder.limitMatches(otherLimitOrder)) {
                     log.debug("Limits match so completing trade");
-                    oppositeTypeLimitOrders.remove(otherLimitOrder);
                     makeTrade(marketState, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(), tickerData);
+                    removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder);
+                    continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders, sameTypeLimitOrders, oppositeTypeLimitOrders);
                 } else {
                     log.debug("Limits do not match, so check if time in force");
                     queueIfTimeInForce(limitOrder, sameTypeLimitOrders);
@@ -68,8 +69,23 @@ public class ReadyLimitOrderProcessor implements OrderProcessor {
         } else {
             log.debug("main.Market Order queue not empty, so trading with oldest order: " + limitOrder.toString());
             MarketOrder marketOrder = marketOrders.first();
-            marketOrders.remove(marketOrder);
             makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+            removeOrderIfFulfilled(marketOrders, marketOrder);
+            continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders, sameTypeLimitOrders, oppositeTypeLimitOrders);
+        }
+    }
+
+    private void continueProcessingLimitOrderIfNotFulfilled(LimitOrder limitOrder, TickerData tickerData, SortedSet<MarketOrder> marketOrders, SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders) {
+        log.debug("If new limit order is not fully satisfied, continue processing it.");
+        if (!limitOrder.isFullyFulfilled()) {
+            processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders, oppositeTypeLimitOrders);
+        }
+    }
+
+    private <T extends Order> void removeOrderIfFulfilled(SortedSet<T> orders, T order) {
+        log.debug("Removing market Order if it is fully satisfied.");
+        if (order.isFullyFulfilled()) {
+            orders.remove(order);
         }
     }
 

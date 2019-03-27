@@ -1,11 +1,8 @@
 package unit.utils;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.StopOrder;
-import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.domain.*;
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import org.junit.Assert;
@@ -18,22 +15,21 @@ import java.util.List;
 public class CSVTests {
 
     private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
-    private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE";
+    private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
 
     @Test
     public void canDecodeCSVStopLimitOrder() {
 
         final String limitOrderInput = "42,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
-        final Order limitOrderOutput = StopOrder.builder().triggerPrice(666)
-            .readyOrder(LimitOrder.builder()
+        final Order limitOrderOutput = StopLimitOrder.builder()
+                .triggerPrice(666)
                 .orderId(42)
                 .direction(DIRECTION.BUY)
                 .quantity(999)
                 .ticker("Fred")
                 .limit(3.14f)
                 .timeInForce(TIME_IN_FORCE.GTC)
-                .build()
-            ).build();
+                .build();
 
         final List<String> csvInput = new ArrayList<>();
         csvInput.add(csvInputHeader);
@@ -53,9 +49,10 @@ public class CSVTests {
             .sellOrder(118)
             .matchPrice(1.5f)
             .matchQuantity(451)
+            .ticker("FRED")
             .build();
 
-        final String tradeOutput = "64,118,451,1.5";
+        final String tradeOutput = "64,118,451,1.5,FRED";
 
         final List<String> outputTest = new ArrayList<>();
         outputTest.add(csvOutputHeader);

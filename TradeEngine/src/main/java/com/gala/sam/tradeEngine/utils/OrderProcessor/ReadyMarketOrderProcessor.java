@@ -47,8 +47,15 @@ public class ReadyMarketOrderProcessor implements OrderProcessor {
         } else {
             LimitOrder limitOrder = limitOrders.first();
             log.debug("Limit Order queue not empty, so trading with best limit order: " + limitOrder.toString());
-            limitOrders.remove(limitOrder);
             makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+            log.debug("Removing limit order if it is fully satisfied.");
+            if (limitOrder.isFullyFulfilled()) {
+                limitOrders.remove(limitOrder);
+            }
+            log.debug("If new market order is not fully satisfied, continue processing it.");
+            if (!marketOrder.isFullyFulfilled()) {
+                processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
+            }
         }
     }
 

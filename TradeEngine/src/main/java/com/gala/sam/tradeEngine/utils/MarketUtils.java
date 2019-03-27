@@ -1,11 +1,11 @@
 package com.gala.sam.tradeEngine.utils;
 
 import com.gala.sam.tradeEngine.domain.ReadyOrder;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import lombok.extern.slf4j.Slf4j;
+import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
 
 import java.util.SortedSet;
 
@@ -26,12 +26,16 @@ public class MarketUtils {
 
     public static void makeTrade(MarketState marketState, ReadyOrder a, ReadyOrder b, float limit, TickerData ticketData) {
         ticketData.setLastExecutedTradePrice(limit);
+        int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
+        a.reduceQuantityRemaining(tradeQuantity);
+        b.reduceQuantityRemaining(tradeQuantity);
         if(a.getDirection().equals(ReadyOrder.DIRECTION.BUY)) {
             Trade trade = Trade.builder()
                     .buyOrder(a.getOrderId())
                     .sellOrder(b.getOrderId())
                     .matchQuantity(a.getQuantity())
                     .matchPrice(limit)
+                    .ticker(a.getTicker())
                     .build();
             log.debug("Making Buy trade: " + trade.toString());
             marketState.getTrades().add(trade);
@@ -41,6 +45,7 @@ public class MarketUtils {
                     .sellOrder(a.getOrderId())
                     .matchQuantity(a.getQuantity())
                     .matchPrice(limit)
+                    .ticker(a.getTicker())
                     .build();
             log.debug("Making Sell trade: " + trade.toString());
             marketState.getTrades().add(trade);

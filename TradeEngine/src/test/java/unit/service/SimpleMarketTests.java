@@ -2,8 +2,8 @@ package unit.service;
 
 import com.gala.sam.tradeEngine.domain.LimitOrder;
 import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
 import org.junit.Assert;
@@ -40,6 +40,7 @@ public class SimpleMarketTests {
             .sellOrder(marketOrder.getOrderId())
             .matchQuantity(marketOrder.getQuantity())
             .matchPrice(limitOrder.getLimit())
+            .ticker(limitOrder.getTicker())
             .build();
 
         marketService.enterOrder(limitOrder);
@@ -80,6 +81,7 @@ public class SimpleMarketTests {
             .sellOrder(limitOrderBMatchingA.getOrderId())
             .matchQuantity(limitOrderA.getQuantity())
             .matchPrice(limitOrderA.getLimit())
+            .ticker(limitOrderA.getTicker())
             .build();
 
 
