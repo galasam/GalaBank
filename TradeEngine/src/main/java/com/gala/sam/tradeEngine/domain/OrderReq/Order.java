@@ -13,16 +13,16 @@ public abstract class Order {
     public enum DIRECTION {SELL, BUY}
     public enum TIME_IN_FORCE {FOK, GTC}
 
-    int groupId;
+    int clientId;
     DIRECTION direction;
     int quantity;
     int quantityRemaining;
     TIME_IN_FORCE timeInForce;
     String ticker;
 
-    public Order(OrderType type, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
+    public Order(OrderType type, int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
         this.type = type;
-        this.groupId = groupId;
+        this.clientId = clientId;
         this.direction = direction;
         this.quantity = quantity;
         this.quantityRemaining = this.quantity;

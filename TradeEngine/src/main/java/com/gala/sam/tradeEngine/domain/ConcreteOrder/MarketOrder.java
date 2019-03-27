@@ -10,8 +10,8 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 public class MarketOrder extends ActiveOrder {
 
     @Builder
-    public MarketOrder(int orderId, int groupId, DIRECTION direction, int quantity,
+    public MarketOrder(int orderId, int clientId, DIRECTION direction, int quantity,
                        TIME_IN_FORCE timeInForce, String ticker) {
-        super(OrderType.ACTIVE_MARKET, orderId, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_MARKET, orderId, clientId, direction, quantity, timeInForce, ticker);
     }
 }

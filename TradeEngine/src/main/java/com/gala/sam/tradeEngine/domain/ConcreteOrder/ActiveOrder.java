@@ -6,8 +6,8 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
 public abstract class ActiveOrder extends Order {
 
-    public ActiveOrder(OrderType type, int orderId, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
-        super(type, orderId, groupId, direction, quantity, timeInForce, ticker);
+    public ActiveOrder(OrderType type, int orderId, int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
+        super(type, orderId, clientId, direction, quantity, timeInForce, ticker);
     }
 
 }

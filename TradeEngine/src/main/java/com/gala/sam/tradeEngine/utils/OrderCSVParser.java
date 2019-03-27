@@ -39,7 +39,7 @@ public class OrderCSVParser {
     final String[] values = input.split(",");
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);
-    final int groupId = Integer.parseInt(values[INPUT_HEADINGS.get("GROUP ID")]);
+    final int clientId = Integer.parseInt(values[INPUT_HEADINGS.get("GROUP ID")]);
     final DIRECTION direction = DIRECTION.valueOf(values[INPUT_HEADINGS.get("DIRECTION")]);
     final int quantity = Integer.parseInt(values[INPUT_HEADINGS.get("QUANTITY")]);
     final String type = values[INPUT_HEADINGS.get("TYPE")];
@@ -50,7 +50,7 @@ public class OrderCSVParser {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         return LimitOrder.builder()
-                .groupId(groupId)
+                .clientId(clientId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
@@ -59,7 +59,7 @@ public class OrderCSVParser {
                 .build();
       case "MARKET":
         return MarketOrder.builder()
-                .groupId(groupId)
+                .clientId(clientId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
@@ -69,7 +69,7 @@ public class OrderCSVParser {
         limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopLimitOrder.builder()
-                .groupId(groupId)
+                .clientId(clientId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
@@ -80,7 +80,7 @@ public class OrderCSVParser {
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopMarketOrder.builder()
-                .groupId(groupId)
+                .clientId(clientId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)

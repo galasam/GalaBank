@@ -10,8 +10,8 @@ public class StopLimitOrder extends StopOrder {
     float limit;
 
     @Builder
-    public StopLimitOrder(int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice, float limit) {
-        super(groupId, direction, quantity, timeInForce, ticker, triggerPrice);
+    public StopLimitOrder(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice, float limit) {
+        super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
         this.limit = limit;
     }
 
@@ -19,7 +19,7 @@ public class StopLimitOrder extends StopOrder {
     public Order toConcrete(int orderId) {
         return com.gala.sam.tradeEngine.domain.ConcreteOrder.StopLimitOrder.builder()
                 .orderId(orderId)
-                .groupId(getGroupId())
+                .clientId(getClientId())
                 .direction(getDirection())
                 .quantity(getQuantity())
                 .ticker(getTicker())

@@ -10,8 +10,8 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 public class StopMarketOrder extends StopOrder {
 
     @Builder
-    public StopMarketOrder(int orderId, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
-        super(orderId, groupId, direction, quantity, timeInForce, ticker, triggerPrice);
+    public StopMarketOrder(int orderId, int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
+        super(orderId, clientId, direction, quantity, timeInForce, ticker, triggerPrice);
     }
 
     @Override

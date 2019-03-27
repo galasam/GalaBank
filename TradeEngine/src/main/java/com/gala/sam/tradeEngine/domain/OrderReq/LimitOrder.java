@@ -14,9 +14,9 @@ public class LimitOrder extends ActiveOrder {
     float limit;
 
     @Builder
-    public LimitOrder(int groupId, DIRECTION direction, int quantity,
+    public LimitOrder(int clientId, DIRECTION direction, int quantity,
         TIME_IN_FORCE timeInForce, String ticker, float limit) {
-        super(OrderType.ACTIVE_LIMIT, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_LIMIT, clientId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }
 
@@ -34,7 +34,7 @@ public class LimitOrder extends ActiveOrder {
     public Order toConcrete(int orderId) {
         return com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder.builder()
                 .orderId(orderId)
-                .groupId(getGroupId())
+                .clientId(getClientId())
                 .direction(getDirection())
                 .quantity(getQuantity())
                 .ticker(getTicker())

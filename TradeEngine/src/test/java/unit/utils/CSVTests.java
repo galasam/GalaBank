@@ -24,7 +24,7 @@ public class CSVTests {
         final String limitOrderInput = "1,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
         final Order limitOrderOutput = StopLimitOrder.builder()
                 .triggerPrice(666)
-                .groupId(1)
+                .clientId(1)
                 .direction(DIRECTION.BUY)
                 .quantity(999)
                 .ticker("Fred")

@@ -13,17 +13,17 @@ public abstract class Order {
     final OrderType type;
 
     int orderId;
-    int groupId;
+    int clientId;
     DIRECTION direction;
     int quantity;
     int quantityRemaining;
     TIME_IN_FORCE timeInForce;
     String ticker;
 
-    public Order(OrderType type, int orderId, int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
+    public Order(OrderType type, int orderId, int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
         this.type = type;
         this.orderId = orderId;
-        this.groupId = groupId;
+        this.clientId = clientId;
         this.direction = direction;
         this.quantity = quantity;
         this.quantityRemaining = this.quantity;

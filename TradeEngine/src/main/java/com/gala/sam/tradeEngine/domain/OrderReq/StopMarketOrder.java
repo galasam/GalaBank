@@ -8,15 +8,15 @@ import lombok.Value;
 public class StopMarketOrder extends StopOrder {
 
     @Builder
-    public StopMarketOrder(int groupId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
-        super(groupId, direction, quantity, timeInForce, ticker, triggerPrice);
+    public StopMarketOrder(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
+        super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
     }
 
     @Override
     public Order toConcrete(int orderId) {
         return com.gala.sam.tradeEngine.domain.ConcreteOrder.StopMarketOrder.builder()
                 .orderId(orderId)
-                .groupId(getGroupId())
+                .clientId(getClientId())
                 .direction(getDirection())
                 .quantity(getQuantity())
                 .ticker(getTicker())

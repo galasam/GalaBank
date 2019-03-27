@@ -8,16 +8,16 @@ import lombok.Value;
 public class MarketOrder extends ActiveOrder {
 
     @Builder
-    public MarketOrder(int groupId, DIRECTION direction, int quantity,
+    public MarketOrder(int clientId, DIRECTION direction, int quantity,
                        TIME_IN_FORCE timeInForce, String ticker) {
-        super(OrderType.ACTIVE_MARKET, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.ACTIVE_MARKET, clientId, direction, quantity, timeInForce, ticker);
     }
 
     @Override
     public Order toConcrete(int orderId) {
         return com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder.builder()
                 .orderId(orderId)
-                .groupId(getGroupId())
+                .clientId(getClientId())
                 .direction(getDirection())
                 .quantity(getQuantity())
                 .ticker(getTicker())
