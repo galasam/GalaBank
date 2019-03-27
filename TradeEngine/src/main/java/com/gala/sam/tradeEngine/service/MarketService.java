@@ -25,10 +25,12 @@ public class MarketService {
 
   private final ConcreteOrderGenerator concreteOrderGenerator;
   private final TradeRepository tradeRepository;
+  private final OrderProcessorFactory orderProcessorFactory;
 
-  public MarketService(TradeRepository tradeRepository, ConcreteOrderGenerator concreteOrderGenerator) {
+  public MarketService(TradeRepository tradeRepository, ConcreteOrderGenerator concreteOrderGenerator, OrderProcessorFactory orderProcessorFactory) {
     this.tradeRepository = tradeRepository;
     this.concreteOrderGenerator = concreteOrderGenerator;
+    this.orderProcessorFactory = orderProcessorFactory;
   }
 
   @PostConstruct
@@ -55,7 +57,7 @@ public class MarketService {
   private void processOrder(Order order) {
     log.info(String.format("Processing order %s", order.toString()));
 
-    OrderProcessorFactory.getOrderProcessor(marketState, order.getType())
+    orderProcessorFactory.getOrderProcessor(marketState, order.getType())
             .process(order);
 
 

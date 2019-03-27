@@ -7,6 +7,7 @@ import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
+import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -23,7 +24,7 @@ public class AdvancedMarketTests {
 
   private static final String relativeDirectoryOfTestFiles = "/src/test/resources/Market Test Cases/";
   private static final String absoluteDirectoryOfTestFiles = Paths
-      .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
+          .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
 
   @Test
   public void correctlyHandlesPhase1TestCases() throws IOException {
@@ -62,8 +63,9 @@ public class AdvancedMarketTests {
     when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
 
     ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
+    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory();
 
-    MarketService marketService = new MarketService(tradeRepository, concreteOrderGenerator);
+    MarketService marketService = new MarketService(tradeRepository, concreteOrderGenerator, orderProcessorFactory);
     orders.stream().forEach(marketService::enterOrder);
 
     final List<Trade> trades = marketService.getAllMatchedTrades();
