@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.StopOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

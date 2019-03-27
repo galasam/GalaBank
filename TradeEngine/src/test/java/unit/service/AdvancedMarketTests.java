@@ -1,6 +1,6 @@
 package unit.service;
 
-import com.gala.sam.tradeEngine.domain.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;

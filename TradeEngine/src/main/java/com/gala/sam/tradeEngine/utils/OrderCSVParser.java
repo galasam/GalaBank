@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
-import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.*;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,6 @@ public class OrderCSVParser {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         return LimitOrder.builder()
-                .orderId(orderId)
                 .groupId(groupId)
                 .direction(direction)
                 .quantity(quantity)
@@ -60,7 +59,6 @@ public class OrderCSVParser {
                 .build();
       case "MARKET":
         return MarketOrder.builder()
-                .orderId(orderId)
                 .groupId(groupId)
                 .direction(direction)
                 .quantity(quantity)
@@ -71,7 +69,6 @@ public class OrderCSVParser {
         limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopLimitOrder.builder()
-                .orderId(orderId)
                 .groupId(groupId)
                 .direction(direction)
                 .quantity(quantity)
@@ -83,14 +80,13 @@ public class OrderCSVParser {
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
         return StopMarketOrder.builder()
-                .orderId(orderId)
+                .groupId(groupId)
                 .direction(direction)
                 .quantity(quantity)
                 .timeInForce(tif)
                 .ticker(ticker)
                 .triggerPrice(triggerPrice)
                 .build();
-
       default:
         throw new UnsupportedOperationException(" Unsupported order type");
     }

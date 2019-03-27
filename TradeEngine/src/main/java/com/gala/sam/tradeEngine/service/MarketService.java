@@ -1,11 +1,15 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import lombok.extern.slf4j.Slf4j;
-import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
 import java.util.*;
 
 @Slf4j
@@ -13,15 +17,21 @@ public class MarketService {
 
 
   private MarketState marketState = new MarketState();
+  private ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
 
   public void clear() {
     marketState = new MarketState();
+    concreteOrderGenerator = new ConcreteOrderGenerator();
   }
 
-  public void enterOrder(Order order) {
+  public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
     log.info("Processing Triggered Stop Orders");
+
+    Order order = concreteOrderGenerator.getConcreteOrder(orderReq);
+
     processOrder(order);
     processTriggeredStopOrders();
+    return order;
   }
 
   public List<Trade> getAllMatchedTrades() {

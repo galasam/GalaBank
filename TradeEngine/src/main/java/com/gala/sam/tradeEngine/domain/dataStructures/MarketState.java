@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.domain.dataStructures;
 
-import com.gala.sam.tradeEngine.domain.ReadyOrder;
-import com.gala.sam.tradeEngine.domain.StopOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 
 import java.util.*;

@@ -1,11 +1,11 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.LimitOrder;
-import com.gala.sam.tradeEngine.domain.MarketOrder;
-import com.gala.sam.tradeEngine.domain.Order;
-import com.gala.sam.tradeEngine.domain.ReadyOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,12 +27,12 @@ public class ReadyLimitOrderProcessor implements OrderProcessor {
 
     private void processLimitOrder(LimitOrder limitOrder) {
         TickerData tickerData = marketState.getTickerQueueGroup(limitOrder);
-        if (limitOrder.getDirection() == ReadyOrder.DIRECTION.BUY) {
+        if (limitOrder.getDirection() == DIRECTION.BUY) {
             processDirectedLimitOrder(limitOrder, tickerData,
                     tickerData.getSellMarketOrders(),
                     tickerData.getBuyLimitOrders(),
                     tickerData.getSellLimitOrders());
-        } else if (limitOrder.getDirection() == ReadyOrder.DIRECTION.SELL) {
+        } else if (limitOrder.getDirection() == DIRECTION.SELL) {
             processDirectedLimitOrder(limitOrder, tickerData,
                     tickerData.getBuyMarketOrders(),
                     tickerData.getSellLimitOrders(),

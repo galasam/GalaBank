@@ -1,5 +1,6 @@
-package com.gala.sam.tradeEngine.domain;
+package com.gala.sam.tradeEngine.domain.OrderReq;
 
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,9 +14,9 @@ public class LimitOrder extends ReadyOrder {
     float limit;
 
     @Builder
-    public LimitOrder(int orderId, int groupId, DIRECTION direction, int quantity,
+    public LimitOrder(int groupId, DIRECTION direction, int quantity,
         TIME_IN_FORCE timeInForce, String ticker, float limit) {
-        super(OrderType.READY_LIMIT, orderId, groupId, direction, quantity, timeInForce, ticker);
+        super(OrderType.READY_LIMIT, groupId, direction, quantity, timeInForce, ticker);
         this.limit = limit;
     }
 
@@ -29,4 +30,16 @@ public class LimitOrder extends ReadyOrder {
         }
     }
 
+    @Override
+    public Order toConcrete(int orderId) {
+        return com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder.builder()
+                .orderId(orderId)
+                .groupId(getGroupId())
+                .direction(getDirection())
+                .quantity(getQuantity())
+                .ticker(getTicker())
+                .timeInForce(getTimeInForce())
+                .limit(getLimit())
+                .build();
+    }
 }

@@ -1,17 +1,16 @@
-package com.gala.sam.tradeEngine.domain;
+package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
 import lombok.Data;
 import lombok.experimental.NonFinal;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
 @Data
 @NonFinal
 public abstract class Order {
 
-    public enum OrderType {STOP, READY_LIMIT, READY_MARKET}
     final OrderType type;
-
-    public enum DIRECTION {SELL, BUY}
-    public enum TIME_IN_FORCE {FOK, GTC}
 
     int orderId;
     int groupId;

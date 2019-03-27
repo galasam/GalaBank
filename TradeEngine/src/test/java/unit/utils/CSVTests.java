@@ -1,10 +1,11 @@
 package unit.utils;
 
-import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.Order.DIRECTION;
-import com.gala.sam.tradeEngine.domain.Order.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.StopLimitOrder;
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,10 +21,10 @@ public class CSVTests {
     @Test
     public void canDecodeCSVStopLimitOrder() {
 
-        final String limitOrderInput = "42,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
+        final String limitOrderInput = "1,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
         final Order limitOrderOutput = StopLimitOrder.builder()
                 .triggerPrice(666)
-                .orderId(42)
+                .groupId(1)
                 .direction(DIRECTION.BUY)
                 .quantity(999)
                 .ticker("Fred")

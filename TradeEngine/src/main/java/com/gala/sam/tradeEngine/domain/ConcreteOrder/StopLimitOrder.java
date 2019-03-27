@@ -1,7 +1,10 @@
-package com.gala.sam.tradeEngine.domain;
+package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
 import lombok.Builder;
 import lombok.Value;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
 @Value
 public class StopLimitOrder extends StopOrder {
