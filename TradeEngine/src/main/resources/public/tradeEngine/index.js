@@ -4,14 +4,15 @@ class Order extends React.Component {
     let order=this.props.order
     console.log(order)
     if (order.limit == null) {
-      return (
-        <li className="order market">#{order.orderId} Market Order for {order.quantity} shares with {order.timeInForce}</li>
-      );
+      var orderTypeName = "Market"
+      var orderTypeClass = "market"
     } else {
-      return (
-        <li className="order limit">#{order.orderId} Limit Order for {order.quantity} shares at {order.limit} with {order.timeInForce}</li>
-      );
+      var orderTypeName = "Limit"
+      var orderTypeClass = "limit"
     }
+    return (
+      <li className={"order " + orderTypeClass} >#{order.orderId}: {order.clientId} made {order.timeInForce} {orderTypeName} Order for {order.quantity} shares of {order.ticker} at {order.limit} with {order.quantityRemaining} remaining.</li>
+    );
   }
 }
 
@@ -74,7 +75,7 @@ class Trade extends React.Component {
   render() {
     let trade=this.props.trade
     return (
-      <li className="trade">#{trade.buyOrder} sold to #{trade.sellOrder} {trade.matchQuantity} shares at {trade.matchPrice}</li>
+      <li className="trade">#{trade.buyOrder} sold to #{trade.sellOrder} {trade.matchQuantity} shares of {trade.ticker} at {trade.matchPrice}</li>
       );
   }
 }
