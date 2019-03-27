@@ -33,7 +33,7 @@ public class MarketUtils {
             Trade trade = Trade.builder()
                     .buyOrder(a.getOrderId())
                     .sellOrder(b.getOrderId())
-                    .matchQuantity(a.getQuantity())
+                    .matchQuantity(tradeQuantity)
                     .matchPrice(limit)
                     .ticker(a.getTicker())
                     .build();
@@ -43,7 +43,7 @@ public class MarketUtils {
             Trade trade = Trade.builder()
                     .buyOrder(b.getOrderId())
                     .sellOrder(a.getOrderId())
-                    .matchQuantity(a.getQuantity())
+                    .matchQuantity(tradeQuantity)
                     .matchPrice(limit)
                     .ticker(a.getTicker())
                     .build();
