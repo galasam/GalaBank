@@ -20,9 +20,7 @@ public class SimpleMarketTests {
     @Test
     public void testSimpleTimeStep() {
 
-        TradeRepository tradeRepository = mock(TradeRepository.class);
-        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
-        MarketService marketService = new MarketService(tradeRepository);
+        MarketService marketService = new MarketService(getMockedTradeRepository());
 
         LimitOrder limitOrder = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -60,9 +58,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithMatchingLimits() {
 
-        TradeRepository tradeRepository = mock(TradeRepository.class);
-        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
-        MarketService marketService = new MarketService(tradeRepository);
+        MarketService marketService = new MarketService(getMockedTradeRepository());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -101,9 +97,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithNonMatchingLimits() {
 
-        TradeRepository tradeRepository = mock(TradeRepository.class);
-        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
-        MarketService marketService = new MarketService(tradeRepository);
+        MarketService marketService = new MarketService(getMockedTradeRepository());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -127,6 +121,67 @@ public class SimpleMarketTests {
 
         Assert.assertEquals("Should not match a buy and sell non-matching limit orders", 0,
             trades.size());
+    }
+
+    @Test
+    public void testOrderPartialFulfillment() {
+
+
+        MarketService marketService = new MarketService(getMockedTradeRepository());
+
+        LimitOrder limitOrderA = LimitOrder.builder()
+                .direction(Order.DIRECTION.BUY)
+                .quantity(10)
+                .ticker("Fred")
+                .limit(4)
+                .timeInForce(Order.TIME_IN_FORCE.GTC)
+                .build();
+
+        LimitOrder limitOrderB = LimitOrder.builder()
+                .direction(Order.DIRECTION.BUY)
+                .quantity(20)
+                .ticker("Fred")
+                .limit(3)
+                .timeInForce(Order.TIME_IN_FORCE.GTC)
+                .build();
+
+        MarketOrder marketOrder = MarketOrder.builder()
+                .direction(Order.DIRECTION.SELL)
+                .quantity(30)
+                .ticker("Fred")
+                .timeInForce(Order.TIME_IN_FORCE.GTC)
+                .build();
+
+        int limitOrderAId = marketService.enterOrder(limitOrderA).getOrderId();
+        int limitOrderBId = marketService.enterOrder(limitOrderB).getOrderId();
+        int marketOrderId = marketService.enterOrder(marketOrder).getOrderId();
+
+        Trade tradeA = Trade.builder()
+                .buyOrder(limitOrderAId)
+                .sellOrder(marketOrderId)
+                .matchPrice(limitOrderA.getLimit())
+                .matchQuantity(limitOrderA.getQuantity())
+                .ticker(limitOrderA.getTicker())
+                .build();
+
+        Trade tradeB = Trade.builder()
+                .buyOrder(limitOrderBId)
+                .sellOrder(marketOrderId)
+                .matchPrice(limitOrderB.getLimit())
+                .matchQuantity(limitOrderB.getQuantity())
+                .ticker(limitOrderB.getTicker())
+                .build();
+
+        List<Trade> results = marketService.getAllMatchedTrades();
+        Assert.assertEquals("Should result in two trades", results.size(), 2);
+        Assert.assertEquals("First half of market order should match with limit order A", tradeA, results.get(0));
+        Assert.assertEquals("Second half of market order should match with limit order B", tradeB, results.get(1));
+    }
+
+    private TradeRepository getMockedTradeRepository() {
+        TradeRepository tradeRepository = mock(TradeRepository.class);
+        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
+        return tradeRepository;
     }
 
 }
