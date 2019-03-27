@@ -9,6 +9,8 @@ spring:
   freemarker:
     enabled: false
 
+debug: false
+
 # Discovery Server Access
 eureka:
   client:

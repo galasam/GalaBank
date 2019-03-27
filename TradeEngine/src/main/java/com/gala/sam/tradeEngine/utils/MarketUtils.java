@@ -38,7 +38,7 @@ public class MarketUtils {
                     .ticker(a.getTicker())
                     .build();
             log.debug("Making Buy trade: " + trade.toString());
-            marketState.getTrades().add(trade);
+            marketState.addTrade(trade);
         } else if(a.getDirection().equals(Order.DIRECTION.SELL)) {
             Trade trade = Trade.builder()
                     .buyOrder(b.getOrderId())
@@ -48,7 +48,7 @@ public class MarketUtils {
                     .ticker(a.getTicker())
                     .build();
             log.debug("Making Sell trade: " + trade.toString());
-            marketState.getTrades().add(trade);
+            marketState.addTrade(trade);
         } else {
             throw new UnsupportedOperationException("Order direction not supported");
         }

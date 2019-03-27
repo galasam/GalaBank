@@ -5,10 +5,12 @@ import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class MarketState {
 
     private List<Trade> trades = new ArrayList<>();
+
     private Map<String, TickerData> tickerQueues = new TreeMap<>();
     private List<StopOrder> stopOrders = new LinkedList<>();
 
@@ -33,4 +35,16 @@ public class MarketState {
         }
         return queues;
     }
+
+    Optional<Consumer<Trade>> tradeAddSubscriber = Optional.empty();
+
+    public void setTradeAddSubscriber(Consumer<Trade> f) {
+        tradeAddSubscriber = Optional.of(f);
+    }
+
+    public void addTrade(Trade trade) {
+        trades.add(trade);
+        tradeAddSubscriber.ifPresent(f -> f.accept(trade));
+    }
+
 }

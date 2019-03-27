@@ -6,22 +6,41 @@ import com.gala.sam.tradeEngine.domain.ConcreteOrder.ReadyOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Slf4j
+@Service
 public class MarketService {
 
 
   private MarketState marketState = new MarketState();
   private ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
 
+  private final TradeRepository tradeRepository;
+
+  public MarketService(TradeRepository tradeRepository) {
+    this.tradeRepository = tradeRepository;
+  }
+
+  @PostConstruct
+  void init() {
+    log.info("Getting existing trades from database");
+    marketState.getTrades().addAll((Collection<? extends Trade>) tradeRepository.findAll());
+    marketState.setTradeAddSubscriber(trade -> tradeRepository.save(trade));
+  }
+
   public void clear() {
     marketState = new MarketState();
     concreteOrderGenerator = new ConcreteOrderGenerator();
+    tradeRepository.deleteAll();
   }
 
   public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
@@ -116,5 +135,4 @@ public class MarketService {
                 .orders(h.tickers)
                 .build();
     }
-
 }
