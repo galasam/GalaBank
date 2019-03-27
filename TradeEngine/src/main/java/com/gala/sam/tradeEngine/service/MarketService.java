@@ -77,7 +77,7 @@ public class MarketService {
       if(isStopLossTriggered(stopOrder)) {
         log.info("Stop Order Triggered");
         it.remove();
-        ActiveOrder activeOrder = stopOrder.getActiveOrder();
+        ActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {
         log.info("Stop Order not Triggered");
@@ -86,7 +86,7 @@ public class MarketService {
   }
 
   private boolean isStopLossTriggered(StopOrder stopOrder) {
-    ActiveOrder activeOrder = stopOrder.getActiveOrder();
+    ActiveOrder activeOrder = stopOrder.toActiveOrder();
     Optional<Float> lastExec = marketState.getTickerQueueGroup(activeOrder).getLastExecutedTradePrice();
     log.debug("Checking if there has been a previous trade");
     if(lastExec.isPresent()) {

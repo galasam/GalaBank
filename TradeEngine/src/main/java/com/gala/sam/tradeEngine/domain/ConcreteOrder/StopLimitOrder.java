@@ -18,7 +18,7 @@ public class StopLimitOrder extends StopOrder {
     }
 
     @Override
-    public LimitOrder getActiveOrder() {
+    public LimitOrder toActiveOrder() {
         return LimitOrder.builder()
                 .orderId(getOrderId())
                 .direction(getDirection())
