@@ -6,6 +6,7 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
+import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class SimpleMarketTests {
     @Test
     public void testSimpleTimeStep() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository());
+        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator());
 
         LimitOrder limitOrder = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -58,7 +59,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithMatchingLimits() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository());
+        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -97,7 +98,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithNonMatchingLimits() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository());
+        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -127,7 +128,7 @@ public class SimpleMarketTests {
     public void testOrderPartialFulfillment() {
 
 
-        MarketService marketService = new MarketService(getMockedTradeRepository());
+        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator());
 
         LimitOrder limitOrderA = LimitOrder.builder()
                 .direction(Order.DIRECTION.BUY)

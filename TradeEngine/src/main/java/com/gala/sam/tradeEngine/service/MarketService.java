@@ -22,12 +22,13 @@ public class MarketService {
 
 
   private MarketState marketState = new MarketState();
-  private ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
 
+  private final ConcreteOrderGenerator concreteOrderGenerator;
   private final TradeRepository tradeRepository;
 
-  public MarketService(TradeRepository tradeRepository) {
+  public MarketService(TradeRepository tradeRepository, ConcreteOrderGenerator concreteOrderGenerator) {
     this.tradeRepository = tradeRepository;
+    this.concreteOrderGenerator = concreteOrderGenerator;
   }
 
   @PostConstruct
@@ -35,12 +36,6 @@ public class MarketService {
     log.info("Getting existing trades from database");
     marketState.getTrades().addAll((Collection<? extends Trade>) tradeRepository.findAll());
     marketState.setTradeAddSubscriber(trade -> tradeRepository.save(trade));
-  }
-
-  public void clear() {
-    marketState = new MarketState();
-    concreteOrderGenerator = new ConcreteOrderGenerator();
-    tradeRepository.deleteAll();
   }
 
   public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
