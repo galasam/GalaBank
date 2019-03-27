@@ -17,4 +17,12 @@ public class ReadyOrder extends Order {
     TIME_IN_FORCE timeInForce;
     String ticker;
 
+    public ReadyOrder(OrderType type, int orderId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {
+        super(type);
+        this.orderId = orderId;
+        this.direction = direction;
+        this.quantity = quantity;
+        this.timeInForce = timeInForce;
+        this.ticker = ticker;
+    }
 }
