@@ -1,18 +1,23 @@
 package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.Value;
+import lombok.*;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
-@Value
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Data
+@NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper    = false)
+@Entity(name = "LimitOrder")
+@DiscriminatorValue("LimitOrder")
 public class LimitOrder extends ActiveOrder {
 
+    @Column(name = "limit_price")
     float limit;
 
     @Builder

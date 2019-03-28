@@ -5,6 +5,7 @@ import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
+
 @Slf4j
 @Service
 public class MarketService {
@@ -24,10 +28,15 @@ public class MarketService {
 
   private final ConcreteOrderGenerator concreteOrderGenerator;
   private final TradeRepository tradeRepository;
+  private final OrderRepository orderRepository;
   private final OrderProcessorFactory orderProcessorFactory;
 
-  public MarketService(TradeRepository tradeRepository, ConcreteOrderGenerator concreteOrderGenerator, OrderProcessorFactory orderProcessorFactory) {
+  public MarketService(TradeRepository tradeRepository,
+                       OrderRepository orderRepository,
+                       ConcreteOrderGenerator concreteOrderGenerator,
+                       OrderProcessorFactory orderProcessorFactory) {
     this.tradeRepository = tradeRepository;
+    this.orderRepository = orderRepository;
     this.concreteOrderGenerator = concreteOrderGenerator;
     this.orderProcessorFactory = orderProcessorFactory;
   }
@@ -35,8 +44,8 @@ public class MarketService {
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
-    marketState.getTrades().addAll((Collection<? extends Trade>) tradeRepository.findAll());
-    marketState.setTradeAddSubscriber(trade -> tradeRepository.save(trade));
+    updateMarketStateFromTradeRepository(marketState, tradeRepository);
+    updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
   public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
@@ -73,6 +82,7 @@ public class MarketService {
       if(isStopLossTriggered(stopOrder)) {
         log.info("Stop Order Triggered");
         it.remove();
+        orderRepository.delete(stopOrder);
         ActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {

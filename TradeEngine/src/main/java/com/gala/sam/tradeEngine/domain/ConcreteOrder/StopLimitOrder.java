@@ -1,14 +1,24 @@
 package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
-@Value
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Data
+@NoArgsConstructor
+@Entity(name = "StopLimitOrder")
+@DiscriminatorValue("StopLimitOrder")
 public class StopLimitOrder extends StopOrder {
 
+    @Column(name = "limit_price")
     float limit;
 
     @Builder
