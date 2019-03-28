@@ -3,6 +3,7 @@ package com.gala.sam.tradeEngine.service;
 import com.gala.sam.tradeEngine.domain.*;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
+import com.gala.sam.tradeEngine.domain.dataStructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
@@ -119,7 +120,7 @@ public class MarketService {
             }
 
           private SortedSet<ActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders, SortedSet<MarketOrder> buyMarketOrders) {
-            SortedSet<ActiveOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
+            SortedSet<ActiveOrder> buyOrders = new OrderIdPriorityQueue();
             buyOrders.addAll(buyLimitOrders);
             buyOrders.addAll(buyMarketOrders);
             return buyOrders;
