@@ -1,6 +1,7 @@
 package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.NonFinal;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
@@ -14,9 +15,10 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Order_Type")
+@NoArgsConstructor
 public abstract class Order {
 
-    final OrderType type;
+    OrderType type;
 
     @Id @Column
     int orderId;

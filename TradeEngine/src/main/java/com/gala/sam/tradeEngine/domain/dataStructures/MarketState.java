@@ -3,10 +3,11 @@ package com.gala.sam.tradeEngine.domain.dataStructures;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.Consumer;
 
+@Component
 public class MarketState {
 
     private List<Trade> trades = new ArrayList<>();
@@ -34,17 +35,6 @@ public class MarketState {
             tickerQueues.put(marketOrder.getTicker(), queues);
         }
         return queues;
-    }
-
-    Optional<Consumer<Trade>> tradeAddSubscriber = Optional.empty();
-
-    public void setTradeAddSubscriber(Consumer<Trade> f) {
-        tradeAddSubscriber = Optional.of(f);
-    }
-
-    public void addTrade(Trade trade) {
-        trades.add(trade);
-        tradeAddSubscriber.ifPresent(f -> f.accept(trade));
     }
 
 }

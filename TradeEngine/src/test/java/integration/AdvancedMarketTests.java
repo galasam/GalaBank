@@ -66,7 +66,7 @@ public class AdvancedMarketTests {
     OrderRepository orderRepository = getEmptyRepository(OrderRepository.class);
 
     ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory();
+    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository, concreteOrderGenerator, orderProcessorFactory);
     orders.stream().forEach(marketService::enterOrder);

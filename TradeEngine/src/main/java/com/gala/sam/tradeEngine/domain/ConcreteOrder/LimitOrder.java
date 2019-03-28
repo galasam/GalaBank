@@ -1,9 +1,6 @@
 package com.gala.sam.tradeEngine.domain.ConcreteOrder;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.Value;
+import lombok.*;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
@@ -12,7 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Value
+@Data
+@NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper    = false)
 @Entity(name = "LimitOrder")

@@ -24,7 +24,8 @@ public class SimpleMarketTests {
     @Test
     public void testSimpleTimeStep() {
 
-        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), orderProcessorFactory);
 
         LimitOrder limitOrder = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -62,7 +63,8 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithMatchingLimits() {
 
-        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), orderProcessorFactory);
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -101,7 +103,8 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithNonMatchingLimits() {
 
-        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), orderProcessorFactory);
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -131,7 +134,8 @@ public class SimpleMarketTests {
     public void testOrderPartialFulfillment() {
 
 
-        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), orderProcessorFactory);
 
         LimitOrder limitOrderA = LimitOrder.builder()
                 .direction(Order.DIRECTION.BUY)

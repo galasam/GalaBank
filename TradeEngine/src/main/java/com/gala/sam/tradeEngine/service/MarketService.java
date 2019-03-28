@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
+
 @Slf4j
 @Service
 public class MarketService {
@@ -40,48 +43,8 @@ public class MarketService {
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
-    marketState.getTrades().addAll((Collection<Trade>) tradeRepository.findAll());
-    marketState.setTradeAddSubscriber(trade -> tradeRepository.save(trade));
-
-    Iterable<Order> ordersFromDatabase = orderRepository.findAll();
-    for (Order order : ordersFromDatabase) {
-      TickerData tickerQueueGroup;
-      switch (order.getType()) {
-        case STOP:
-          marketState.getStopOrders().add((StopOrder) order);
-          break;
-        case ACTIVE_LIMIT:
-          LimitOrder limitOrder = (LimitOrder) order;
-          tickerQueueGroup = marketState.getTickerQueueGroup(limitOrder);
-          switch (limitOrder.getDirection()) {
-            case BUY:
-              tickerQueueGroup.getBuyLimitOrders().add(limitOrder);
-              break;
-            case SELL:
-              tickerQueueGroup.getSellLimitOrders().add(limitOrder);
-              break;
-            default:
-              throw new UnsupportedOperationException("Unsupported direction");
-          }
-          break;
-        case ACTIVE_MARKET:
-          MarketOrder marketOrder = (MarketOrder) order;
-          tickerQueueGroup = marketState.getTickerQueueGroup(marketOrder);
-          switch (marketOrder.getDirection()) {
-            case BUY:
-              tickerQueueGroup.getBuyMarketOrders().add(marketOrder);
-              break;
-            case SELL:
-              tickerQueueGroup.getSellMarketOrders().add(marketOrder);
-              break;
-            default:
-              throw new UnsupportedOperationException("Unsupported direction");
-          }
-          break;
-        default:
-          throw new UnsupportedOperationException("Unsupported direction");
-      }
-    }
+    updateMarketStateFromTradeRepository(marketState, tradeRepository);
+    updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
   public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
@@ -118,6 +81,7 @@ public class MarketService {
       if(isStopLossTriggered(stopOrder)) {
         log.info("Stop Order Triggered");
         it.remove();
+        orderRepository.delete(stopOrder);
         ActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {

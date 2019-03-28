@@ -6,7 +6,8 @@ import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
-import lombok.AllArgsConstructor;
+import com.gala.sam.tradeEngine.repository.OrderRepository;
+import com.gala.sam.tradeEngine.repository.TradeRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.SortedSet;
@@ -14,11 +15,15 @@ import java.util.SortedSet;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
-@AllArgsConstructor
 @Slf4j
-public class ActiveMarketOrderProcessor implements OrderProcessor {
+public class ActiveMarketOrderProcessor extends OrderProcessor {
 
-    final MarketState marketState;
+    private final MarketState marketState;
+
+    public ActiveMarketOrderProcessor(OrderRepository orderRepository, TradeRepository tradeRepository, MarketState marketState) {
+        super(orderRepository, tradeRepository);
+        this.marketState = marketState;
+    }
 
     @Override
     public <T extends Order> void process(T order) {
@@ -43,14 +48,15 @@ public class ActiveMarketOrderProcessor implements OrderProcessor {
         log.debug("Checking Limit Order queue");
         if(limitOrders.isEmpty()) {
             log.debug("Limit Order queue empty, so check if time in force");
-            queueIfTimeInForce(marketOrder, marketOrders);
+            queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);
         } else {
             LimitOrder limitOrder = limitOrders.first();
             log.debug("Limit Order queue not empty, so trading with best limit order: " + limitOrder.toString());
-            makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+            makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData, this::saveTrade);
             log.debug("Removing limit order if it is fully satisfied.");
             if (limitOrder.isFullyFulfilled()) {
                 limitOrders.remove(limitOrder);
+                deleteOrder(limitOrder);
             }
             log.debug("If new market order is not fully satisfied, continue processing it.");
             if (!marketOrder.isFullyFulfilled()) {
