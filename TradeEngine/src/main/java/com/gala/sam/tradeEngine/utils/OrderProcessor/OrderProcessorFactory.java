@@ -2,7 +2,9 @@ package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderProcessorFactory {
     public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
         switch(type) {

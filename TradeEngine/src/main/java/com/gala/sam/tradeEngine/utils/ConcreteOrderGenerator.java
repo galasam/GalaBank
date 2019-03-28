@@ -1,7 +1,9 @@
 package com.gala.sam.tradeEngine.utils;
 
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ConcreteOrderGenerator {
 
     private static final int InitialOrderIndex = 1;
