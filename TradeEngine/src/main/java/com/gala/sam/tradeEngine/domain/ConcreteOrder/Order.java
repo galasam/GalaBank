@@ -6,18 +6,31 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
+import javax.persistence.*;
+
 @Data
 @NonFinal
+@Table(name = "orders")
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "Order_Type")
 public abstract class Order {
 
     final OrderType type;
 
+    @Id @Column
     int orderId;
+    @Column
     int clientId;
+    @Column
     DIRECTION direction;
+    @Column
     int quantity;
+    @Column
     int quantityRemaining;
+    @Column
     TIME_IN_FORCE timeInForce;
+    @Column
     String ticker;
 
     public Order(OrderType type, int orderId, int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce, String ticker) {

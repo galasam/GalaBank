@@ -4,12 +4,14 @@ import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrder;
 import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrder;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class SimpleMarketTests {
     @Test
     public void testSimpleTimeStep() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
 
         LimitOrder limitOrder = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -60,7 +62,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithMatchingLimits() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -99,7 +101,7 @@ public class SimpleMarketTests {
     @Test
     public void testTimeStepWithNonMatchingLimits() {
 
-        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
 
         LimitOrder limitOrderA = LimitOrder.builder()
             .direction(Order.DIRECTION.BUY)
@@ -129,7 +131,7 @@ public class SimpleMarketTests {
     public void testOrderPartialFulfillment() {
 
 
-        MarketService marketService = new MarketService(getMockedTradeRepository(), new ConcreteOrderGenerator(), new OrderProcessorFactory());
+        MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(), new OrderProcessorFactory());
 
         LimitOrder limitOrderA = LimitOrder.builder()
                 .direction(Order.DIRECTION.BUY)
@@ -180,10 +182,10 @@ public class SimpleMarketTests {
         Assert.assertEquals("Second half of market order should match with limit order B", tradeB, results.get(1));
     }
 
-    private TradeRepository getMockedTradeRepository() {
-        TradeRepository tradeRepository = mock(TradeRepository.class);
-        when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
-        return tradeRepository;
+    private <T extends CrudRepository> T getEmptyRepository(Class<T> type) {
+        T repository = mock(type);
+        when(repository.findAll()).thenReturn(new ArrayList<>());
+        return repository;
     }
 
 }

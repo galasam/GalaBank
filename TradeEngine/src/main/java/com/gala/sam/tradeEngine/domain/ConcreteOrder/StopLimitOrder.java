@@ -6,9 +6,16 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 @Value
+@Entity(name = "StopLimitOrder")
+@DiscriminatorValue("StopLimitOrder")
 public class StopLimitOrder extends StopOrder {
 
+    @Column(name = "limit_price")
     float limit;
 
     @Builder

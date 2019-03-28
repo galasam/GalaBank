@@ -6,7 +6,12 @@ import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 @Value
+@Entity(name = "MarketOrder")
+@DiscriminatorValue("MarketOrder")
 public class MarketOrder extends ActiveOrder {
 
     @Builder

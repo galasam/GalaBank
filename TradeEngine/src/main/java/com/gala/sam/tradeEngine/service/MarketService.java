@@ -1,11 +1,10 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
@@ -25,10 +24,15 @@ public class MarketService {
 
   private final ConcreteOrderGenerator concreteOrderGenerator;
   private final TradeRepository tradeRepository;
+  private final OrderRepository orderRepository;
   private final OrderProcessorFactory orderProcessorFactory;
 
-  public MarketService(TradeRepository tradeRepository, ConcreteOrderGenerator concreteOrderGenerator, OrderProcessorFactory orderProcessorFactory) {
+  public MarketService(TradeRepository tradeRepository,
+                       OrderRepository orderRepository,
+                       ConcreteOrderGenerator concreteOrderGenerator,
+                       OrderProcessorFactory orderProcessorFactory) {
     this.tradeRepository = tradeRepository;
+    this.orderRepository = orderRepository;
     this.concreteOrderGenerator = concreteOrderGenerator;
     this.orderProcessorFactory = orderProcessorFactory;
   }
@@ -36,8 +40,48 @@ public class MarketService {
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
-    marketState.getTrades().addAll((Collection<? extends Trade>) tradeRepository.findAll());
+    marketState.getTrades().addAll((Collection<Trade>) tradeRepository.findAll());
     marketState.setTradeAddSubscriber(trade -> tradeRepository.save(trade));
+
+    Iterable<Order> ordersFromDatabase = orderRepository.findAll();
+    for (Order order : ordersFromDatabase) {
+      TickerData tickerQueueGroup;
+      switch (order.getType()) {
+        case STOP:
+          marketState.getStopOrders().add((StopOrder) order);
+          break;
+        case ACTIVE_LIMIT:
+          LimitOrder limitOrder = (LimitOrder) order;
+          tickerQueueGroup = marketState.getTickerQueueGroup(limitOrder);
+          switch (limitOrder.getDirection()) {
+            case BUY:
+              tickerQueueGroup.getBuyLimitOrders().add(limitOrder);
+              break;
+            case SELL:
+              tickerQueueGroup.getSellLimitOrders().add(limitOrder);
+              break;
+            default:
+              throw new UnsupportedOperationException("Unsupported direction");
+          }
+          break;
+        case ACTIVE_MARKET:
+          MarketOrder marketOrder = (MarketOrder) order;
+          tickerQueueGroup = marketState.getTickerQueueGroup(marketOrder);
+          switch (marketOrder.getDirection()) {
+            case BUY:
+              tickerQueueGroup.getBuyMarketOrders().add(marketOrder);
+              break;
+            case SELL:
+              tickerQueueGroup.getSellMarketOrders().add(marketOrder);
+              break;
+            default:
+              throw new UnsupportedOperationException("Unsupported direction");
+          }
+          break;
+        default:
+          throw new UnsupportedOperationException("Unsupported direction");
+      }
+    }
   }
 
   public Order enterOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
