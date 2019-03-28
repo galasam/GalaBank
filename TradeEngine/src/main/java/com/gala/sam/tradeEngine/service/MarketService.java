@@ -1,9 +1,7 @@
 package com.gala.sam.tradeEngine.service;
 
 import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
+import com.gala.sam.tradeEngine.domain.ConcreteOrder.*;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
@@ -108,15 +106,10 @@ public class MarketService {
             List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
 
             void processTicker(String name, TickerData data) {
-                SortedSet<ActiveOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
-                buyOrders.addAll(data.getBuyLimitOrders());
-                buyOrders.addAll(data.getBuyMarketOrders());
+              SortedSet<ActiveOrder> buyOrders = getActiveOrders(data.getBuyLimitOrders(), data.getBuyMarketOrders());
+              SortedSet<ActiveOrder> sellOrders = getActiveOrders(data.getSellLimitOrders(), data.getSellMarketOrders());
 
-                SortedSet<ActiveOrder> sellOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
-                sellOrders.addAll(data.getSellLimitOrders());
-                sellOrders.addAll(data.getSellMarketOrders());
-
-                if (!(buyOrders.isEmpty() && sellOrders.isEmpty())) {
+              if (!(buyOrders.isEmpty() && sellOrders.isEmpty())) {
                     tickers.add(PublicMarketStatus.Ticker.builder()
                             .name(name)
                             .buy(new ArrayList<>(buyOrders))
@@ -124,6 +117,13 @@ public class MarketService {
                             .build());
                 }
             }
+
+          private SortedSet<ActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders, SortedSet<MarketOrder> buyMarketOrders) {
+            SortedSet<ActiveOrder> buyOrders = new TreeSet<>(Comparator.comparingInt(ActiveOrder::getOrderId));
+            buyOrders.addAll(buyLimitOrders);
+            buyOrders.addAll(buyMarketOrders);
+            return buyOrders;
+          }
         }
         TickerProcessorHelper h = new TickerProcessorHelper();
         marketState.getTickerQueues().forEach(h::processTicker);
