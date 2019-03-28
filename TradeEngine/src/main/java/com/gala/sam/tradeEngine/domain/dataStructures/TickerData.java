@@ -11,8 +11,8 @@ import java.util.SortedSet;
 public class TickerData {
     private final SortedSet<LimitOrder> sellLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_ASC);
     private final SortedSet<LimitOrder> buyLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_DECS);
-    private final SortedSet<MarketOrder> buyMarketOrders = new OrderIdPriorityQueue();
-    private final SortedSet<MarketOrder> sellMarketOrders = new OrderIdPriorityQueue();
+    private final SortedSet<MarketOrder> buyMarketOrders = new OrderIdPriorityQueue<>();
+    private final SortedSet<MarketOrder> sellMarketOrders = new OrderIdPriorityQueue<>();
 
     private Optional<Float> lastExecutedTradePrice = Optional.empty();
 

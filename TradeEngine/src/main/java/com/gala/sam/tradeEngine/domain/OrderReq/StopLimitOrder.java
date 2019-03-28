@@ -2,9 +2,10 @@ package com.gala.sam.tradeEngine.domain.OrderReq;
 
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Value;
 
-@Value
+@Getter
 public class StopLimitOrder extends StopOrder {
 
     float limit;

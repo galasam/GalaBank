@@ -9,7 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Data
+@Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper    = false)

@@ -130,7 +130,7 @@ public class MarketService {
             }
 
           private SortedSet<ActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders, SortedSet<MarketOrder> buyMarketOrders) {
-            SortedSet<ActiveOrder> buyOrders = new OrderIdPriorityQueue();
+            SortedSet<ActiveOrder> buyOrders = new OrderIdPriorityQueue<>();
             buyOrders.addAll(buyLimitOrders);
             buyOrders.addAll(buyMarketOrders);
             return buyOrders;
