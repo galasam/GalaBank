@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 @EnableEurekaClient
 public class OrderCaptureApplication {
+
   public static void main(String[] args) {
     System.setProperty("spring.config.name", "order-capture");
     SpringApplication.run(OrderCaptureApplication.class, args);

@@ -1,7 +1,6 @@
 package com.gala.sam.tradeEngine.utils;
 
 import com.gala.sam.tradeEngine.domain.Trade;
-
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,6 +10,9 @@ import java.util.stream.Stream;
 public class TradeCSVParser {
 
   private final static Map<String, Integer> HEADINGS = new TreeMap<>();
+  private final static String OUTPUT_HEADER = String
+      .join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE", "TICKER");
+
   static {
     HEADINGS.put("BUY ORDER", 0);
     HEADINGS.put("SELL ORDER", 1);
@@ -18,7 +20,6 @@ public class TradeCSVParser {
     HEADINGS.put("MATCH PRICE", 3);
     HEADINGS.put("TICKER", 4);
   }
-  private final static String OUTPUT_HEADER = String.join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE", "TICKER");
 
   public static List<String> encodeCSV(List<Trade> output) {
     return encodeCSV(output.stream());

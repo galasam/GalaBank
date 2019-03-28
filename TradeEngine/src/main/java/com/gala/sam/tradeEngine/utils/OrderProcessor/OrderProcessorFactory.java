@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class OrderProcessorFactory {
 
-    private final TradeRepository tradeRepository;
-    private final OrderRepository orderRepository;
+  private final TradeRepository tradeRepository;
+  private final OrderRepository orderRepository;
 
-    public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
-        switch(type) {
-            case STOP:
-                return new StopOrderProcessor(orderRepository, tradeRepository, marketState);
-            case ACTIVE_LIMIT:
-                return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState);
-            case ACTIVE_MARKET:
-                return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState);
-            default:
-                throw new UnsupportedOperationException("Order type not specified");
-        }
+  public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
+    switch (type) {
+      case STOP:
+        return new StopOrderProcessor(orderRepository, tradeRepository, marketState);
+      case ACTIVE_LIMIT:
+        return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState);
+      case ACTIVE_MARKET:
+        return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState);
+      default:
+        throw new UnsupportedOperationException("Order type not specified");
     }
+  }
 }

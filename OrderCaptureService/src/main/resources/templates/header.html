@@ -3,78 +3,81 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="copy">
-    <title>Order Capture</title>
+  <title>Order Capture</title>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
-            id="Viewport" name="viewport" />
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+  <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
+      id="Viewport" name="viewport"/>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" />
+  <!-- Bootstrap -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" media="screen"
+        rel="stylesheet"/>
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap-theme.min.css" />
+  <!-- Optional theme -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap-theme.min.css"
+        rel="stylesheet"/>
 
-    <link rel="stylesheet" href="/shared/styles.css" />
-    <link rel="stylesheet" href="/shared/header.css" />
+  <link href="/shared/styles.css" rel="stylesheet"/>
+  <link href="/shared/header.css" rel="stylesheet"/>
 
-    <!-- Load React. -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
-    <!-- JSX Support -->
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- JSX Support -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-    <!-- Load JQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <!-- Load JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]
-              <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-              <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-            <![endif]-->
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+          <![endif]-->
 </head>
 
-<body th:fragment="copy" class="container">
+<body class="container" th:fragment="copy">
 <nav class="navbar navbar-default navbar-inverse" role="navigation" style="margin-bottom: 2px;">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse"
-                data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span> <span
-                class="icon-bar"></span>
-            <!-- Logo -->
-            <span class="icon-bar"></span>
-            <!-- Home -->
-            <span class="icon-bar"></span>
-            <!-- This Blog -->
-            <span class="icon-bar"></span>
-            <!-- Other Blogs -->
-        </button>
-        <a title="GalaBank" href="/">
-            <img height="50" th:src="@{/shared/logo.png}" src="/shared/logo.png" class="header-logo" />
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button class="navbar-toggle" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse"
+            type="button">
+      <span class="sr-only">Toggle navigation</span> <span
+        class="icon-bar"></span>
+      <!-- Logo -->
+      <span class="icon-bar"></span>
+      <!-- Home -->
+      <span class="icon-bar"></span>
+      <!-- This Blog -->
+      <span class="icon-bar"></span>
+      <!-- Other Blogs -->
+    </button>
+    <a href="/" title="GalaBank">
+      <img class="header-logo" height="50" src="/shared/logo.png" th:src="@{/shared/logo.png}"/>
+    </a>
+    &nbsp;&nbsp;&nbsp;
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/" th:href="@{/}">Home</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a href="https://github.com/galasam/GalaBank">
+          <img alt="Github" height="25" src="/shared/Octocat.png"
+               th:src="@{/shared/Octocat.png}" title="Github"/>
         </a>
-        &nbsp;&nbsp;&nbsp;
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="/" th:href="@{/}">Home</a></li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="https://github.com/galasam/GalaBank">
-                    <img alt="Github" title="Github" height="25"
-                         th:src="@{/shared/Octocat.png}" src="/shared/Octocat.png" />
-                </a>
-            </li>
-        </ul>
-    </div>
-    <!-- /.navbar-collapse -->
+      </li>
+    </ul>
+  </div>
+  <!-- /.navbar-collapse -->
 </nav>
 </body>
 </html>

@@ -6,17 +6,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConcreteOrderGenerator {
 
-    private static final int InitialOrderIndex = 1;
-    private int currentOrderIndex = InitialOrderIndex;
+  private static final int InitialOrderIndex = 1;
+  private int currentOrderIndex = InitialOrderIndex;
 
-    private void incrementOrderIndex() {
-        currentOrderIndex++;
-    }
+  private void incrementOrderIndex() {
+    currentOrderIndex++;
+  }
 
-    public Order getConcreteOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
-        Order concreteOrder =  orderReq.toConcrete(currentOrderIndex);
-        incrementOrderIndex();
-        return concreteOrder;
-    }
+  public Order getConcreteOrder(com.gala.sam.tradeEngine.domain.OrderReq.Order orderReq) {
+    Order concreteOrder = orderReq.toConcrete(currentOrderIndex);
+    incrementOrderIndex();
+    return concreteOrder;
+  }
 
 }

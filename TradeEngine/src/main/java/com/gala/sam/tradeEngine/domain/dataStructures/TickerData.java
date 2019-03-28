@@ -3,51 +3,53 @@ package com.gala.sam.tradeEngine.domain.dataStructures;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;
-
 import java.util.Optional;
 import java.util.SortedSet;
 
 
 public class TickerData {
-    private final SortedSet<LimitOrder> sellLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_ASC);
-    private final SortedSet<LimitOrder> buyLimitOrders = new LimitOrderQueue(SORTING_METHOD.PRICE_DECS);
-    private final SortedSet<MarketOrder> buyMarketOrders = new OrderIdPriorityQueue<>();
-    private final SortedSet<MarketOrder> sellMarketOrders = new OrderIdPriorityQueue<>();
 
-    private Optional<Float> lastExecutedTradePrice = Optional.empty();
+  private final SortedSet<LimitOrder> sellLimitOrders = new LimitOrderQueue(
+      SORTING_METHOD.PRICE_ASC);
+  private final SortedSet<LimitOrder> buyLimitOrders = new LimitOrderQueue(
+      SORTING_METHOD.PRICE_DECS);
+  private final SortedSet<MarketOrder> buyMarketOrders = new OrderIdPriorityQueue<>();
+  private final SortedSet<MarketOrder> sellMarketOrders = new OrderIdPriorityQueue<>();
 
-    public Optional<Float> getLastExecutedTradePrice() {
-        return lastExecutedTradePrice;
-    }
+  private Optional<Float> lastExecutedTradePrice = Optional.empty();
 
-    public void setLastExecutedTradePrice(float lastExecutedTradePrice) {
-        this.lastExecutedTradePrice = Optional.of(lastExecutedTradePrice);
-    }
+  public Optional<Float> getLastExecutedTradePrice() {
+    return lastExecutedTradePrice;
+  }
 
-    public SortedSet<LimitOrder> getSellLimitOrders() {
-        return sellLimitOrders;
-    }
+  public void setLastExecutedTradePrice(float lastExecutedTradePrice) {
+    this.lastExecutedTradePrice = Optional.of(lastExecutedTradePrice);
+  }
 
-    public SortedSet<LimitOrder> getBuyLimitOrders() {
-        return buyLimitOrders;
-    }
+  public SortedSet<LimitOrder> getSellLimitOrders() {
+    return sellLimitOrders;
+  }
 
-    public SortedSet<MarketOrder> getBuyMarketOrders() {
-        return buyMarketOrders;
-    }
+  public SortedSet<LimitOrder> getBuyLimitOrders() {
+    return buyLimitOrders;
+  }
 
-    public SortedSet<MarketOrder> getSellMarketOrders() {
-        return sellMarketOrders;
-    }
+  public SortedSet<MarketOrder> getBuyMarketOrders() {
+    return buyMarketOrders;
+  }
 
-    @Override
-    public String toString() {
-        return "TickerData{" +
-            "sellLimitOrders=" + sellLimitOrders +
-            ", buyLimitOrders=" + buyLimitOrders +
-            ", buyMarketOrders=" + buyMarketOrders +
-            ", sellMarketOrders=" + sellMarketOrders +
-            ", lastExecutedTradePrice=" + lastExecutedTradePrice +
-            '}';
-    }
+  public SortedSet<MarketOrder> getSellMarketOrders() {
+    return sellMarketOrders;
+  }
+
+  @Override
+  public String toString() {
+    return "TickerData{" +
+        "sellLimitOrders=" + sellLimitOrders +
+        ", buyLimitOrders=" + buyLimitOrders +
+        ", buyMarketOrders=" + buyMarketOrders +
+        ", sellMarketOrders=" + sellMarketOrders +
+        ", lastExecutedTradePrice=" + lastExecutedTradePrice +
+        '}';
+  }
 }

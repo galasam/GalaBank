@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 @EnableEurekaClient
 public class TradeApplication {
+
   public static void main(String[] args) {
     System.setProperty("spring.config.name", "trade-engine");
     SpringApplication.run(TradeApplication.class, args);

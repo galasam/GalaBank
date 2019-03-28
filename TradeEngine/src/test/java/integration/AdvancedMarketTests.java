@@ -1,5 +1,8 @@
 package integration;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.gala.sam.tradeEngine.domain.OrderReq.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
@@ -10,24 +13,21 @@ import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.data.repository.CrudRepository;
-
-import static org.mockito.Mockito.*;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.data.repository.CrudRepository;
 
 @Slf4j
 public class AdvancedMarketTests {
 
   private static final String relativeDirectoryOfTestFiles = "/src/test/resources/Market Test Cases/";
   private static final String absoluteDirectoryOfTestFiles = Paths
-          .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
+      .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
 
   @Test
   public void correctlyHandlesPhase1TestCases() throws IOException {
@@ -53,7 +53,7 @@ public class AdvancedMarketTests {
 
   private void runPhaseTests(int phase) throws IOException {
     int testNumber = 1;
-    while(testFileExists(phase, testNumber)) {
+    while (testFileExists(phase, testNumber)) {
       runTest(phase, testNumber++);
     }
   }
@@ -66,15 +66,18 @@ public class AdvancedMarketTests {
     OrderRepository orderRepository = getEmptyRepository(OrderRepository.class);
 
     ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
+        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
 
-    MarketService marketService = new MarketService(tradeRepository, orderRepository, concreteOrderGenerator, orderProcessorFactory);
+    MarketService marketService = new MarketService(tradeRepository, orderRepository,
+        concreteOrderGenerator, orderProcessorFactory);
     orders.stream().forEach(marketService::enterOrder);
 
     final List<Trade> trades = marketService.getAllMatchedTrades();
     final List<Trade> tradesReference = readTrades(phase, testNumber);
-    Assert.assertEquals("#" + Integer.toString(testNumber) + " Trades should be the same as the reference",
-            tradesReference, trades);
+    Assert.assertEquals(
+        "#" + Integer.toString(testNumber) + " Trades should be the same as the reference",
+        tradesReference, trades);
   }
 
   private <T extends CrudRepository> T getEmptyRepository(Class<T> type) {

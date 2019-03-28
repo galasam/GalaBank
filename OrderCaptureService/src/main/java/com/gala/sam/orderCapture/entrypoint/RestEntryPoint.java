@@ -18,7 +18,7 @@ public class RestEntryPoint {
   final TradeEngineService tradeEngineService;
 
   @PostMapping("/enter-order")
-  public JsonNode enterOrder(@RequestBody String csvInput){
+  public JsonNode enterOrder(@RequestBody String csvInput) {
     JsonNode order = tradeEngineService.enterOrder(csvInput);
     log.info("Order Entered in to Trade Engine: {}", order);
     return order;

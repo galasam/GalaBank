@@ -12,13 +12,11 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class TradeEngineService {
 
+  protected String serviceHostName;
   @Autowired
   RestTemplate restTemplate;
-
   @Autowired
   private EurekaClient discoveryClient;
-
-  protected String serviceHostName;
 
   public TradeEngineService(String serviceHostName) {
     this.serviceHostName = serviceHostName;
