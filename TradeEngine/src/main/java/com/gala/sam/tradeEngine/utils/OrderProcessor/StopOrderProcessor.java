@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.StopOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;

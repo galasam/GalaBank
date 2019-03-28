@@ -5,7 +5,7 @@ import lombok.experimental.NonFinal;
 
 @Data
 @NonFinal
-public abstract class Order {
+public abstract class OrderReq {
 
   final OrderType type;
   int clientId;
@@ -15,7 +15,7 @@ public abstract class Order {
   TIME_IN_FORCE timeInForce;
   String ticker;
 
-  public Order(OrderType type, int clientId, DIRECTION direction, int quantity,
+  public OrderReq(OrderType type, int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker) {
     this.type = type;
     this.clientId = clientId;
@@ -39,7 +39,7 @@ public abstract class Order {
     }
   }
 
-  public abstract com.gala.sam.tradeEngine.domain.ConcreteOrder.Order toConcrete(int orderId);
+  public abstract com.gala.sam.tradeEngine.domain.EnteredOrder.Order toConcrete(int orderId);
 
   public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
 

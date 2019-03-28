@@ -1,15 +1,15 @@
-package com.gala.sam.tradeEngine.domain.ConcreteOrder;
+package com.gala.sam.tradeEngine.domain.EnteredOrder;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Entity(name = "StopMarketOrder")
-@DiscriminatorValue("StopMarketOrder")
+@Entity(name = "StopMarketOrderReq")
+@DiscriminatorValue("StopMarketOrderReq")
 public class StopMarketOrder extends StopOrder {
 
   @Builder

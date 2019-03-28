@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.domain.dataStructures;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;
 import java.util.Optional;
 import java.util.SortedSet;

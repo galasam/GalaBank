@@ -3,10 +3,10 @@ package com.gala.sam.tradeEngine.utils.OrderProcessor;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
@@ -39,19 +39,19 @@ public class ActiveMarketOrderProcessor extends OrderProcessor {
       processDirectedMarketOrder(marketOrder, tickerData,
           tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
     } else {
-      throw new UnsupportedOperationException("Order direction not supported");
+      throw new UnsupportedOperationException("OrderReq direction not supported");
     }
   }
 
   private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
       SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
-    log.debug("Checking Limit Order queue");
+    log.debug("Checking Limit OrderReq queue");
     if (limitOrders.isEmpty()) {
-      log.debug("Limit Order queue empty, so check if time in force");
+      log.debug("Limit OrderReq queue empty, so check if time in force");
       queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);
     } else {
       LimitOrder limitOrder = limitOrders.first();
-      log.debug("Limit Order queue not empty, so trading with best limit order: " + limitOrder
+      log.debug("Limit OrderReq queue not empty, so trading with best limit order: " + limitOrder
           .toString());
       makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
           this::saveTrade);

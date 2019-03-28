@@ -3,10 +3,10 @@ package com.gala.sam.tradeEngine.utils.OrderProcessor;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
@@ -43,7 +43,7 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
           tickerData.getSellLimitOrders(),
           tickerData.getBuyLimitOrders());
     } else {
-      throw new UnsupportedOperationException("Order direction not supported");
+      throw new UnsupportedOperationException("OrderReq direction not supported");
     }
   }
 
@@ -51,16 +51,16 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
       SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders,
       SortedSet<LimitOrder> oppositeTypeLimitOrders) {
-    log.debug("Checking main.Market Order queue");
+    log.debug("Checking main.Market OrderReq queue");
     if (marketOrders.isEmpty()) {
-      log.debug("main.Market Order queue empty, so checking Limit orders");
+      log.debug("main.Market OrderReq queue empty, so checking Limit orders");
       if (oppositeTypeLimitOrders.isEmpty()) {
-        log.debug("Limit Order queue empty, so check if time in force");
+        log.debug("Limit OrderReq queue empty, so check if time in force");
         queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrder);
       } else {
         LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
         log.debug(
-            "Limit Order queue not empty, so checking if best order matches: " + otherLimitOrder
+            "Limit OrderReq queue not empty, so checking if best order matches: " + otherLimitOrder
                 .toString());
 
         if (limitOrder.limitMatches(otherLimitOrder)) {
@@ -76,7 +76,7 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
         }
       }
     } else {
-      log.debug("main.Market Order queue not empty, so trading with oldest order: " + limitOrder
+      log.debug("main.Market OrderReq queue not empty, so trading with oldest order: " + limitOrder
           .toString());
       MarketOrder marketOrder = marketOrders.first();
       makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
@@ -98,7 +98,7 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
   }
 
   private <T extends Order> void removeOrderIfFulfilled(SortedSet<T> orders, T order) {
-    log.debug("Removing market Order if it is fully satisfied.");
+    log.debug("Removing market OrderReq if it is fully satisfied.");
     if (order.isFullyFulfilled()) {
       orders.remove(order);
       deleteOrder(order);

@@ -3,7 +3,7 @@ package integration;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.Order;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
@@ -60,7 +60,7 @@ public class AdvancedMarketTests {
 
   private void runTest(int phase, int testNumber) throws IOException {
     log.info(String.format("Running test %d", testNumber));
-    final List<Order> orders = readOrders(phase, testNumber);
+    final List<OrderReq> orders = readOrders(phase, testNumber);
 
     TradeRepository tradeRepository = getEmptyRepository(TradeRepository.class);
     OrderRepository orderRepository = getEmptyRepository(OrderRepository.class);
@@ -93,7 +93,7 @@ public class AdvancedMarketTests {
     return TradeCSVParser.decodeCSV(inputText);
   }
 
-  private List<Order> readOrders(int phase, int testNumber) throws IOException {
+  private List<OrderReq> readOrders(int phase, int testNumber) throws IOException {
     log.debug("Reading Orders from file");
     String filepath = getInputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);

@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.domain;
 
-import com.gala.sam.tradeEngine.domain.ConcreteOrder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;

@@ -1,15 +1,15 @@
-package com.gala.sam.tradeEngine.domain.ConcreteOrder;
+package com.gala.sam.tradeEngine.domain.EnteredOrder;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.OrderType;
-import com.gala.sam.tradeEngine.domain.OrderReq.Order.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "StopOrder")
-@DiscriminatorValue("StopOrder")
+@Entity(name = "StopOrderReq")
+@DiscriminatorValue("StopOrderReq")
 @NoArgsConstructor
 public abstract class StopOrder extends Order {
 
