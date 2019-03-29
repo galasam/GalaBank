@@ -4,16 +4,13 @@ import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public abstract class OrderProcessor {
 
-  private OrderRepository orderRepository;
-  private TradeRepository tradeRepository;
-
-  public OrderProcessor(OrderRepository orderRepository, TradeRepository tradeRepository) {
-    this.orderRepository = orderRepository;
-    this.tradeRepository = tradeRepository;
-  }
+  private final OrderRepository orderRepository;
+  private final TradeRepository tradeRepository;
 
   protected void saveOrder(Order order) {
     orderRepository.save(order);

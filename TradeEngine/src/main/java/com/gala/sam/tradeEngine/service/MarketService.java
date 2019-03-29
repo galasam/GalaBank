@@ -25,29 +25,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MarketService {
 
 
-  private final ConcreteOrderGenerator concreteOrderGenerator;
   private final TradeRepository tradeRepository;
   private final OrderRepository orderRepository;
+  private final ConcreteOrderGenerator concreteOrderGenerator;
   private final OrderProcessorFactory orderProcessorFactory;
   private MarketState marketState = new MarketState();
-
-  public MarketService(TradeRepository tradeRepository,
-      OrderRepository orderRepository,
-      ConcreteOrderGenerator concreteOrderGenerator,
-      OrderProcessorFactory orderProcessorFactory) {
-    this.tradeRepository = tradeRepository;
-    this.orderRepository = orderRepository;
-    this.concreteOrderGenerator = concreteOrderGenerator;
-    this.orderProcessorFactory = orderProcessorFactory;
-  }
 
   @PostConstruct
   void init() {
