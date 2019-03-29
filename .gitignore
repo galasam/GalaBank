@@ -3,4 +3,4 @@
 target/
 out/
 test\ truths/*/output.test*.*.csv
-
+node_modules/
