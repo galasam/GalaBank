@@ -1,8 +1,5 @@
 package unit;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrderReq;
 import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrderReq;
 import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
@@ -12,11 +9,9 @@ import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.data.repository.CrudRepository;
 
 public class SimpleMarketTradeTests {
 
@@ -24,9 +19,12 @@ public class SimpleMarketTradeTests {
   public void testSimpleTimeStep() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
-    MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class),
-        getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(),
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+    MarketService marketService = new MarketService(
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderReq limitOrder = LimitOrderReq.builder()
@@ -66,9 +64,12 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithMatchingLimits() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
-    MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class),
-        getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(),
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+    MarketService marketService = new MarketService(
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderReq limitOrderA = LimitOrderReq.builder()
@@ -109,9 +110,12 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithNonMatchingLimits() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
-    MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class),
-        getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(),
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+    MarketService marketService = new MarketService(
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderReq limitOrderA = LimitOrderReq.builder()
@@ -142,9 +146,12 @@ public class SimpleMarketTradeTests {
   public void testOrderPartialFulfillment() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
-    MarketService marketService = new MarketService(getEmptyRepository(TradeRepository.class),
-        getEmptyRepository(OrderRepository.class), new ConcreteOrderGenerator(),
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+    MarketService marketService = new MarketService(
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderReq limitOrderA = LimitOrderReq.builder()
@@ -196,12 +203,6 @@ public class SimpleMarketTradeTests {
         results.get(0));
     Assert.assertEquals("Second half of market order should match with limit order B", tradeB,
         results.get(1));
-  }
-
-  private <T extends CrudRepository> T getEmptyRepository(Class<T> type) {
-    T repository = mock(type);
-    when(repository.findAll()).thenReturn(new ArrayList<>());
-    return repository;
   }
 
 }

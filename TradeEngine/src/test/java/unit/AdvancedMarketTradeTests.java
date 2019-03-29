@@ -1,8 +1,5 @@
 package unit;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
@@ -15,12 +12,10 @@ import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.data.repository.CrudRepository;
 
 @Slf4j
 public class AdvancedMarketTradeTests {
@@ -62,12 +57,13 @@ public class AdvancedMarketTradeTests {
     log.info(String.format("Running test %d", testNumber));
     final List<OrderReq> orders = readOrders(phase, testNumber);
 
-    TradeRepository tradeRepository = getEmptyRepository(TradeRepository.class);
-    OrderRepository orderRepository = getEmptyRepository(OrderRepository.class);
+    TradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(TradeRepository.class);
+    OrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(OrderRepository.class);
 
     ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        getEmptyRepository(TradeRepository.class), getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
         concreteOrderGenerator, orderProcessorFactory);
@@ -78,12 +74,6 @@ public class AdvancedMarketTradeTests {
     Assert.assertEquals(
         "#" + Integer.toString(testNumber) + " Trades should be the same as the reference",
         tradesReference, trades);
-  }
-
-  private <T extends CrudRepository> T getEmptyRepository(Class<T> type) {
-    T repository = mock(type);
-    when(repository.findAll()).thenReturn(new ArrayList<>());
-    return repository;
   }
 
   private List<Trade> readTrades(int phase, int testNumber) throws IOException {
