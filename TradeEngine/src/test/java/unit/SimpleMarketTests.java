@@ -1,4 +1,4 @@
-package integration;
+package unit;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
