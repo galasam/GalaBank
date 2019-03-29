@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-public class TradeEngineService {
+public class TradeEngineGateway {
 
   protected String serviceHostName;
   @Autowired
@@ -18,7 +18,7 @@ public class TradeEngineService {
   @Autowired
   private EurekaClient discoveryClient;
 
-  public TradeEngineService(String serviceHostName) {
+  public TradeEngineGateway(String serviceHostName) {
     this.serviceHostName = serviceHostName;
   }
 
