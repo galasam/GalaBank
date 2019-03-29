@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.springframework.data.repository.CrudRepository;
 
 @Slf4j
-public class AdvancedMarketTests {
+public class AdvancedMarketTradeTests {
 
   private static final String relativeDirectoryOfTestFiles = "/src/test/resources/Market Test Cases/";
   private static final String absoluteDirectoryOfTestFiles = Paths
