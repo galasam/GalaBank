@@ -2,5 +2,5 @@
 *.iml
 target/
 out/
-test\ truths/*/output.test*.*.csv
 node_modules/
+TradeEngine/src/main/resources/public/tradeEngine/*.js
