@@ -110,6 +110,21 @@
               <workingDirectory>src/main/resources/js</workingDirectory>
             </configuration>
           </execution>
+
+          <execution>
+            <id>jest test js</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <executable>npx</executable>
+              <arguments>
+                <argument>jest</argument>
+              </arguments>
+              <workingDirectory>src/main/resources/js</workingDirectory>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
