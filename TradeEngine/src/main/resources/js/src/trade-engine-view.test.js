@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {act} from 'react-dom/test-utils'
 import TradeEngineView from "./trade-engine-view";
+import $ from 'jquery';
 
 let container;
 
@@ -14,6 +15,8 @@ afterEach(() => {
   document.body.removeChild(container);
   container = null;
 });
+
+jest.mock("../src/rest");
 
 it("displays a trade", () => {
 

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import $ from 'jquery';
+import get_status from './rest';
 
 class Order extends React.Component {
   render() {
@@ -108,26 +109,24 @@ class TradeEngineView extends React.Component {
         text: "Fetching Trade Engine Status"
       }
     }
-    if(this.props.jquery == null) {
-      return;
-    }
-    $.ajax("http://localhost:2222/status", {
-          method: "GET",
-          contentType: "application/json"
-        }).done( (ret) => {
-          console.log(ret)
-          this.setState({
-            status: ret,
-            message: null
-          })
-        }).fail( (ret) => {
-          this.setState({
-            message: {
-              type: "error",
-              text: ret.responseJSON.error
-            }
-          })
-        });
+  }
+
+  componentDidMount() {
+    get_status()
+      .done( (ret) => {
+        console.log(ret)
+        this.setState({
+          status: ret,
+          message: null
+        })
+      }).fail( (ret) => {
+        this.setState({
+          message: {
+            type: "error",
+            text: ret.responseJSON.error
+          }
+        })
+      });
   }
 
   render() {
