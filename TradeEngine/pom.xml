@@ -160,7 +160,7 @@
         <executions>
           <execution>
             <id>copy webpack bundle to public directory</id>
-            <phase>process-classes</phase>
+            <phase>process-resources</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
