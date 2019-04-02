@@ -78,7 +78,7 @@ public class MarketStatusReturnTests {
         .build();
     
     Assert.assertTrue("A trade is shown", publicMarketStatus.getTrades().size() > 0);
-    Assert.assertEquals("It is the correct trade", trade, publicMarketStatus.getOrders().get(0).getBuy().get(0));
+    Assert.assertEquals("It is the correct trade", trade, publicMarketStatus.getTrades().get(0));
     Assert.assertEquals("No orders are shown", 0, publicMarketStatus.getOrders().size());
   }
 }

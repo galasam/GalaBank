@@ -8,16 +8,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class MarketState {
 
   private List<Trade> trades = new ArrayList<>();
-
   private Map<String, TickerData> tickerQueues = new TreeMap<>();
   private List<StopOrder> stopOrders = new LinkedList<>();
-
 
   public Map<String, TickerData> getTickerQueues() {
     return tickerQueues;
