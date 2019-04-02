@@ -107,7 +107,10 @@ class TradeEngineView extends React.Component {
         text: "Fetching Trade Engine Status"
       }
     }
-    $.ajax("http://localhost:2222/status", {
+    if(this.props.jquery == null) {
+      return;
+    }
+    this.props.jquery.ajax("http://localhost:2222/status", {
           method: "GET",
           contentType: "application/json"
         }).done( (ret) => {

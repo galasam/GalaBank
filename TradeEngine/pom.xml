@@ -87,7 +87,7 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <!-- <skip>true</skip> -->
+              <skip>true</skip>
               <executable>npm</executable>
               <arguments>
                 <argument>install</argument>
@@ -95,8 +95,9 @@
               <workingDirectory>src/main/resources/js</workingDirectory>
             </configuration>
           </execution>
+
           <execution>
-            <id>build</id>
+            <id>build main</id>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -113,34 +114,6 @@
       </plugin>
       <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>clean compiled javascript</id>
-            <phase>pre-clean</phase>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-            <configuration>
-              <filesets>
-                <fileset>
-                  <directory>src/main/resources/public/tradeEngine</directory>
-                  <includes>
-                    <include>*.js</include>
-                  </includes>
-                </fileset>
-                <fileset>
-                  <directory>src/main/resources/js/dist</directory>
-                  <includes>
-                    <include>*.js</include>
-                  </includes>
-                </fileset>
-              </filesets>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
         <executions>
           <execution>
             <id>clean compiled javascript</id>

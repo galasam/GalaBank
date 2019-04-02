@@ -4,6 +4,6 @@ import ReactDOM from 'react-dom';
 import TradeEngineView from "./trade-engine-view";
 
 ReactDOM.render(
-  <TradeEngineView />,
+  <TradeEngineView jquery={$}/>,
   document.getElementById('root')
 );
