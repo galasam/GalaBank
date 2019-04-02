@@ -1,6 +1,7 @@
 /.idea/
 *.iml
 target/
+dist/
 out/
 node_modules/
 TradeEngine/src/main/resources/public/tradeEngine/*.js

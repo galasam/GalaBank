@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 class Order extends React.Component {
   render() {
     let order=this.props.order
@@ -147,3 +149,5 @@ class TradeEngineView extends React.Component {
     }
   }
 }
+
+export default TradeEngineView;
