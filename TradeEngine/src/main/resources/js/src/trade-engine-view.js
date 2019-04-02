@@ -1,5 +1,6 @@
 
 import React from 'react';
+import $ from 'jquery';
 
 class Order extends React.Component {
   render() {
@@ -110,7 +111,7 @@ class TradeEngineView extends React.Component {
     if(this.props.jquery == null) {
       return;
     }
-    this.props.jquery.ajax("http://localhost:2222/status", {
+    $.ajax("http://localhost:2222/status", {
           method: "GET",
           contentType: "application/json"
         }).done( (ret) => {
