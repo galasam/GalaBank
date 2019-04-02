@@ -2,7 +2,10 @@ package unit;
 
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
@@ -14,7 +17,10 @@ import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import org.junit.Assert;
@@ -42,14 +48,15 @@ public class MarketUtilTests {
 
     queueIfTimeInForce(order, orders, save);
 
-    verify(save).accept(order);
+    verify(save, never()).accept(any());
     Assert.assertEquals("", 0, orders.size());
   }
 
   @Test
   public void testMakeTradeCreatesTradeCorrectly() {
     TickerData tickerData = mock(TickerData.class);
-    MarketState marketState = mock(MarketState.class);
+    List<Trade> trades = mock(List.class);
+    MarketState marketState = new MarketState(trades, new TreeMap<>(), new LinkedList<>());
 
     LimitOrder limitOrderA = LimitOrder.builder()
         .orderId(1)
@@ -82,8 +89,8 @@ public class MarketUtilTests {
 
     makeTrade(marketState, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData, save);
 
-    verify(tickerData).setLastExecutedTradePrice(limitOrderA.getLimit());
-    verify(marketState).getTrades().add(trade);
+    verify(tickerData, times(1)).setLastExecutedTradePrice(limitOrderA.getLimit());
+    verify(marketState.getTrades(), times(1)).add(trade);
     Assert.assertTrue("LimitOrderA should be fully fulfilled.", limitOrderA.isFullyFulfilled());
     Assert
         .assertTrue("LimitOrderB should not be fully fulfilled.", !limitOrderB.isFullyFulfilled());
