@@ -5,10 +5,12 @@ import lombok.Builder;
 
 public class MarketOrderRequest extends AbstractActiveOrderRequest {
 
+  private static final OrderType ORDER_TYPE = OrderType.ACTIVE_MARKET;
+
   @Builder
   public MarketOrderRequest(int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker) {
-    super(OrderType.ACTIVE_MARKET, clientId, direction, quantity, timeInForce, ticker);
+    super(ORDER_TYPE, clientId, direction, quantity, timeInForce, ticker);
   }
 
   @Override

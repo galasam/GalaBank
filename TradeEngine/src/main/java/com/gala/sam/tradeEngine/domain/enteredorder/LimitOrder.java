@@ -20,13 +20,15 @@ import lombok.ToString;
 @DiscriminatorValue("LimitOrderRequest")
 public class LimitOrder extends AbstractActiveOrder {
 
+  private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;
+
   @Column(name = "limit_price")
   float limit;
 
   @Builder
   public LimitOrder(int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker, float limit) {
-    super(OrderType.ACTIVE_LIMIT, orderId, clientId, direction, quantity, timeInForce, ticker);
+    super(ORDER_TYPE, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.limit = limit;
   }
 

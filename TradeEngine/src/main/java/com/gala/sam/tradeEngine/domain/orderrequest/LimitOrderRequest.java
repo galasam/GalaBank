@@ -11,12 +11,14 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = false)
 public class LimitOrderRequest extends AbstractActiveOrderRequest {
 
+  private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;
+
   float limit;
 
   @Builder
   public LimitOrderRequest(int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker, float limit) {
-    super(OrderType.ACTIVE_LIMIT, clientId, direction, quantity, timeInForce, ticker);
+    super(ORDER_TYPE, clientId, direction, quantity, timeInForce, ticker);
     this.limit = limit;
   }
 

@@ -13,9 +13,11 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("MarketOrderRequest")
 public class MarketOrder extends AbstractActiveOrder {
 
+  private static final OrderType ORDER_TYPE = OrderType.ACTIVE_MARKET;
+
   @Builder
   public MarketOrder(int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker) {
-    super(OrderType.ACTIVE_MARKET, orderId, clientId, direction, quantity, timeInForce, ticker);
+    super(ORDER_TYPE, orderId, clientId, direction, quantity, timeInForce, ticker);
   }
 }

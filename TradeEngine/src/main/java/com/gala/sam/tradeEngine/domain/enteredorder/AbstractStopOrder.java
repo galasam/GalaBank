@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class AbstractStopOrder extends AbstractOrder {
 
+  private static final OrderType ORDER_TYPE = OrderType.STOP;
+
   @Column
   float triggerPrice;
 
   public AbstractStopOrder(int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker, float triggerPrice) {
-    super(OrderType.STOP, orderId, clientId, direction, quantity, timeInForce, ticker);
+    super(ORDER_TYPE, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.triggerPrice = triggerPrice;
   }
 
