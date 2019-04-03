@@ -68,24 +68,24 @@ public class MarketService {
     orderProcessorFactory.getOrderProcessor(marketState, order.getType())
         .process(order);
 
-    log.info("Ticker queues: " + marketState.getTickerQueues().toString());
-    log.info("Stop Orders: " + marketState.getStopOrders().toString());
-    log.info("Trades: " + marketState.getTrades().toString());
+    log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
+    log.debug("Stop Orders: " + marketState.getStopOrders().toString());
+    log.debug("Trades: " + marketState.getTrades().toString());
   }
 
   private void processTriggeredStopOrders() {
     Iterator<AbstractStopOrder> it = marketState.getStopOrders().iterator();
     while (it.hasNext()) {
       AbstractStopOrder stopOrder = it.next();
-      log.info("Testing Trigger on: " + stopOrder.toString());
+      log.debug("Testing Trigger on: " + stopOrder.toString());
       if (isStopLossTriggered(stopOrder)) {
-        log.info("Stop orderrequest Triggered");
+        log.debug("Stop order request Triggered");
         it.remove();
         orderRepository.delete(stopOrder);
         AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {
-        log.info("Stop orderrequest not Triggered");
+        log.debug("Stop order request not Triggered");
       }
     }
   }
