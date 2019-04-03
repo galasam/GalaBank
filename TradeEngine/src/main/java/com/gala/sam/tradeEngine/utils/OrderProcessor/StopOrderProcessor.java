@@ -1,10 +1,10 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -12,16 +12,16 @@ public class StopOrderProcessor extends OrderProcessor {
 
   private final MarketState marketState;
 
-  public StopOrderProcessor(OrderRepository orderRepository, TradeRepository tradeRepository,
+  public StopOrderProcessor(IOrderRepository orderRepository, ITradeRepository tradeRepository,
       MarketState marketState) {
     super(orderRepository, tradeRepository);
     this.marketState = marketState;
   }
 
   @Override
-  public <T extends Order> void process(T order) {
+  public <T extends AbstractOrder> void process(T order) {
     log.debug("Adding stop order: " + order.toString());
-    marketState.getStopOrders().add((StopOrder) order);
+    marketState.getStopOrders().add((AbstractStopOrder) order);
     saveOrder(order);
   }
 }

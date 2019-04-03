@@ -3,20 +3,20 @@ package com.gala.sam.tradeEngine.service;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ import org.springframework.stereotype.Service;
 public class MarketService {
 
 
-  private final TradeRepository tradeRepository;
-  private final OrderRepository orderRepository;
+  private final ITradeRepository tradeRepository;
+  private final IOrderRepository orderRepository;
   private final ConcreteOrderGenerator concreteOrderGenerator;
   private final OrderProcessorFactory orderProcessorFactory;
   private MarketState marketState = new MarketState();
@@ -48,10 +48,10 @@ public class MarketService {
     updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
-  public Order enterOrder(OrderRequest orderRequest) {
+  public AbstractOrder enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Triggered Stop Orders");
 
-    Order order = concreteOrderGenerator.getConcreteOrder(orderRequest);
+    AbstractOrder order = concreteOrderGenerator.getConcreteOrder(orderRequest);
 
     processOrder(order);
     processTriggeredStopOrders();
@@ -62,7 +62,7 @@ public class MarketService {
     return marketState.getTrades();
   }
 
-  private void processOrder(Order order) {
+  private void processOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
 
     orderProcessorFactory.getOrderProcessor(marketState, order.getType())
@@ -74,15 +74,15 @@ public class MarketService {
   }
 
   private void processTriggeredStopOrders() {
-    Iterator<StopOrder> it = marketState.getStopOrders().iterator();
+    Iterator<AbstractStopOrder> it = marketState.getStopOrders().iterator();
     while (it.hasNext()) {
-      StopOrder stopOrder = it.next();
+      AbstractStopOrder stopOrder = it.next();
       log.info("Testing Trigger on: " + stopOrder.toString());
       if (isStopLossTriggered(stopOrder)) {
         log.info("Stop orderrequest Triggered");
         it.remove();
         orderRepository.delete(stopOrder);
-        ActiveOrder activeOrder = stopOrder.toActiveOrder();
+        AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {
         log.info("Stop orderrequest not Triggered");
@@ -90,8 +90,8 @@ public class MarketService {
     }
   }
 
-  private boolean isStopLossTriggered(StopOrder stopOrder) {
-    ActiveOrder activeOrder = stopOrder.toActiveOrder();
+  private boolean isStopLossTriggered(AbstractStopOrder stopOrder) {
+    AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
     Optional<Float> lastExec = marketState.getTickerQueueGroup(activeOrder)
         .getLastExecutedTradePrice();
     log.debug("Checking if there has been a previous trade");
@@ -118,9 +118,9 @@ public class MarketService {
       List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
 
       void processTicker(String name, TickerData data) {
-        SortedSet<ActiveOrder> buyOrders = getActiveOrders(data.getBuyLimitOrders(),
+        SortedSet<AbstractActiveOrder> buyOrders = getActiveOrders(data.getBuyLimitOrders(),
             data.getBuyMarketOrders());
-        SortedSet<ActiveOrder> sellOrders = getActiveOrders(data.getSellLimitOrders(),
+        SortedSet<AbstractActiveOrder> sellOrders = getActiveOrders(data.getSellLimitOrders(),
             data.getSellMarketOrders());
 
         if (!(buyOrders.isEmpty() && sellOrders.isEmpty())) {
@@ -132,9 +132,9 @@ public class MarketService {
         }
       }
 
-      private SortedSet<ActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders,
+      private SortedSet<AbstractActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders,
           SortedSet<MarketOrder> buyMarketOrders) {
-        SortedSet<ActiveOrder> buyOrders = new OrderIdPriorityQueue<>();
+        SortedSet<AbstractActiveOrder> buyOrders = new OrderIdPriorityQueue<>();
         buyOrders.addAll(buyLimitOrders);
         buyOrders.addAll(buyMarketOrders);
         return buyOrders;

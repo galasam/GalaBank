@@ -1,9 +1,9 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.OrderType;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class OrderProcessorFactory {
 
-  private final TradeRepository tradeRepository;
-  private final OrderRepository orderRepository;
+  private final ITradeRepository tradeRepository;
+  private final IOrderRepository orderRepository;
 
   public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
     switch (type) {

@@ -1,22 +1,22 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class OrderProcessor {
 
-  private final OrderRepository orderRepository;
-  private final TradeRepository tradeRepository;
+  private final IOrderRepository orderRepository;
+  private final ITradeRepository tradeRepository;
 
-  protected void saveOrder(Order order) {
+  protected void saveOrder(AbstractOrder order) {
     orderRepository.save(order);
   }
 
-  protected void deleteOrder(Order order) {
+  protected void deleteOrder(AbstractOrder order) {
     orderRepository.delete(order);
   }
 
@@ -24,6 +24,6 @@ public abstract class OrderProcessor {
     tradeRepository.save(order);
   }
 
-  public abstract <T extends Order> void process(T order);
+  public abstract <T extends AbstractOrder> void process(T order);
 
 }

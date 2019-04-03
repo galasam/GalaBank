@@ -5,12 +5,12 @@ import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,14 +19,14 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
 
   final MarketState marketState;
 
-  public ActiveLimitOrderProcessor(OrderRepository orderRepository, TradeRepository tradeRepository,
+  public ActiveLimitOrderProcessor(IOrderRepository orderRepository, ITradeRepository tradeRepository,
       MarketState marketState) {
     super(orderRepository, tradeRepository);
     this.marketState = marketState;
   }
 
   @Override
-  public <T extends Order> void process(T order) {
+  public <T extends AbstractOrder> void process(T order) {
     processLimitOrder((LimitOrder) order);
   }
 
@@ -97,7 +97,7 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
     }
   }
 
-  private <T extends Order> void removeOrderIfFulfilled(SortedSet<T> orders, T order) {
+  private <T extends AbstractOrder> void removeOrderIfFulfilled(SortedSet<T> orders, T order) {
     log.debug("Removing market orderrequest if it is fully satisfied.");
     if (order.isFullyFulfilled()) {
       orders.remove(order);

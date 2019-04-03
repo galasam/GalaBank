@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
 
-public abstract class StopOrderRequest extends OrderRequest {
+public abstract class StopOrderRequest extends AbstractOrderRequest {
 
   float triggerPrice;
 

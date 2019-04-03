@@ -1,9 +1,9 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.FileIO;
@@ -55,15 +55,15 @@ public class AdvancedMarketTradeTests {
 
   private void runTest(int phase, int testNumber) throws IOException {
     log.info(String.format("Running test %d", testNumber));
-    final List<OrderRequest> orders = readOrders(phase, testNumber);
+    final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
 
-    TradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(TradeRepository.class);
-    OrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(OrderRepository.class);
+    ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
+    IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
 
     ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
         concreteOrderGenerator, orderProcessorFactory);
@@ -83,7 +83,7 @@ public class AdvancedMarketTradeTests {
     return TradeCSVParser.decodeCSV(inputText);
   }
 
-  private List<OrderRequest> readOrders(int phase, int testNumber) throws IOException {
+  private List<AbstractOrderRequest> readOrders(int phase, int testNumber) throws IOException {
     log.debug("Reading Orders from file");
     String filepath = getInputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);

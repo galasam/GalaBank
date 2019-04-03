@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Entity(name = "StopOrderRequest")
 @DiscriminatorValue("StopOrderRequest")
 @NoArgsConstructor
-public abstract class StopOrder extends Order {
+public abstract class AbstractStopOrder extends AbstractOrder {
 
   @Column
   float triggerPrice;
 
-  public StopOrder(int orderId, int clientId, DIRECTION direction, int quantity,
+  public AbstractStopOrder(int orderId, int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker, float triggerPrice) {
     super(OrderType.STOP, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.triggerPrice = triggerPrice;
@@ -26,6 +26,6 @@ public abstract class StopOrder extends Order {
     return triggerPrice;
   }
 
-  public abstract ActiveOrder toActiveOrder();
+  public abstract AbstractActiveOrder toActiveOrder();
 
 }

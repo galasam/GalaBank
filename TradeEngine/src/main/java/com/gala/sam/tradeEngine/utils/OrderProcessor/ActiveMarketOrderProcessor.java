@@ -5,12 +5,12 @@ import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,14 +19,14 @@ public class ActiveMarketOrderProcessor extends OrderProcessor {
 
   private final MarketState marketState;
 
-  public ActiveMarketOrderProcessor(OrderRepository orderRepository,
-      TradeRepository tradeRepository, MarketState marketState) {
+  public ActiveMarketOrderProcessor(IOrderRepository orderRepository,
+      ITradeRepository tradeRepository, MarketState marketState) {
     super(orderRepository, tradeRepository);
     this.marketState = marketState;
   }
 
   @Override
-  public <T extends Order> void process(T order) {
+  public <T extends AbstractOrder> void process(T order) {
     processMarketOrder((MarketOrder) order);
   }
 

@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -9,7 +9,7 @@ import lombok.Value;
 @Value
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-public class LimitOrderRequest extends ActiveOrderRequest {
+public class LimitOrderRequest extends AbstractActiveOrderRequest {
 
   float limit;
 
@@ -31,7 +31,7 @@ public class LimitOrderRequest extends ActiveOrderRequest {
   }
 
   @Override
-  public Order toConcrete(int orderId) {
+  public AbstractOrder toConcrete(int orderId) {
     return com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder.builder()
         .orderId(orderId)
         .clientId(getClientId())

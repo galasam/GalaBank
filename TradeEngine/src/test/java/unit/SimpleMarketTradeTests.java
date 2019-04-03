@@ -2,10 +2,10 @@ package unit;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
@@ -19,27 +19,27 @@ public class SimpleMarketTradeTests {
   public void testSimpleTimeStep() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderRequest limitOrder = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.BUY)
+        .direction(AbstractOrderRequest.DIRECTION.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     MarketOrderRequest marketOrder = MarketOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.SELL)
+        .direction(AbstractOrderRequest.DIRECTION.SELL)
         .quantity(999)
         .ticker("Fred")
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     int limitOrderId = marketService.enterOrder(limitOrder).getOrderId();
@@ -64,28 +64,28 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithMatchingLimits() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.BUY)
+        .direction(AbstractOrderRequest.DIRECTION.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     LimitOrderRequest limitOrderBMatchingA = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.SELL)
+        .direction(AbstractOrderRequest.DIRECTION.SELL)
         .quantity(999)
         .ticker("Fred")
         .limit(2f)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     int orderIdA = marketService.enterOrder(limitOrderA).getOrderId();
@@ -110,28 +110,28 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithNonMatchingLimits() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.BUY)
+        .direction(AbstractOrderRequest.DIRECTION.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     LimitOrderRequest limitOrderBNotMatchingA = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.SELL)
+        .direction(AbstractOrderRequest.DIRECTION.SELL)
         .quantity(999)
         .ticker("Fred")
         .limit(10f)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     marketService.enterOrder(limitOrderA);
@@ -146,35 +146,35 @@ public class SimpleMarketTradeTests {
   public void testOrderPartialFulfillment() {
 
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.BUY)
+        .direction(AbstractOrderRequest.DIRECTION.BUY)
         .quantity(10)
         .ticker("Fred")
         .limit(4)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     LimitOrderRequest limitOrderB = LimitOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.BUY)
+        .direction(AbstractOrderRequest.DIRECTION.BUY)
         .quantity(20)
         .ticker("Fred")
         .limit(3)
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     MarketOrderRequest marketOrder = MarketOrderRequest.builder()
-        .direction(OrderRequest.DIRECTION.SELL)
+        .direction(AbstractOrderRequest.DIRECTION.SELL)
         .quantity(30)
         .ticker("Fred")
-        .timeInForce(OrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
         .build();
 
     int limitOrderAId = marketService.enterOrder(limitOrderA).getOrderId();

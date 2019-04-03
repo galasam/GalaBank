@@ -2,9 +2,9 @@ package com.gala.sam.tradeEngine.utils;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.util.List;
@@ -29,17 +29,17 @@ public class OrderCSVParser {
     INPUT_HEADINGS.put("TRIGGER PRICE", 8);
   }
 
-  public static List<OrderRequest> decodeCSV(List<String> input) {
+  public static List<AbstractOrderRequest> decodeCSV(List<String> input) {
     return decodeCSV(input.stream());
   }
 
-  public static List<OrderRequest> decodeCSV(Stream<String> input) {
+  public static List<AbstractOrderRequest> decodeCSV(Stream<String> input) {
     return input.skip(1)
         .map(OrderCSVParser::decodeCSVRow)
         .collect(Collectors.toList());
   }
 
-  private static OrderRequest decodeCSVRow(String input) {
+  private static AbstractOrderRequest decodeCSVRow(String input) {
     final String[] values = input.split(",");
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);

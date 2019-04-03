@@ -9,9 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SORTING_METHOD;
@@ -32,7 +32,7 @@ public class MarketUtilTests {
   public void testQueueIfTimeInForce() {
     SortedSet<LimitOrder> orders = new LimitOrderQueue(SORTING_METHOD.PRICE_ASC);
     LimitOrder order = LimitOrder.builder().timeInForce(TIME_IN_FORCE.GTC).orderId(1).build();
-    Consumer<Order> save = mock(Consumer.class);
+    Consumer<AbstractOrder> save = mock(Consumer.class);
 
     queueIfTimeInForce(order, orders, save);
 
@@ -44,7 +44,7 @@ public class MarketUtilTests {
   public void testQueueIfTimeNotInForce() {
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TIME_IN_FORCE.FOK).build();
-    Consumer<Order> save = mock(Consumer.class);
+    Consumer<AbstractOrder> save = mock(Consumer.class);
 
     queueIfTimeInForce(order, orders, save);
 

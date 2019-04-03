@@ -1,11 +1,12 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import lombok.Data;
 import lombok.experimental.NonFinal;
 
 @Data
 @NonFinal
-public abstract class OrderRequest {
+public abstract class AbstractOrderRequest {
 
   final OrderType type;
   int clientId;
@@ -15,7 +16,7 @@ public abstract class OrderRequest {
   TIME_IN_FORCE timeInForce;
   String ticker;
 
-  public OrderRequest(OrderType type, int clientId, DIRECTION direction, int quantity,
+  public AbstractOrderRequest(OrderType type, int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker) {
     this.type = type;
     this.clientId = clientId;
@@ -39,7 +40,7 @@ public abstract class OrderRequest {
     }
   }
 
-  public abstract com.gala.sam.tradeEngine.domain.enteredorder.Order toConcrete(int orderId);
+  public abstract AbstractOrder toConcrete(int orderId);
 
   public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
 

@@ -1,17 +1,17 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.Order;
-import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.function.Consumer;
@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MarketUtils {
 
-  public static <T extends ActiveOrder> void queueIfTimeInForce(T order,
-      SortedSet<T> sameTypeLimitOrders, Consumer<Order> saveOrder) {
+  public static <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
+      SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder) {
     if (order.getTimeInForce().equals(TIME_IN_FORCE.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
@@ -33,7 +33,7 @@ public class MarketUtils {
     }
   }
 
-  public static void makeTrade(MarketState marketState, ActiveOrder a, ActiveOrder b, float limit,
+  public static void makeTrade(MarketState marketState, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
       TickerData ticketData, Consumer<Trade> saveTrade) {
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
@@ -66,14 +66,14 @@ public class MarketUtils {
   }
 
   public static void updateMarketStateFromOrderRepository(MarketState marketState,
-      OrderRepository orderRepository) {
-    Iterable<com.gala.sam.tradeEngine.domain.enteredorder.Order> ordersFromDatabase = orderRepository
+      IOrderRepository orderRepository) {
+    Iterable<AbstractOrder> ordersFromDatabase = orderRepository
         .findAll();
-    for (com.gala.sam.tradeEngine.domain.enteredorder.Order order : ordersFromDatabase) {
+    for (AbstractOrder order : ordersFromDatabase) {
       TickerData tickerQueueGroup;
       switch (order.getType()) {
         case STOP:
-          marketState.getStopOrders().add((StopOrder) order);
+          marketState.getStopOrders().add((AbstractStopOrder) order);
           break;
         case ACTIVE_LIMIT:
           LimitOrder limitOrder = (LimitOrder) order;
@@ -110,7 +110,7 @@ public class MarketUtils {
   }
 
   public static void updateMarketStateFromTradeRepository(MarketState marketState,
-      TradeRepository tradeRepository) {
+      ITradeRepository tradeRepository) {
     marketState.getTrades().addAll((Collection<Trade>) tradeRepository.findAll());
   }
 

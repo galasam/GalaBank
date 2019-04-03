@@ -1,13 +1,13 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION.BUY;
-import static com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION.SELL;
+import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION.BUY;
+import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION.SELL;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
@@ -21,11 +21,11 @@ public class MarketStatusReturnTests {
   public void orderEnteredIsShownInStatus() {
 
     val orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     val marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
@@ -54,11 +54,11 @@ public class MarketStatusReturnTests {
   public void orderTradeIsShownInStatus() {
 
     val orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     val marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class),
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
