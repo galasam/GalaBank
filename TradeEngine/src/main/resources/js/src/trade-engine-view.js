@@ -86,7 +86,7 @@ class Trade extends React.Component {
 
 class TradeList extends React.Component {
   render() {
-    if (this.props.trades.length == 0) {
+    if (this.props.trades == null || this.props.trades.length == 0) {
       return (<div className="positive-feedback">No trades yet.</div>)
     } else {
       return (
@@ -114,7 +114,6 @@ class TradeEngineView extends React.Component {
   componentDidMount() {
     get_status()
       .done( (ret) => {
-        console.log(ret)
         this.setState({
           status: ret,
           message: null
