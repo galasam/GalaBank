@@ -29,7 +29,7 @@ public abstract class AbstractOrderRequest {
 
   public abstract AbstractOrder toConcrete(int orderId);
 
-  public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
+  public enum OrderType {STOP_LIMIT, STOP_MARKET, ACTIVE_LIMIT, ACTIVE_MARKET}
 
   public enum Direction {SELL, BUY}
 

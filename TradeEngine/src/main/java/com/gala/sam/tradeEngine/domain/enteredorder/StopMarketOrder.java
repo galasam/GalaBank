@@ -1,6 +1,7 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -12,10 +13,12 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("StopMarketOrderRequest")
 public class StopMarketOrder extends AbstractStopOrder {
 
+  private static final OrderType ORDER_TYPE = OrderType.STOP_MARKET;
+
   @Builder
   public StopMarketOrder(int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker, float triggerPrice) {
-    super(orderId, clientId, direction, quantity, timeInForce, ticker, triggerPrice);
+    super(ORDER_TYPE, orderId, clientId, direction, quantity, timeInForce, ticker, triggerPrice);
   }
 
   @Override
