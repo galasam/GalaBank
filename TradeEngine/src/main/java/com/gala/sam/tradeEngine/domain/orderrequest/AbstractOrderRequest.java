@@ -15,7 +15,7 @@ public abstract class AbstractOrderRequest {
   int quantityRemaining;
   TimeInForce timeInForce;
   String ticker;
-enu
+
   public AbstractOrderRequest(OrderType type, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker) {
     this.type = type;
