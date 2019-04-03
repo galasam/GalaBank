@@ -72,4 +72,110 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <!-- Windows gets confused when trying to run npm.cmd. Solution: rename npm shell script to npm.sh -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <!-- <skip>true</skip> -->
+              <executable>npm</executable>
+              <arguments>
+                <argument>install</argument>
+              </arguments>
+              <workingDirectory>src/main/resources/js</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>build main</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <executable>npx</executable>
+              <arguments>
+                <argument>webpack</argument>
+              </arguments>
+              <workingDirectory>src/main/resources/js</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>jest test js</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <executable>npx</executable>
+              <arguments>
+                <argument>jest</argument>
+              </arguments>
+              <workingDirectory>src/main/resources/js</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>clean compiled javascript</id>
+            <phase>pre-clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>src/main/resources/public/tradeEngine</directory>
+                  <includes>
+                    <include>*.js</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/resources/js/dist</directory>
+                  <includes>
+                    <include>*.js</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy webpack bundle to public directory</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/main/resources/public/tradeEngine</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/js/dist</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

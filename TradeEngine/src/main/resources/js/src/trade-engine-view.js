@@ -1,4 +1,8 @@
 
+import React from 'react';
+import $ from 'jquery';
+import get_status from './rest';
+
 class Order extends React.Component {
   render() {
     let order=this.props.order
@@ -82,7 +86,7 @@ class Trade extends React.Component {
 
 class TradeList extends React.Component {
   render() {
-    if (this.props.trades.length == 0) {
+    if (this.props.trades == null || this.props.trades.length == 0) {
       return (<div className="positive-feedback">No trades yet.</div>)
     } else {
       return (
@@ -105,23 +109,23 @@ class TradeEngineView extends React.Component {
         text: "Fetching Trade Engine Status"
       }
     }
-    $.ajax("http://localhost:2222/status", {
-          method: "GET",
-          contentType: "application/json"
-        }).done( (ret) => {
-          console.log(ret)
-          this.setState({
-            status: ret,
-            message: null
-          })
-        }).fail( (ret) => {
-          this.setState({
-            message: {
-              type: "error",
-              text: ret.responseJSON.error
-            }
-          })
-        });
+  }
+
+  componentDidMount() {
+    get_status()
+      .done( (ret) => {
+        this.setState({
+          status: ret,
+          message: null
+        })
+      }).fail( (ret) => {
+        this.setState({
+          message: {
+            type: "error",
+            text: ret.responseJSON.error
+          }
+        })
+      });
   }
 
   render() {
@@ -147,3 +151,5 @@ class TradeEngineView extends React.Component {
     }
   }
 }
+
+export default TradeEngineView;
