@@ -3,12 +3,12 @@ package com.gala.sam.tradeEngine.utils.OrderProcessor;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
-import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import java.util.SortedSet;
@@ -39,19 +39,19 @@ public class ActiveMarketOrderProcessor extends OrderProcessor {
       processDirectedMarketOrder(marketOrder, tickerData,
           tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
     } else {
-      throw new UnsupportedOperationException("OrderRequest direction not supported");
+      throw new UnsupportedOperationException("orderrequest direction not supported");
     }
   }
 
   private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
       SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
-    log.debug("Checking Limit OrderRequest queue");
+    log.debug("Checking Limit orderrequest queue");
     if (limitOrders.isEmpty()) {
-      log.debug("Limit OrderRequest queue empty, so check if time in force");
+      log.debug("Limit orderrequest queue empty, so check if time in force");
       queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);
     } else {
       LimitOrder limitOrder = limitOrders.first();
-      log.debug("Limit OrderRequest queue not empty, so trading with best limit order: " + limitOrder
+      log.debug("Limit orderrequest queue not empty, so trading with best limit order: " + limitOrder
           .toString());
       makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
           this::saveTrade);

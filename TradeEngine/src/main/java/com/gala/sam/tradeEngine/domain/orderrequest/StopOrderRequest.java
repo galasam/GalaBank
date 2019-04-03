@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
 
 public abstract class StopOrderRequest extends OrderRequest {

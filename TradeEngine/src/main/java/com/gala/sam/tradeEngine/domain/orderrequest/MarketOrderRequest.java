@@ -1,6 +1,6 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
 import lombok.Builder;
 
 public class MarketOrderRequest extends ActiveOrderRequest {
@@ -13,7 +13,7 @@ public class MarketOrderRequest extends ActiveOrderRequest {
 
   @Override
   public Order toConcrete(int orderId) {
-    return com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder.builder()
+    return com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder.builder()
         .orderId(orderId)
         .clientId(getClientId())
         .direction(getDirection())

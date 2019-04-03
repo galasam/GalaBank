@@ -1,12 +1,12 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.OrderRequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.OrderRequest.StopLimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.StopMarketOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;

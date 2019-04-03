@@ -3,18 +3,18 @@ package com.gala.sam.tradeEngine.service;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
-import com.gala.sam.tradeEngine.domain.dataStructures.OrderIdPriorityQueue;
-import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
@@ -79,13 +79,13 @@ public class MarketService {
       StopOrder stopOrder = it.next();
       log.info("Testing Trigger on: " + stopOrder.toString());
       if (isStopLossTriggered(stopOrder)) {
-        log.info("Stop OrderRequest Triggered");
+        log.info("Stop orderrequest Triggered");
         it.remove();
         orderRepository.delete(stopOrder);
         ActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {
-        log.info("Stop OrderRequest not Triggered");
+        log.info("Stop orderrequest not Triggered");
       }
     }
   }
@@ -104,7 +104,7 @@ public class MarketService {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {
-        throw new UnsupportedOperationException("OrderRequest direction not supported");
+        throw new UnsupportedOperationException("orderrequest direction not supported");
       }
     } else {
       log.debug("No previous trade found");

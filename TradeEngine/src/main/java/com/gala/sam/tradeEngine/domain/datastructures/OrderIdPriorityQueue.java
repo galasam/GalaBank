@@ -1,6 +1,6 @@
-package com.gala.sam.tradeEngine.domain.dataStructures;
+package com.gala.sam.tradeEngine.domain.datastructures;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
 import java.util.Comparator;
 import java.util.TreeSet;
 

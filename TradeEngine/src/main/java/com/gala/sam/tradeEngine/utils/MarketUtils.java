@@ -1,15 +1,15 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
-import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import java.util.Collection;
@@ -59,7 +59,7 @@ public class MarketUtils {
           .build();
       log.debug("Making Sell trade: " + trade.toString());
     } else {
-      throw new UnsupportedOperationException("OrderRequest direction not supported");
+      throw new UnsupportedOperationException("orderrequest direction not supported");
     }
     marketState.getTrades().add(trade);
     saveTrade.accept(trade);
@@ -67,9 +67,9 @@ public class MarketUtils {
 
   public static void updateMarketStateFromOrderRepository(MarketState marketState,
       OrderRepository orderRepository) {
-    Iterable<com.gala.sam.tradeEngine.domain.EnteredOrder.Order> ordersFromDatabase = orderRepository
+    Iterable<com.gala.sam.tradeEngine.domain.enteredorder.Order> ordersFromDatabase = orderRepository
         .findAll();
-    for (com.gala.sam.tradeEngine.domain.EnteredOrder.Order order : ordersFromDatabase) {
+    for (com.gala.sam.tradeEngine.domain.enteredorder.Order order : ordersFromDatabase) {
       TickerData tickerQueueGroup;
       switch (order.getType()) {
         case STOP:

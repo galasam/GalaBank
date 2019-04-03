@@ -1,6 +1,6 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;

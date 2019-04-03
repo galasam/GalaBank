@@ -1,6 +1,6 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +18,7 @@ public class StopLimitOrderRequest extends StopOrderRequest {
 
   @Override
   public Order toConcrete(int orderId) {
-    return com.gala.sam.tradeEngine.domain.EnteredOrder.StopLimitOrder.builder()
+    return com.gala.sam.tradeEngine.domain.enteredorder.StopLimitOrder.builder()
         .orderId(orderId)
         .clientId(getClientId())
         .direction(getDirection())

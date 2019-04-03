@@ -1,7 +1,7 @@
-package com.gala.sam.tradeEngine.domain.EnteredOrder;
+package com.gala.sam.tradeEngine.domain.enteredorder;
 
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.Builder;

@@ -1,6 +1,6 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
 import lombok.Builder;
 import lombok.Value;
 
@@ -15,7 +15,7 @@ public class StopMarketOrderRequest extends StopOrderRequest {
 
   @Override
   public Order toConcrete(int orderId) {
-    return com.gala.sam.tradeEngine.domain.EnteredOrder.StopMarketOrder.builder()
+    return com.gala.sam.tradeEngine.domain.enteredorder.StopMarketOrder.builder()
         .orderId(orderId)
         .clientId(getClientId())
         .direction(getDirection())

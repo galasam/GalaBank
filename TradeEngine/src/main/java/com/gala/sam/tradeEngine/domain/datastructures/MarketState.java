@@ -1,7 +1,7 @@
-package com.gala.sam.tradeEngine.domain.dataStructures;
+package com.gala.sam.tradeEngine.domain.datastructures;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component

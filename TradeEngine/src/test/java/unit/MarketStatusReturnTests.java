@@ -1,10 +1,10 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION.BUY;
-import static com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION.SELL;
-import com.gala.sam.tradeEngine.domain.OrderRequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
+import static com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION.BUY;
+import static com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION.SELL;
+import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;

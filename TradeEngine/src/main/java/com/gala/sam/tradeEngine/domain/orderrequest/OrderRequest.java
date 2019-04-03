@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.Data;
 import lombok.experimental.NonFinal;
@@ -39,7 +39,7 @@ public abstract class OrderRequest {
     }
   }
 
-  public abstract com.gala.sam.tradeEngine.domain.EnteredOrder.Order toConcrete(int orderId);
+  public abstract com.gala.sam.tradeEngine.domain.enteredorder.Order toConcrete(int orderId);
 
   public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
 

@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequest;
 import org.springframework.stereotype.Component;
 
 @Component

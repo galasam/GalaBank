@@ -1,6 +1,6 @@
-package com.gala.sam.tradeEngine.domain.OrderRequest;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -26,13 +26,13 @@ public class LimitOrderRequest extends ActiveOrderRequest {
     } else if (getDirection().equals(DIRECTION.SELL)) {
       return getLimit() <= other.getLimit();
     } else {
-      throw new UnsupportedOperationException("OrderRequest direction not supported");
+      throw new UnsupportedOperationException("orderrequest direction not supported");
     }
   }
 
   @Override
   public Order toConcrete(int orderId) {
-    return com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder.builder()
+    return com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder.builder()
         .orderId(orderId)
         .clientId(getClientId())
         .direction(getDirection())

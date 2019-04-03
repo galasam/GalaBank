@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
-import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
+import com.gala.sam.tradeEngine.domain.enteredorder.Order;
+import com.gala.sam.tradeEngine.domain.enteredorder.StopOrder;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
 import lombok.extern.slf4j.Slf4j;
