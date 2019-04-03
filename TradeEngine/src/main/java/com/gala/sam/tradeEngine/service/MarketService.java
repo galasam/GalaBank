@@ -49,7 +49,7 @@ public class MarketService {
   }
 
   public AbstractOrder enterOrder(AbstractOrderRequest orderRequest) {
-    log.info("Processing Triggered Stop Orders");
+    log.info("Processing Order Time-step");
 
     AbstractOrder order = concreteOrderGenerator.getConcreteOrder(orderRequest);
 
