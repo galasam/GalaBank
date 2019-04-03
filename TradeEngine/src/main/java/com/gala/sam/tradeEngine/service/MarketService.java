@@ -9,7 +9,7 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
@@ -97,10 +97,10 @@ public class MarketService {
     log.debug("Checking if there has been a previous trade");
     if (lastExec.isPresent()) {
       log.debug("Previous trade found, checking direction");
-      if (activeOrder.getDirection().equals(DIRECTION.BUY)) {
+      if (activeOrder.getDirection().equals(Direction.BUY)) {
         log.debug("Buy direction: testing trigger");
         return stopOrder.getTriggerPrice() <= lastExec.get();
-      } else if (activeOrder.getDirection().equals(DIRECTION.SELL)) {
+      } else if (activeOrder.getDirection().equals(Direction.SELL)) {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {

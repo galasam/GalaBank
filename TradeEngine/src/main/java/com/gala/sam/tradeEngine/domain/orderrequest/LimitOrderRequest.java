@@ -14,16 +14,16 @@ public class LimitOrderRequest extends AbstractActiveOrderRequest {
   float limit;
 
   @Builder
-  public LimitOrderRequest(int clientId, DIRECTION direction, int quantity,
-      TIME_IN_FORCE timeInForce, String ticker, float limit) {
+  public LimitOrderRequest(int clientId, Direction direction, int quantity,
+      TimeInForce timeInForce, String ticker, float limit) {
     super(OrderType.ACTIVE_LIMIT, clientId, direction, quantity, timeInForce, ticker);
     this.limit = limit;
   }
 
   public boolean limitMatches(LimitOrderRequest other) {
-    if (getDirection().equals(DIRECTION.BUY)) {
+    if (getDirection().equals(Direction.BUY)) {
       return getLimit() >= other.getLimit();
-    } else if (getDirection().equals(DIRECTION.SELL)) {
+    } else if (getDirection().equals(Direction.SELL)) {
       return getLimit() <= other.getLimit();
     } else {
       throw new UnsupportedOperationException("orderrequest direction not supported");

@@ -1,8 +1,9 @@
 package unit;
 
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
@@ -28,18 +29,18 @@ public class SimpleMarketTradeTests {
         orderProcessorFactory);
 
     LimitOrderRequest limitOrder = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     MarketOrderRequest marketOrder = MarketOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.SELL)
+        .direction(Direction.SELL)
         .quantity(999)
         .ticker("Fred")
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     int limitOrderId = marketService.enterOrder(limitOrder).getOrderId();
@@ -73,19 +74,19 @@ public class SimpleMarketTradeTests {
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     LimitOrderRequest limitOrderBMatchingA = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.SELL)
+        .direction(Direction.SELL)
         .quantity(999)
         .ticker("Fred")
         .limit(2f)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     int orderIdA = marketService.enterOrder(limitOrderA).getOrderId();
@@ -119,19 +120,19 @@ public class SimpleMarketTradeTests {
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     LimitOrderRequest limitOrderBNotMatchingA = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.SELL)
+        .direction(Direction.SELL)
         .quantity(999)
         .ticker("Fred")
         .limit(10f)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     marketService.enterOrder(limitOrderA);
@@ -155,26 +156,26 @@ public class SimpleMarketTradeTests {
         orderProcessorFactory);
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(10)
         .ticker("Fred")
         .limit(4)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     LimitOrderRequest limitOrderB = LimitOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(20)
         .ticker("Fred")
         .limit(3)
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     MarketOrderRequest marketOrder = MarketOrderRequest.builder()
-        .direction(AbstractOrderRequest.DIRECTION.SELL)
+        .direction(Direction.SELL)
         .quantity(30)
         .ticker("Fred")
-        .timeInForce(AbstractOrderRequest.TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     int limitOrderAId = marketService.enterOrder(limitOrderA).getOrderId();

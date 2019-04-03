@@ -6,8 +6,8 @@ import lombok.Builder;
 public class MarketOrderRequest extends AbstractActiveOrderRequest {
 
   @Builder
-  public MarketOrderRequest(int clientId, DIRECTION direction, int quantity,
-      TIME_IN_FORCE timeInForce, String ticker) {
+  public MarketOrderRequest(int clientId, Direction direction, int quantity,
+      TimeInForce timeInForce, String ticker) {
     super(OrderType.ACTIVE_MARKET, clientId, direction, quantity, timeInForce, ticker);
   }
 

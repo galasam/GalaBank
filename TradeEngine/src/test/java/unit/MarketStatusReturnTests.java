@@ -1,10 +1,10 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION.BUY;
-import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION.SELL;
+import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.BUY;
+import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.SELL;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
@@ -39,13 +39,13 @@ public class MarketStatusReturnTests {
     Assert.assertEquals("It is the correct order", limitOrder, publicMarketStatus.getOrders().get(0).getBuy().get(0));
   }
 
-  private LimitOrderRequest getLimitOrderReq(DIRECTION direction) {
+  private LimitOrderRequest getLimitOrderReq(Direction direction) {
     return LimitOrderRequest.builder()
         .clientId(1)
         .direction(direction)
         .quantity(1)
         .ticker("Fred")
-        .timeInForce(TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .limit(1f)
         .build();
   }

@@ -28,11 +28,11 @@ public class LimitOrderQueue extends TreeSet<LimitOrder> {
     }
   };
 
-  public LimitOrderQueue(SORTING_METHOD method) {
+  public LimitOrderQueue(SortingMethod method) {
     super(getComparator(method));
   }
 
-  private static Comparator<LimitOrder> getComparator(SORTING_METHOD method) {
+  private static Comparator<LimitOrder> getComparator(SortingMethod method) {
     switch (method) {
       case PRICE_ASC:
         return price_asc;
@@ -43,6 +43,6 @@ public class LimitOrderQueue extends TreeSet<LimitOrder> {
     }
   }
 
-  public enum SORTING_METHOD {PRICE_ASC, PRICE_DECS}
+  public enum SortingMethod {PRICE_ASC, PRICE_DECS}
 
 }

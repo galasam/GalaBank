@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -24,16 +24,16 @@ public class LimitOrder extends AbstractActiveOrder {
   float limit;
 
   @Builder
-  public LimitOrder(int orderId, int clientId, DIRECTION direction, int quantity,
-      TIME_IN_FORCE timeInForce, String ticker, float limit) {
+  public LimitOrder(int orderId, int clientId, Direction direction, int quantity,
+      TimeInForce timeInForce, String ticker, float limit) {
     super(OrderType.ACTIVE_LIMIT, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.limit = limit;
   }
 
   public boolean limitMatches(LimitOrder other) {
-    if (getDirection().equals(DIRECTION.BUY)) {
+    if (getDirection().equals(Direction.BUY)) {
       return getLimit() >= other.getLimit();
-    } else if (getDirection().equals(DIRECTION.SELL)) {
+    } else if (getDirection().equals(Direction.SELL)) {
       return getLimit() <= other.getLimit();
     } else {
       throw new UnsupportedOperationException("orderrequest direction not supported");

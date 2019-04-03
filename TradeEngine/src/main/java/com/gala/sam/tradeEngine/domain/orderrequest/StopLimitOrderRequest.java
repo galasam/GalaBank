@@ -10,7 +10,7 @@ public class StopLimitOrderRequest extends StopOrderRequest {
   float limit;
 
   @Builder
-  public StopLimitOrderRequest(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
+  public StopLimitOrderRequest(int clientId, Direction direction, int quantity, TimeInForce timeInForce,
       String ticker, float triggerPrice, float limit) {
     super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
     this.limit = limit;

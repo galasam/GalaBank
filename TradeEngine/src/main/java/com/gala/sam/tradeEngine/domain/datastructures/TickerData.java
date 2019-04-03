@@ -2,7 +2,7 @@ package com.gala.sam.tradeEngine.domain.datastructures;
 
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SORTING_METHOD;
+import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
 import java.util.Optional;
 import java.util.SortedSet;
 
@@ -10,9 +10,9 @@ import java.util.SortedSet;
 public class TickerData {
 
   private final SortedSet<LimitOrder> sellLimitOrders = new LimitOrderQueue(
-      SORTING_METHOD.PRICE_ASC);
+      SortingMethod.PRICE_ASC);
   private final SortedSet<LimitOrder> buyLimitOrders = new LimitOrderQueue(
-      SORTING_METHOD.PRICE_DECS);
+      SortingMethod.PRICE_DECS);
   private final SortedSet<MarketOrder> buyMarketOrders = new OrderIdPriorityQueue<>();
   private final SortedSet<MarketOrder> sellMarketOrders = new OrderIdPriorityQueue<>();
 

@@ -10,11 +10,11 @@ import static org.mockito.Mockito.verify;
 
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
-import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SORTING_METHOD;
+import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import java.util.LinkedList;
@@ -30,8 +30,8 @@ public class MarketUtilTests {
 
   @Test
   public void testQueueIfTimeInForce() {
-    SortedSet<LimitOrder> orders = new LimitOrderQueue(SORTING_METHOD.PRICE_ASC);
-    LimitOrder order = LimitOrder.builder().timeInForce(TIME_IN_FORCE.GTC).orderId(1).build();
+    SortedSet<LimitOrder> orders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
+    LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     queueIfTimeInForce(order, orders, save);
@@ -43,7 +43,7 @@ public class MarketUtilTests {
   @Test
   public void testQueueIfTimeNotInForce() {
     SortedSet<LimitOrder> orders = new TreeSet<>();
-    LimitOrder order = LimitOrder.builder().timeInForce(TIME_IN_FORCE.FOK).build();
+    LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     queueIfTimeInForce(order, orders, save);
@@ -60,18 +60,18 @@ public class MarketUtilTests {
 
     LimitOrder limitOrderA = LimitOrder.builder()
         .orderId(1)
-        .direction(DIRECTION.BUY)
+        .direction(Direction.BUY)
         .ticker("XXX")
-        .timeInForce(TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .quantity(10)
         .clientId(100)
         .build();
 
     LimitOrder limitOrderB = LimitOrder.builder()
         .orderId(2)
-        .direction(DIRECTION.SELL)
+        .direction(Direction.SELL)
         .ticker("XXX")
-        .timeInForce(TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .quantity(100)
         .clientId(101)
         .build();

@@ -1,8 +1,8 @@
 package unit;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class CSVTests {
 
-  private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
+  private final static String csvInputHeader = "ORDER ID,GROUP ID,Direction,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
   private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
 
   @Test
@@ -25,11 +25,11 @@ public class CSVTests {
     final AbstractOrderRequest limitOrderOutput = StopLimitOrderRequest.builder()
         .triggerPrice(666)
         .clientId(1)
-        .direction(DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     final List<String> csvInput = new ArrayList<>();

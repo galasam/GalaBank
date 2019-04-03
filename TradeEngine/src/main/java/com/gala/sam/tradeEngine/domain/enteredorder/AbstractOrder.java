@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -31,18 +31,18 @@ public abstract class AbstractOrder {
   @Column
   int clientId;
   @Column
-  DIRECTION direction;
+  Direction direction;
   @Column
   int quantity;
   @Column
   int quantityRemaining;
   @Column
-  TIME_IN_FORCE timeInForce;
+  TimeInForce timeInForce;
   @Column
   String ticker;
 
-  public AbstractOrder(OrderType type, int orderId, int clientId, DIRECTION direction, int quantity,
-      TIME_IN_FORCE timeInForce, String ticker) {
+  public AbstractOrder(OrderType type, int orderId, int clientId, Direction direction, int quantity,
+      TimeInForce timeInForce, String ticker) {
     this.type = type;
     this.orderId = orderId;
     this.clientId = clientId;

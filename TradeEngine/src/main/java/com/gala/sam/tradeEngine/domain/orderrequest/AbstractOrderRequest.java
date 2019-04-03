@@ -10,14 +10,14 @@ public abstract class AbstractOrderRequest {
 
   final OrderType type;
   int clientId;
-  DIRECTION direction;
+  Direction direction;
   int quantity;
   int quantityRemaining;
-  TIME_IN_FORCE timeInForce;
+  TimeInForce timeInForce;
   String ticker;
-
-  public AbstractOrderRequest(OrderType type, int clientId, DIRECTION direction, int quantity,
-      TIME_IN_FORCE timeInForce, String ticker) {
+enu
+  public AbstractOrderRequest(OrderType type, int clientId, Direction direction, int quantity,
+      TimeInForce timeInForce, String ticker) {
     this.type = type;
     this.clientId = clientId;
     this.direction = direction;
@@ -44,7 +44,7 @@ public abstract class AbstractOrderRequest {
 
   public enum OrderType {STOP, ACTIVE_LIMIT, ACTIVE_MARKET}
 
-  public enum DIRECTION {SELL, BUY}
+  public enum Direction {SELL, BUY}
 
-  public enum TIME_IN_FORCE {FOK, GTC}
+  public enum TimeInForce {FOK, GTC}
 }

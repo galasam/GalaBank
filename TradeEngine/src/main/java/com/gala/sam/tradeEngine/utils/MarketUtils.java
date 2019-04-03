@@ -5,8 +5,8 @@ import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
@@ -22,11 +22,11 @@ public class MarketUtils {
 
   public static <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
       SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder) {
-    if (order.getTimeInForce().equals(TIME_IN_FORCE.GTC)) {
+    if (order.getTimeInForce().equals(TimeInForce.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
       saveOrder.accept(order);
-    } else if (order.getTimeInForce().equals(TIME_IN_FORCE.FOK)) {
+    } else if (order.getTimeInForce().equals(TimeInForce.FOK)) {
       log.debug("Time in force is FOK so drop");
     } else {
       throw new UnsupportedOperationException("TIME IN FORCE mode not supported");
@@ -40,7 +40,7 @@ public class MarketUtils {
     a.reduceQuantityRemaining(tradeQuantity);
     b.reduceQuantityRemaining(tradeQuantity);
     final Trade trade;
-    if (a.getDirection().equals(DIRECTION.BUY)) {
+    if (a.getDirection().equals(Direction.BUY)) {
       trade = Trade.builder()
           .buyOrder(a.getOrderId())
           .sellOrder(b.getOrderId())
@@ -49,7 +49,7 @@ public class MarketUtils {
           .ticker(a.getTicker())
           .build();
       log.debug("Making Buy trade: " + trade.toString());
-    } else if (a.getDirection().equals(DIRECTION.SELL)) {
+    } else if (a.getDirection().equals(Direction.SELL)) {
       trade = Trade.builder()
           .buyOrder(b.getOrderId())
           .sellOrder(a.getOrderId())

@@ -6,7 +6,7 @@ import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
@@ -32,12 +32,12 @@ public class ActiveLimitOrderProcessor extends OrderProcessor {
 
   private void processLimitOrder(LimitOrder limitOrder) {
     TickerData tickerData = marketState.getTickerQueueGroup(limitOrder);
-    if (limitOrder.getDirection() == DIRECTION.BUY) {
+    if (limitOrder.getDirection() == Direction.BUY) {
       processDirectedLimitOrder(limitOrder, tickerData,
           tickerData.getSellMarketOrders(),
           tickerData.getBuyLimitOrders(),
           tickerData.getSellLimitOrders());
-    } else if (limitOrder.getDirection() == DIRECTION.SELL) {
+    } else if (limitOrder.getDirection() == Direction.SELL) {
       processDirectedLimitOrder(limitOrder, tickerData,
           tickerData.getBuyMarketOrders(),
           tickerData.getSellLimitOrders(),

@@ -1,10 +1,10 @@
 package com.gala.sam.tradeEngine.utils;
 
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.DIRECTION;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.util.List;
@@ -20,7 +20,7 @@ public class OrderCSVParser {
   static {
     INPUT_HEADINGS.put("ORDER ID", 0);
     INPUT_HEADINGS.put("GROUP ID", 1);
-    INPUT_HEADINGS.put("DIRECTION", 2);
+    INPUT_HEADINGS.put("Direction", 2);
     INPUT_HEADINGS.put("QUANTITY", 3);
     INPUT_HEADINGS.put("TICKER", 4);
     INPUT_HEADINGS.put("TYPE", 5);
@@ -44,10 +44,10 @@ public class OrderCSVParser {
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);
     final int clientId = Integer.parseInt(values[INPUT_HEADINGS.get("GROUP ID")]);
-    final DIRECTION direction = DIRECTION.valueOf(values[INPUT_HEADINGS.get("DIRECTION")]);
+    final Direction direction = Direction.valueOf(values[INPUT_HEADINGS.get("Direction")]);
     final int quantity = Integer.parseInt(values[INPUT_HEADINGS.get("QUANTITY")]);
     final String type = values[INPUT_HEADINGS.get("TYPE")];
-    final TIME_IN_FORCE tif = TIME_IN_FORCE.valueOf(values[INPUT_HEADINGS.get("TIME IN FORCE")]);
+    final TimeInForce tif = TimeInForce.valueOf(values[INPUT_HEADINGS.get("TIME IN FORCE")]);
     final String ticker = values[INPUT_HEADINGS.get("TICKER")];
 
     switch (type) {

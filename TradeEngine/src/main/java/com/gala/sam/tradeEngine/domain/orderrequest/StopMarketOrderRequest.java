@@ -8,7 +8,7 @@ import lombok.Value;
 public class StopMarketOrderRequest extends StopOrderRequest {
 
   @Builder
-  public StopMarketOrderRequest(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
+  public StopMarketOrderRequest(int clientId, Direction direction, int quantity, TimeInForce timeInForce,
       String ticker, float triggerPrice) {
     super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
   }
