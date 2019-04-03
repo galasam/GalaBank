@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,8 +14,8 @@ public class ConcreteOrderGenerator {
     currentOrderIndex++;
   }
 
-  public Order getConcreteOrder(OrderReq orderReq) {
-    Order concreteOrder = orderReq.toConcrete(currentOrderIndex);
+  public Order getConcreteOrder(OrderRequest orderRequest) {
+    Order concreteOrder = orderRequest.toConcrete(currentOrderIndex);
     incrementOrderIndex();
     return concreteOrder;
   }

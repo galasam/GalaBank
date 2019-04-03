@@ -1,12 +1,12 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.MarketOrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.OrderReq.StopLimitOrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.StopMarketOrderReq;
+import com.gala.sam.tradeEngine.domain.OrderRequest.LimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.MarketOrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.StopLimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.StopMarketOrderRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,17 +29,17 @@ public class OrderCSVParser {
     INPUT_HEADINGS.put("TRIGGER PRICE", 8);
   }
 
-  public static List<OrderReq> decodeCSV(List<String> input) {
+  public static List<OrderRequest> decodeCSV(List<String> input) {
     return decodeCSV(input.stream());
   }
 
-  public static List<OrderReq> decodeCSV(Stream<String> input) {
+  public static List<OrderRequest> decodeCSV(Stream<String> input) {
     return input.skip(1)
         .map(OrderCSVParser::decodeCSVRow)
         .collect(Collectors.toList());
   }
 
-  private static OrderReq decodeCSVRow(String input) {
+  private static OrderRequest decodeCSVRow(String input) {
     final String[] values = input.split(",");
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);
@@ -53,7 +53,7 @@ public class OrderCSVParser {
     switch (type) {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
-        return LimitOrderReq.builder()
+        return LimitOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
@@ -62,7 +62,7 @@ public class OrderCSVParser {
             .limit(limit)
             .build();
       case "MARKET":
-        return MarketOrderReq.builder()
+        return MarketOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
@@ -72,7 +72,7 @@ public class OrderCSVParser {
       case "STOP-LIMIT":
         limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopLimitOrderReq.builder()
+        return StopLimitOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
@@ -83,7 +83,7 @@ public class OrderCSVParser {
             .build();
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopMarketOrderReq.builder()
+        return StopMarketOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)

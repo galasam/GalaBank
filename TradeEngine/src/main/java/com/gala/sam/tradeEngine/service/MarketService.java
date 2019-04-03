@@ -8,8 +8,8 @@ import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import com.gala.sam.tradeEngine.domain.EnteredOrder.StopOrder;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
@@ -48,10 +48,10 @@ public class MarketService {
     updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
-  public Order enterOrder(OrderReq orderReq) {
+  public Order enterOrder(OrderRequest orderRequest) {
     log.info("Processing Triggered Stop Orders");
 
-    Order order = concreteOrderGenerator.getConcreteOrder(orderReq);
+    Order order = concreteOrderGenerator.getConcreteOrder(orderRequest);
 
     processOrder(order);
     processTriggeredStopOrders();
@@ -79,13 +79,13 @@ public class MarketService {
       StopOrder stopOrder = it.next();
       log.info("Testing Trigger on: " + stopOrder.toString());
       if (isStopLossTriggered(stopOrder)) {
-        log.info("Stop OrderReq Triggered");
+        log.info("Stop OrderRequest Triggered");
         it.remove();
         orderRepository.delete(stopOrder);
         ActiveOrder activeOrder = stopOrder.toActiveOrder();
         processOrder(activeOrder);
       } else {
-        log.info("Stop OrderReq not Triggered");
+        log.info("Stop OrderRequest not Triggered");
       }
     }
   }
@@ -104,7 +104,7 @@ public class MarketService {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {
-        throw new UnsupportedOperationException("OrderReq direction not supported");
+        throw new UnsupportedOperationException("OrderRequest direction not supported");
       }
     } else {
       log.debug("No previous trade found");

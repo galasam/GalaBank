@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.utils.OrderProcessor;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.OrderType;
 import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
@@ -23,7 +23,7 @@ public class OrderProcessorFactory {
       case ACTIVE_MARKET:
         return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState);
       default:
-        throw new UnsupportedOperationException("OrderReq type not specified");
+        throw new UnsupportedOperationException("OrderRequest type not specified");
     }
   }
 }

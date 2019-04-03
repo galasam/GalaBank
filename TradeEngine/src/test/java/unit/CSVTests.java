@@ -1,9 +1,9 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.OrderReq.StopLimitOrderReq;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
@@ -22,7 +22,7 @@ public class CSVTests {
   public void canDecodeCSVStopLimitOrder() {
 
     final String limitOrderInput = "1,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
-    final OrderReq limitOrderOutput = StopLimitOrderReq.builder()
+    final OrderRequest limitOrderOutput = StopLimitOrderRequest.builder()
         .triggerPrice(666)
         .clientId(1)
         .direction(DIRECTION.BUY)
@@ -36,7 +36,7 @@ public class CSVTests {
     csvInput.add(csvInputHeader);
     csvInput.add(limitOrderInput);
 
-    List<OrderReq> orders = OrderCSVParser.decodeCSV(csvInput);
+    List<OrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
 
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
     Assert.assertEquals("Decoder should decode a stop limit order correctly", orders.get(0),

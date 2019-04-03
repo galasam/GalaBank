@@ -1,12 +1,12 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import lombok.Builder;
 
-public class MarketOrderReq extends ActiveOrderReq {
+public class MarketOrderRequest extends ActiveOrderRequest {
 
   @Builder
-  public MarketOrderReq(int clientId, DIRECTION direction, int quantity,
+  public MarketOrderRequest(int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker) {
     super(OrderType.ACTIVE_MARKET, clientId, direction, quantity, timeInForce, ticker);
   }

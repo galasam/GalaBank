@@ -1,16 +1,16 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class StopLimitOrderReq extends StopOrderReq {
+public class StopLimitOrderRequest extends StopOrderRequest {
 
   float limit;
 
   @Builder
-  public StopLimitOrderReq(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
+  public StopLimitOrderRequest(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
       String ticker, float triggerPrice, float limit) {
     super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
     this.limit = limit;

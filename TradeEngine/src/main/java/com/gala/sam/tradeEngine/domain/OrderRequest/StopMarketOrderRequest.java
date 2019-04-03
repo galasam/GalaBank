@@ -1,14 +1,14 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
-public class StopMarketOrderReq extends StopOrderReq {
+public class StopMarketOrderRequest extends StopOrderRequest {
 
   @Builder
-  public StopMarketOrderReq(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
+  public StopMarketOrderRequest(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
       String ticker, float triggerPrice) {
     super(clientId, direction, quantity, timeInForce, ticker, triggerPrice);
   }

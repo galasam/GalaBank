@@ -1,16 +1,16 @@
 package com.gala.sam.tradeEngine.domain.EnteredOrder;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.OrderType;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Entity(name = "MarketOrderReq")
-@DiscriminatorValue("MarketOrderReq")
+@Entity(name = "MarketOrderRequest")
+@DiscriminatorValue("MarketOrderRequest")
 public class MarketOrder extends ActiveOrder {
 
   @Builder

@@ -1,10 +1,10 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION.BUY;
-import static com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION.SELL;
-import com.gala.sam.tradeEngine.domain.OrderReq.LimitOrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
+import static com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION.BUY;
+import static com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION.SELL;
+import com.gala.sam.tradeEngine.domain.OrderRequest.LimitOrderRequest;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
@@ -29,7 +29,7 @@ public class MarketStatusReturnTests {
         new ConcreteOrderGenerator(),
         orderProcessorFactory);
 
-    LimitOrderReq limitOrderReq = getLimitOrderReq(BUY);
+    LimitOrderRequest limitOrderReq = getLimitOrderReq(BUY);
 
     val limitOrder = marketService.enterOrder(limitOrderReq);
     val publicMarketStatus = marketService.getStatus();
@@ -39,8 +39,8 @@ public class MarketStatusReturnTests {
     Assert.assertEquals("It is the correct order", limitOrder, publicMarketStatus.getOrders().get(0).getBuy().get(0));
   }
 
-  private LimitOrderReq getLimitOrderReq(DIRECTION direction) {
-    return LimitOrderReq.builder()
+  private LimitOrderRequest getLimitOrderReq(DIRECTION direction) {
+    return LimitOrderRequest.builder()
         .clientId(1)
         .direction(direction)
         .quantity(1)

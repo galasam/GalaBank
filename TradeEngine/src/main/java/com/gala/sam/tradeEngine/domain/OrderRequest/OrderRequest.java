@@ -1,11 +1,11 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 import lombok.Data;
 import lombok.experimental.NonFinal;
 
 @Data
 @NonFinal
-public abstract class OrderReq {
+public abstract class OrderRequest {
 
   final OrderType type;
   int clientId;
@@ -15,7 +15,7 @@ public abstract class OrderReq {
   TIME_IN_FORCE timeInForce;
   String ticker;
 
-  public OrderReq(OrderType type, int clientId, DIRECTION direction, int quantity,
+  public OrderRequest(OrderType type, int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker) {
     this.type = type;
     this.clientId = clientId;

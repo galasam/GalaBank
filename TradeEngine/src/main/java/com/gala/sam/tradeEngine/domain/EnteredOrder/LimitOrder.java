@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.EnteredOrder;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.OrderType;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.OrderType;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -16,8 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Entity(name = "LimitOrderReq")
-@DiscriminatorValue("LimitOrderReq")
+@Entity(name = "LimitOrderRequest")
+@DiscriminatorValue("LimitOrderRequest")
 public class LimitOrder extends ActiveOrder {
 
   @Column(name = "limit_price")
@@ -36,7 +36,7 @@ public class LimitOrder extends ActiveOrder {
     } else if (getDirection().equals(DIRECTION.SELL)) {
       return getLimit() <= other.getLimit();
     } else {
-      throw new UnsupportedOperationException("OrderReq direction not supported");
+      throw new UnsupportedOperationException("OrderRequest direction not supported");
     }
   }
 

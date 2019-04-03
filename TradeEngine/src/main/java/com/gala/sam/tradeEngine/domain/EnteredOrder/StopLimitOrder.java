@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.domain.EnteredOrder;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Entity(name = "StopLimitOrderReq")
-@DiscriminatorValue("StopLimitOrderReq")
+@Entity(name = "StopLimitOrderRequest")
+@DiscriminatorValue("StopLimitOrderRequest")
 public class StopLimitOrder extends StopOrder {
 
   @Column(name = "limit_price")

@@ -1,11 +1,11 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 
-public abstract class StopOrderReq extends OrderReq {
+public abstract class StopOrderRequest extends OrderRequest {
 
   float triggerPrice;
 
-  public StopOrderReq(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
+  public StopOrderRequest(int clientId, DIRECTION direction, int quantity, TIME_IN_FORCE timeInForce,
       String ticker, float triggerPrice) {
     super(OrderType.STOP, clientId, direction, quantity, timeInForce, ticker);
     this.triggerPrice = triggerPrice;

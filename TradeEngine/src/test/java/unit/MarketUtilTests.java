@@ -10,8 +10,8 @@ import static org.mockito.Mockito.verify;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.DIRECTION;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest.TIME_IN_FORCE;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.dataStructures.LimitOrderQueue.SORTING_METHOD;

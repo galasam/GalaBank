@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain.OrderReq;
+package com.gala.sam.tradeEngine.domain.OrderRequest;
 
 import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
 import lombok.Builder;
@@ -9,24 +9,24 @@ import lombok.Value;
 @Value
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-public class LimitOrderReq extends ActiveOrderReq {
+public class LimitOrderRequest extends ActiveOrderRequest {
 
   float limit;
 
   @Builder
-  public LimitOrderReq(int clientId, DIRECTION direction, int quantity,
+  public LimitOrderRequest(int clientId, DIRECTION direction, int quantity,
       TIME_IN_FORCE timeInForce, String ticker, float limit) {
     super(OrderType.ACTIVE_LIMIT, clientId, direction, quantity, timeInForce, ticker);
     this.limit = limit;
   }
 
-  public boolean limitMatches(LimitOrderReq other) {
+  public boolean limitMatches(LimitOrderRequest other) {
     if (getDirection().equals(DIRECTION.BUY)) {
       return getLimit() >= other.getLimit();
     } else if (getDirection().equals(DIRECTION.SELL)) {
       return getLimit() <= other.getLimit();
     } else {
-      throw new UnsupportedOperationException("OrderReq direction not supported");
+      throw new UnsupportedOperationException("OrderRequest direction not supported");
     }
   }
 

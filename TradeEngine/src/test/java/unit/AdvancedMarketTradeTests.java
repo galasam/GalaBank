@@ -1,6 +1,6 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
+import com.gala.sam.tradeEngine.domain.OrderRequest.OrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.OrderRepository;
 import com.gala.sam.tradeEngine.repository.TradeRepository;
@@ -55,7 +55,7 @@ public class AdvancedMarketTradeTests {
 
   private void runTest(int phase, int testNumber) throws IOException {
     log.info(String.format("Running test %d", testNumber));
-    final List<OrderReq> orders = readOrders(phase, testNumber);
+    final List<OrderRequest> orders = readOrders(phase, testNumber);
 
     TradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(TradeRepository.class);
     OrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(OrderRepository.class);
@@ -83,7 +83,7 @@ public class AdvancedMarketTradeTests {
     return TradeCSVParser.decodeCSV(inputText);
   }
 
-  private List<OrderReq> readOrders(int phase, int testNumber) throws IOException {
+  private List<OrderRequest> readOrders(int phase, int testNumber) throws IOException {
     log.debug("Reading Orders from file");
     String filepath = getInputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);
