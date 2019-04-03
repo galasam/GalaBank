@@ -1,6 +1,5 @@
 package com.gala.sam.tradeEngine.utils.orderValidators;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractStopOrderRequest;
 import java.util.ArrayList;
 import java.util.Collection;

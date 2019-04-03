@@ -50,6 +50,13 @@
       <version>2.9.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.gala.sam</groupId>
+      <artifactId>TradeEngine</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

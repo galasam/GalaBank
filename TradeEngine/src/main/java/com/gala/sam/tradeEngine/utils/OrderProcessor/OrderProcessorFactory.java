@@ -16,7 +16,8 @@ public class OrderProcessorFactory {
 
   public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
     switch (type) {
-      case STOP:
+      case STOP_LIMIT:
+      case STOP_MARKET:
         return new StopOrderProcessor(orderRepository, tradeRepository, marketState);
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState);

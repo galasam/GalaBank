@@ -1,5 +1,6 @@
 package com.gala.sam.orderCapture.utils.exception;
 
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -8,7 +9,7 @@ public class OrderNotEnteredException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
 
-  public OrderNotEnteredException(String order) {
+  public OrderNotEnteredException(AbstractOrderRequest order) {
     super("Order not entered: " + order.toString());
   }
 }

@@ -1,6 +1,5 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -32,16 +31,4 @@ public class LimitOrderRequest extends AbstractActiveOrderRequest {
     }
   }
 
-  @Override
-  public AbstractOrder toConcrete(int orderId) {
-    return com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder.builder()
-        .orderId(orderId)
-        .clientId(getClientId())
-        .direction(getDirection())
-        .quantity(getQuantity())
-        .ticker(getTicker())
-        .timeInForce(getTimeInForce())
-        .limit(getLimit())
-        .build();
-  }
 }

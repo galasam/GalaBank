@@ -1,12 +1,12 @@
 package com.gala.sam.tradeEngine.utils;
 
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
@@ -72,7 +72,8 @@ public class MarketUtils {
     for (AbstractOrder order : ordersFromDatabase) {
       TickerData tickerQueueGroup;
       switch (order.getType()) {
-        case STOP:
+        case STOP_LIMIT:
+        case STOP_MARKET:
           marketState.getStopOrders().add((AbstractStopOrder) order);
           break;
         case ACTIVE_LIMIT:

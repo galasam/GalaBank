@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain;
+package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.AllArgsConstructor;
 

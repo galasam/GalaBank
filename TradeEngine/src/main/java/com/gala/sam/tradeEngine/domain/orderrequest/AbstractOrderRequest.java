@@ -1,6 +1,5 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import lombok.Data;
 import lombok.experimental.NonFinal;
 
@@ -26,8 +25,6 @@ public abstract class AbstractOrderRequest {
     this.timeInForce = timeInForce;
     this.ticker = ticker;
   }
-
-  public abstract AbstractOrder toConcrete(int orderId);
 
   public enum OrderType {STOP_LIMIT, STOP_MARKET, ACTIVE_LIMIT, ACTIVE_MARKET}
 

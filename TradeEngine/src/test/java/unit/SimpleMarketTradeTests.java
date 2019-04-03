@@ -8,8 +8,10 @@ import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,8 +27,9 @@ public class SimpleMarketTradeTests {
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new ConcreteOrderGenerator(),
-        orderProcessorFactory);
+        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
+        orderProcessorFactory,
+        new OrderValidatorFactory());
 
     LimitOrderRequest limitOrder = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -43,8 +46,8 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
-    int limitOrderId = marketService.enterOrder(limitOrder).getOrderId();
-    int marketOrderId = marketService.enterOrder(marketOrder).getOrderId();
+    int limitOrderId = marketService.enterOrder(limitOrder).get().getOrderId();
+    int marketOrderId = marketService.enterOrder(marketOrder).get().getOrderId();
 
     List<Trade> trades = marketService.getAllMatchedTrades();
 
@@ -70,8 +73,9 @@ public class SimpleMarketTradeTests {
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new ConcreteOrderGenerator(),
-        orderProcessorFactory);
+        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
+        orderProcessorFactory,
+        new OrderValidatorFactory());
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -89,8 +93,8 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
-    int orderIdA = marketService.enterOrder(limitOrderA).getOrderId();
-    int orderIdB = marketService.enterOrder(limitOrderBMatchingA).getOrderId();
+    int orderIdA = marketService.enterOrder(limitOrderA).get().getOrderId();
+    int orderIdB = marketService.enterOrder(limitOrderBMatchingA).get().getOrderId();
 
     List<Trade> trades = marketService.getAllMatchedTrades();
 
@@ -116,8 +120,9 @@ public class SimpleMarketTradeTests {
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new ConcreteOrderGenerator(),
-        orderProcessorFactory);
+        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
+        orderProcessorFactory,
+        new OrderValidatorFactory());
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -152,8 +157,9 @@ public class SimpleMarketTradeTests {
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new ConcreteOrderGenerator(),
-        orderProcessorFactory);
+        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
+        orderProcessorFactory,
+        new OrderValidatorFactory());
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -178,9 +184,9 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
-    int limitOrderAId = marketService.enterOrder(limitOrderA).getOrderId();
-    int limitOrderBId = marketService.enterOrder(limitOrderB).getOrderId();
-    int marketOrderId = marketService.enterOrder(marketOrder).getOrderId();
+    int limitOrderAId = marketService.enterOrder(limitOrderA).get().getOrderId();
+    int limitOrderBId = marketService.enterOrder(limitOrderB).get().getOrderId();
+    int marketOrderId = marketService.enterOrder(marketOrder).get().getOrderId();
 
     Trade tradeA = Trade.builder()
         .buyOrder(limitOrderAId)

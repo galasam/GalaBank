@@ -1,7 +1,8 @@
 package com.gala.sam.orderCapture.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.gala.sam.orderCapture.utils.exception.OrderNotEnteredException;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequestResponse;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import lombok.extern.slf4j.Slf4j;
@@ -22,19 +23,20 @@ public class TradeEngineGateway {
     this.serviceHostName = serviceHostName;
   }
 
-  public JsonNode enterOrder(String orderInput) {
+  public OrderRequestResponse enterOrder(AbstractOrderRequest order) {
     InstanceInfo serverInstance = discoveryClient
         .getNextServerFromEureka(serviceHostName, false);
     String url = serverInstance.getHomePageUrl() + "/enter-order";
 
-    ResponseEntity<JsonNode> response = restTemplate.postForEntity(url, orderInput, JsonNode.class);
+    ResponseEntity<OrderRequestResponse> response = restTemplate
+        .postForEntity(url, order, OrderRequestResponse.class);
 
     if (response.getStatusCode().is2xxSuccessful()) {
-      JsonNode json = response.getBody();
-      log.info("Order Entered in to Trade Engine: {}", json);
-      return json;
+      OrderRequestResponse resp = response.getBody();
+      log.info("Order Entered in to Trade Engine: {}", resp);
+      return resp;
     } else {
-      throw new OrderNotEnteredException(orderInput);
+      throw new OrderNotEnteredException(order);
     }
   }
 

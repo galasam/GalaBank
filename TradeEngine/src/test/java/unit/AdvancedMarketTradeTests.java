@@ -5,11 +5,13 @@ import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -60,13 +62,18 @@ public class AdvancedMarketTradeTests {
     ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
     IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
 
-    ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
+    EnteredOrderGeneratorState concreteOrderGenerator = new EnteredOrderGeneratorState();
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
 
+    EnteredOrderGeneratorFactory enteredOrderGeneratorFactory = new EnteredOrderGeneratorFactory(
+        new EnteredOrderGeneratorState());
+
+    OrderValidatorFactory orderValidatorFactory = new OrderValidatorFactory();
+
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
-        concreteOrderGenerator, orderProcessorFactory);
+        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory);
     orders.stream().forEach(marketService::enterOrder);
 
     final List<Trade> trades = marketService.getAllMatchedTrades();

@@ -17,7 +17,8 @@ import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGenerator;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessor;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidator;
@@ -40,7 +41,7 @@ public class MarketService {
 
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
-  private final ConcreteOrderGenerator concreteOrderGenerator;
+  private final EnteredOrderGeneratorFactory concreteOrderGeneratorFactory;
   private final OrderProcessorFactory orderProcessorFactory;
   private final OrderValidatorFactory orderValidatorFactory;
   private MarketState marketState = new MarketState();
@@ -52,20 +53,23 @@ public class MarketService {
     updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
-  public boolean enterOrder(AbstractOrderRequest orderRequest) {
+  public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Order Time-step");
 
     OrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
     List<String> errors = orderValidator.findErrors(orderRequest);
     if (!errors.isEmpty()) {
-      return false;
+      log.error("Order could not be validated. Reasons: {}", errors);
+      return Optional.empty();
     }
 
-    AbstractOrder order = concreteOrderGenerator.getConcreteOrder(orderRequest);
+    EnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+        .getEnteredOrderGenerator(orderRequest.getType());
+    AbstractOrder order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
 
     processOrder(order);
     processTriggeredStopOrders();
-    return true;
+    return Optional.of(order);
   }
 
   public List<Trade> getAllMatchedTrades() {
