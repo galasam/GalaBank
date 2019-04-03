@@ -18,7 +18,10 @@ import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
+import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessor;
 import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidator;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +42,7 @@ public class MarketService {
   private final IOrderRepository orderRepository;
   private final ConcreteOrderGenerator concreteOrderGenerator;
   private final OrderProcessorFactory orderProcessorFactory;
+  private final OrderValidatorFactory orderValidatorFactory;
   private MarketState marketState = new MarketState();
 
   @PostConstruct
@@ -48,14 +52,20 @@ public class MarketService {
     updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
-  public AbstractOrder enterOrder(AbstractOrderRequest orderRequest) {
+  public boolean enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Order Time-step");
+
+    OrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
+    List<String> errors = orderValidator.findErrors(orderRequest);
+    if (!errors.isEmpty()) {
+      return false;
+    }
 
     AbstractOrder order = concreteOrderGenerator.getConcreteOrder(orderRequest);
 
     processOrder(order);
     processTriggeredStopOrders();
-    return order;
+    return true;
   }
 
   public List<Trade> getAllMatchedTrades() {
@@ -65,8 +75,8 @@ public class MarketService {
   private void processOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
 
-    orderProcessorFactory.getOrderProcessor(marketState, order.getType())
-        .process(order);
+    OrderProcessor orderProcessor = orderProcessorFactory.getOrderProcessor(marketState, order.getType());
+    orderProcessor.process(order);
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
     log.debug("Stop Orders: " + marketState.getStopOrders().toString());
