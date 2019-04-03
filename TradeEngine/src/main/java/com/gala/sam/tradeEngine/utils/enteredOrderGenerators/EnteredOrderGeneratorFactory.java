@@ -3,8 +3,10 @@ package com.gala.sam.tradeEngine.utils.enteredOrderGenerators;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
+@Component
 public class EnteredOrderGeneratorFactory {
 
   private final EnteredOrderGeneratorState enteredOrderGeneratorState;

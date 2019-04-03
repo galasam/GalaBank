@@ -2,7 +2,7 @@ package com.gala.sam.orderCapture.service;
 
 import com.gala.sam.orderCapture.utils.exception.OrderNotEnteredException;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequestResponse;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import lombok.extern.slf4j.Slf4j;

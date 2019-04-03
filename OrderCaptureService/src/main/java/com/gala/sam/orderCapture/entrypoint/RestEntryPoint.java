@@ -1,7 +1,7 @@
 package com.gala.sam.orderCapture.entrypoint;
 
 import com.gala.sam.orderCapture.service.OrderCaptureService;
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequestResponse;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

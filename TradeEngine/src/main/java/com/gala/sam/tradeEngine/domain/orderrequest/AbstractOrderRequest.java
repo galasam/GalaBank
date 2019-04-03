@@ -1,13 +1,18 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.gala.sam.tradeEngine.utils.OrderRequestDeserializer;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.NonFinal;
 
 @Data
 @NonFinal
+@NoArgsConstructor
+@JsonDeserialize(using = OrderRequestDeserializer.class)
 public abstract class AbstractOrderRequest {
 
-  final OrderType type;
+  OrderType type;
   int clientId;
   Direction direction;
   int quantity;

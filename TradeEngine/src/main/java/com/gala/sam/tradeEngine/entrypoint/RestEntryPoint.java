@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.OrderRequestResponse;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
@@ -21,7 +21,7 @@ public class RestEntryPoint {
   final MarketService marketService;
 
   @PostMapping("/enter-order")
-  public OrderRequestResponse enterOrder(@RequestBody AbstractOrderRequest order) {
+  public <T extends AbstractOrderRequest> OrderRequestResponse enterOrder(@RequestBody T order) {
     log.info("Order request received into Trading Engine: {}", order);
     if(marketService.enterOrder(order).isPresent()) {
       log.info("Order request successfully entered into Trading Engine: {}", order);
