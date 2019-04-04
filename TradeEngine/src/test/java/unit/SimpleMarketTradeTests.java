@@ -20,7 +20,7 @@ public class SimpleMarketTradeTests {
 
   @Test
   public void testSimpleTimeStep() {
-
+    //Given: Limit Buy and Market sell orders that should match
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
@@ -46,9 +46,11 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
+    //When: They are entered in to the market
     int limitOrderId = marketService.enterOrder(limitOrder).get().getOrderId();
     int marketOrderId = marketService.enterOrder(marketOrder).get().getOrderId();
 
+    //Then: a correct trade should be made
     List<Trade> trades = marketService.getAllMatchedTrades();
 
     Trade tradeOutputTest = Trade.builder()
@@ -67,6 +69,7 @@ public class SimpleMarketTradeTests {
   @Test
   public void testTimeStepWithMatchingLimits() {
 
+    //Give: two limit orders that should match
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
@@ -93,9 +96,11 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
+    //When: they are entered in to the market
     int orderIdA = marketService.enterOrder(limitOrderA).get().getOrderId();
     int orderIdB = marketService.enterOrder(limitOrderBMatchingA).get().getOrderId();
 
+    //Then: a correct trade should be produced
     List<Trade> trades = marketService.getAllMatchedTrades();
 
     Trade tradeOutputTest = Trade.builder()
@@ -114,6 +119,7 @@ public class SimpleMarketTradeTests {
   @Test
   public void testTimeStepWithNonMatchingLimits() {
 
+    //Given: two limit orders that have non-matching limits
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
@@ -140,8 +146,11 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
+    //When: they are entered in to the market
     marketService.enterOrder(limitOrderA);
     marketService.enterOrder(limitOrderBNotMatchingA);
+
+    //Then: No trade should be produced
     List<Trade> trades = marketService.getAllMatchedTrades();
 
     Assert.assertEquals("Should not match a buy and sell non-matching limit orders", 0,
@@ -151,6 +160,7 @@ public class SimpleMarketTradeTests {
   @Test
   public void testOrderPartialFulfillment() {
 
+    //Given: 2 buy orders and a sell order with the quantity of them added together
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
@@ -184,10 +194,12 @@ public class SimpleMarketTradeTests {
         .timeInForce(TimeInForce.GTC)
         .build();
 
+    //When: the orders are entered in to the market
     int limitOrderAId = marketService.enterOrder(limitOrderA).get().getOrderId();
     int limitOrderBId = marketService.enterOrder(limitOrderB).get().getOrderId();
     int marketOrderId = marketService.enterOrder(marketOrder).get().getOrderId();
 
+    //Then: two trades should occur, with the sell order split over the two buy orders
     Trade tradeA = Trade.builder()
         .buyOrder(limitOrderAId)
         .sellOrder(marketOrderId)
