@@ -57,6 +57,7 @@ public class AdvancedMarketTradeTests {
 
   private void runTest(int phase, int testNumber) throws IOException {
     log.info(String.format("Running test %d", testNumber));
+    //Given some input orders
     final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
 
     ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
@@ -74,8 +75,11 @@ public class AdvancedMarketTradeTests {
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
         enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory);
+
+    //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);
 
+    //Then: the produced trades should match the expected outputs
     final List<Trade> trades = marketService.getAllMatchedTrades();
     final List<Trade> tradesReference = readTrades(phase, testNumber);
     Assert.assertEquals(
