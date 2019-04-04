@@ -32,30 +32,43 @@ public class MarketUtilTests {
 
   @Test
   public void testQueueIfTimeInForce() throws OrderTimeInForceNotSupportedException {
+    //Given: GTC order
     SortedSet<LimitOrder> orders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
+    //When queueIfTimeInForce is called
     queueIfTimeInForce(order, orders, save);
 
+    /*Then:
+      - Order should be saved
+      - order should be added to queue
+     */
     verify(save).accept(order);
     Assert.assertEquals("", 1, orders.size());
   }
 
   @Test
   public void testQueueIfTimeNotInForce() throws OrderTimeInForceNotSupportedException {
+    //Given: FOK order
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
+    //When queueIfTimeInForce is called
     queueIfTimeInForce(order, orders, save);
 
+    /*Then:
+     - order should not be saved
+     - order should not be added to queue
+     */
     verify(save, never()).accept(any());
     Assert.assertEquals("", 0, orders.size());
   }
 
   @Test
   public void testMakeTradeCreatesTradeCorrectly() throws OrderDirectionNotSupportedException {
+    //Given: Two limit orders that should match
     TickerData tickerData = mock(TickerData.class);
     List<Trade> trades = mock(List.class);
     MarketState marketState = new MarketState(trades, new TreeMap<>(), new LinkedList<>());
@@ -89,8 +102,14 @@ public class MarketUtilTests {
 
     Consumer<Trade> save = mock(Consumer.class);
 
+    //When makeTrade is called
     makeTrade(marketState, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData, save);
 
+    /*Then:
+     - LastExecutedTradePrice is updated
+     - the trade is added to the queue
+     - the orders are set to be fully satisfied
+     */
     verify(tickerData, times(1)).setLastExecutedTradePrice(limitOrderA.getLimit());
     verify(marketState.getTrades(), times(1)).add(trade);
     Assert.assertTrue("LimitOrderA should be fully fulfilled.", limitOrderA.isFullyFulfilled());
