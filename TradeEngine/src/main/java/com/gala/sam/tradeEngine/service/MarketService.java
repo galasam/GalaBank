@@ -3,22 +3,22 @@ package com.gala.sam.tradeEngine.service;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
 
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
 import com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderValidators.IOrderValidator;
@@ -32,6 +32,7 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 @Slf4j
 @Service
@@ -56,7 +57,8 @@ public class MarketService {
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Order Time-step with order request: {}", orderRequest);
 
-    IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
+    IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory
+        .getOrderValidator(orderRequest.getType());
     List<String> errors = orderValidator.findErrors(orderRequest);
     if (!errors.isEmpty()) {
       log.error("Order request could not be validated. Reasons: {}", errors);
@@ -82,12 +84,22 @@ public class MarketService {
   private void processOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
 
-    AbstractOrderProcessor orderProcessor = orderProcessorFactory.getOrderProcessor(marketState, order.getType());
-    orderProcessor.process(order);
+    AbstractOrderProcessor orderProcessor = orderProcessorFactory
+        .getOrderProcessor(marketState, order.getType());
+    withTimer(() -> orderProcessor.process(order), order.getOrderId());
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
     log.debug("Stop Orders: " + marketState.getStopOrders().toString());
     log.debug("Trades: " + marketState.getTrades().toString());
+  }
+
+  private void withTimer(Runnable f, int orderId) {
+    StopWatch orderProcessorTimer = new StopWatch();
+    orderProcessorTimer.start();
+    f.run();
+    orderProcessorTimer.stop();
+    log.info("Order {} was processed in {} milliseconds", orderId,
+        orderProcessorTimer.getTotalTimeMillis());
   }
 
   private void processTriggeredStopOrders() {
