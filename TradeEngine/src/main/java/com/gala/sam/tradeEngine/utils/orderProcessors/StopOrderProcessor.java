@@ -20,7 +20,7 @@ public class StopOrderProcessor extends OrderProcessor {
 
   @Override
   public <T extends AbstractOrder> void process(T order) {
-    log.debug("Adding stop order: " + order.toString());
+    log.debug("Adding order to stop orders: " + order.getOrderId());
     marketState.getStopOrders().add((AbstractStopOrder) order);
     saveOrder(order);
   }

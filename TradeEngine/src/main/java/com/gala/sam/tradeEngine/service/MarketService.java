@@ -54,18 +54,21 @@ public class MarketService {
   }
 
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
-    log.info("Processing Order Time-step");
+    log.info("Processing Order Time-step with order request: {}", orderRequest);
 
     OrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
     List<String> errors = orderValidator.findErrors(orderRequest);
     if (!errors.isEmpty()) {
-      log.error("Order could not be validated. Reasons: {}", errors);
+      log.error("Order request could not be validated. Reasons: {}", errors);
       return Optional.empty();
+    } else {
+      log.debug("Order request was validated: {}", orderRequest);
     }
 
     EnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
         .getEnteredOrderGenerator(orderRequest.getType());
     AbstractOrder order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
+    log.debug("Concrete Order generated with id: {}", order.getOrderId());
 
     processOrder(order);
     processTriggeredStopOrders();

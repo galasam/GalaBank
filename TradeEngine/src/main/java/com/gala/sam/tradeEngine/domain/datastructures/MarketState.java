@@ -36,7 +36,7 @@ public class MarketState {
   public TickerData getTickerQueueGroup(AbstractActiveOrder marketOrder) {
     TickerData queues = tickerQueues.get(marketOrder.getTicker());
     if (queues == null) {
-      queues = new TickerData();
+      queues = new TickerData(marketOrder.getTicker());
       tickerQueues.put(marketOrder.getTicker(), queues);
     }
     return queues;

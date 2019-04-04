@@ -35,12 +35,14 @@ public class MarketUtils {
 
   public static void makeTrade(MarketState marketState, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
       TickerData ticketData, Consumer<Trade> saveTrade) {
+    log.debug("Setting last executed price of {} as {}", ticketData.getName(), ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
     a.reduceQuantityRemaining(tradeQuantity);
     b.reduceQuantityRemaining(tradeQuantity);
     final Trade trade;
     if (a.getDirection().equals(Direction.BUY)) {
+      log.debug("creating a trade {} buys from {}", a.getOrderId(), b.getOrderId());
       trade = Trade.builder()
           .buyOrder(a.getOrderId())
           .sellOrder(b.getOrderId())
@@ -50,6 +52,7 @@ public class MarketUtils {
           .build();
       log.debug("Making Buy trade: " + trade.toString());
     } else if (a.getDirection().equals(Direction.SELL)) {
+      log.debug("creating a trade {} sells to {}", a.getOrderId(), b.getOrderId());
       trade = Trade.builder()
           .buyOrder(b.getOrderId())
           .sellOrder(a.getOrderId())
@@ -59,7 +62,7 @@ public class MarketUtils {
           .build();
       log.debug("Making Sell trade: " + trade.toString());
     } else {
-      throw new UnsupportedOperationException("orderrequest direction not supported");
+      throw new UnsupportedOperationException("order direction not supported");
     }
     marketState.getTrades().add(trade);
     saveTrade.accept(trade);
@@ -70,10 +73,12 @@ public class MarketUtils {
     Iterable<AbstractOrder> ordersFromDatabase = orderRepository
         .findAll();
     for (AbstractOrder order : ordersFromDatabase) {
+      log.debug("Reading order: {}", order.getOrderId());
       TickerData tickerQueueGroup;
       switch (order.getType()) {
         case STOP_LIMIT:
         case STOP_MARKET:
+          log.debug("Adding stop order {} to stop order queue", order.getOrderId());
           marketState.getStopOrders().add((AbstractStopOrder) order);
           break;
         case ACTIVE_LIMIT:
@@ -81,9 +86,11 @@ public class MarketUtils {
           tickerQueueGroup = marketState.getTickerQueueGroup(limitOrder);
           switch (limitOrder.getDirection()) {
             case BUY:
+              log.debug("Adding limit order {} to buy queue", order.getOrderId());
               tickerQueueGroup.getBuyLimitOrders().add(limitOrder);
               break;
             case SELL:
+              log.debug("Adding limit order {} to sell queue", order.getOrderId());
               tickerQueueGroup.getSellLimitOrders().add(limitOrder);
               break;
             default:
@@ -95,9 +102,11 @@ public class MarketUtils {
           tickerQueueGroup = marketState.getTickerQueueGroup(marketOrder);
           switch (marketOrder.getDirection()) {
             case BUY:
+              log.debug("Adding market order {} to buy queue", order.getOrderId());
               tickerQueueGroup.getBuyMarketOrders().add(marketOrder);
               break;
             case SELL:
+              log.debug("Adding market order {} to sell queue", order.getOrderId());
               tickerQueueGroup.getSellMarketOrders().add(marketOrder);
               break;
             default:
