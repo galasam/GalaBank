@@ -15,7 +15,7 @@ import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ActiveMarketOrderProcessor extends OrderProcessor {
+public class ActiveMarketOrderProcessor extends AbstractOrderProcessor {
 
   private final MarketState marketState;
 

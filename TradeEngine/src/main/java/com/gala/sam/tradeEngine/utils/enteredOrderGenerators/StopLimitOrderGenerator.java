@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StopLimitOrderGenerator implements
-    EnteredOrderGenerator<StopLimitOrderRequest, StopLimitOrder> {
+    IEnteredOrderGenerator<StopLimitOrderRequest, StopLimitOrder> {
 
   final EnteredOrderGeneratorState enteredOrderGeneratorState;
 

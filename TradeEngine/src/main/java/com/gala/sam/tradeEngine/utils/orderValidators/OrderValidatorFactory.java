@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderValidatorFactory {
 
-  public OrderValidator getOrderValidator(OrderType type) {
+  public IOrderValidator getOrderValidator(OrderType type) {
     switch(type) {
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderValidator();

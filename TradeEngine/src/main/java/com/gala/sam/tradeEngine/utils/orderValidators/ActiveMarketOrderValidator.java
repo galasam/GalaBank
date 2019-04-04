@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ActiveMarketOrderValidator implements OrderValidator<MarketOrderRequest> {
+public class ActiveMarketOrderValidator implements IOrderValidator<MarketOrderRequest> {
 
   public List<String> findErrors(MarketOrderRequest order) {
     List<String> errors = BaseOrderValidator.findErrors(order);

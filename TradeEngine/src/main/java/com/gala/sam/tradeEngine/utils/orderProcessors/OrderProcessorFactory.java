@@ -14,7 +14,7 @@ public class OrderProcessorFactory {
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
 
-  public OrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
+  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
     switch (type) {
       case STOP_LIMIT:
       case STOP_MARKET:

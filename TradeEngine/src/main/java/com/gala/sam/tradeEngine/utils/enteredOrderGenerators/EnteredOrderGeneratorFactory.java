@@ -11,7 +11,7 @@ public class EnteredOrderGeneratorFactory {
 
   private final EnteredOrderGeneratorState enteredOrderGeneratorState;
 
-  public EnteredOrderGenerator getEnteredOrderGenerator(OrderType type) {
+  public IEnteredOrderGenerator getEnteredOrderGenerator(OrderType type) {
     switch (type) {
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderGenerator(enteredOrderGeneratorState);

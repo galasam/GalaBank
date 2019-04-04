@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StopLimitOrderValidator implements OrderValidator<StopLimitOrderRequest> {
+public class StopLimitOrderValidator implements IOrderValidator<StopLimitOrderRequest> {
 
   public List<String> findErrors(StopLimitOrderRequest order) {
     List<String> errors = StopOrderValidator.findErrors(order);

@@ -17,11 +17,11 @@ import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGenerator;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
-import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessor;
+import com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
-import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidator;
+import com.gala.sam.tradeEngine.utils.orderValidators.IOrderValidator;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public class MarketService {
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Order Time-step with order request: {}", orderRequest);
 
-    OrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
+    IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
     List<String> errors = orderValidator.findErrors(orderRequest);
     if (!errors.isEmpty()) {
       log.error("Order request could not be validated. Reasons: {}", errors);
@@ -65,7 +65,7 @@ public class MarketService {
       log.debug("Order request was validated: {}", orderRequest);
     }
 
-    EnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+    IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
         .getEnteredOrderGenerator(orderRequest.getType());
     AbstractOrder order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
     log.debug("Concrete Order generated with id: {}", order.getOrderId());
@@ -82,7 +82,7 @@ public class MarketService {
   private void processOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
 
-    OrderProcessor orderProcessor = orderProcessorFactory.getOrderProcessor(marketState, order.getType());
+    AbstractOrderProcessor orderProcessor = orderProcessorFactory.getOrderProcessor(marketState, order.getType());
     orderProcessor.process(order);
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());

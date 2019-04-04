@@ -7,7 +7,7 @@ import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class OrderProcessor {
+public abstract class AbstractOrderProcessor {
 
   private final IOrderRepository orderRepository;
   private final ITradeRepository tradeRepository;

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StopMarketOrderGenerator implements
-    EnteredOrderGenerator<StopMarketOrderRequest, StopMarketOrder> {
+    IEnteredOrderGenerator<StopMarketOrderRequest, StopMarketOrder> {
 
   final EnteredOrderGeneratorState enteredOrderGeneratorState;
 

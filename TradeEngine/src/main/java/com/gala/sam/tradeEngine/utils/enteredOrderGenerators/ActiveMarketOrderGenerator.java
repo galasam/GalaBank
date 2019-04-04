@@ -5,7 +5,8 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ActiveMarketOrderGenerator implements EnteredOrderGenerator<MarketOrderRequest, MarketOrder> {
+public class ActiveMarketOrderGenerator implements
+    IEnteredOrderGenerator<MarketOrderRequest, MarketOrder> {
 
   final EnteredOrderGeneratorState enteredOrderGeneratorState;
 

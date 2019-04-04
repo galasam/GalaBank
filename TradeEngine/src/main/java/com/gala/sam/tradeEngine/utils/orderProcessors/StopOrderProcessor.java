@@ -8,7 +8,7 @@ import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StopOrderProcessor extends OrderProcessor {
+public class StopOrderProcessor extends AbstractOrderProcessor {
 
   private final MarketState marketState;
 

@@ -5,7 +5,8 @@ import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ActiveLimitOrderGenerator implements EnteredOrderGenerator<LimitOrderRequest, LimitOrder> {
+public class ActiveLimitOrderGenerator implements
+    IEnteredOrderGenerator<LimitOrderRequest, LimitOrder> {
 
   final EnteredOrderGeneratorState enteredOrderGeneratorState;
 
