@@ -4,17 +4,21 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderTy
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class OrderProcessorFactory {
 
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
 
-  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
+  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type)
+      throws OrderTypeNotSupportedException {
     switch (type) {
       case STOP_LIMIT:
       case STOP_MARKET:
@@ -24,7 +28,7 @@ public class OrderProcessorFactory {
       case ACTIVE_MARKET:
         return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState);
       default:
-        throw new UnsupportedOperationException("orderrequest type not specified");
+        throw new OrderTypeNotSupportedException(type);
     }
   }
 }

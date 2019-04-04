@@ -17,6 +17,8 @@ import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -29,7 +31,7 @@ import org.junit.Test;
 public class MarketUtilTests {
 
   @Test
-  public void testQueueIfTimeInForce() {
+  public void testQueueIfTimeInForce() throws OrderTimeInForceNotSupportedException {
     SortedSet<LimitOrder> orders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
@@ -41,7 +43,7 @@ public class MarketUtilTests {
   }
 
   @Test
-  public void testQueueIfTimeNotInForce() {
+  public void testQueueIfTimeNotInForce() throws OrderTimeInForceNotSupportedException {
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
@@ -53,7 +55,7 @@ public class MarketUtilTests {
   }
 
   @Test
-  public void testMakeTradeCreatesTradeCorrectly() {
+  public void testMakeTradeCreatesTradeCorrectly() throws OrderDirectionNotSupportedException {
     TickerData tickerData = mock(TickerData.class);
     List<Trade> trades = mock(List.class);
     MarketState marketState = new MarketState(trades, new TreeMap<>(), new LinkedList<>());

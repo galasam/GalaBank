@@ -21,14 +21,4 @@ public class LimitOrderRequest extends AbstractActiveOrderRequest {
     this.limit = limit;
   }
 
-  public boolean limitMatches(LimitOrderRequest other) {
-    if (getDirection().equals(Direction.BUY)) {
-      return getLimit() >= other.getLimit();
-    } else if (getDirection().equals(Direction.SELL)) {
-      return getLimit() <= other.getLimit();
-    } else {
-      throw new UnsupportedOperationException("orderrequest direction not supported");
-    }
-  }
-
 }

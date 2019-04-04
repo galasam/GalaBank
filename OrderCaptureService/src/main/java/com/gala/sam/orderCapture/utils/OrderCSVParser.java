@@ -1,18 +1,21 @@
 package com.gala.sam.orderCapture.utils;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OrderCSVParser {
 
   private final static Map<String, Integer> INPUT_HEADINGS = new TreeMap<>();
@@ -36,10 +39,12 @@ public class OrderCSVParser {
   public static List<AbstractOrderRequest> decodeCSV(Stream<String> input) {
     return input.skip(1)
         .map(OrderCSVParser::decodeCSVRow)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .collect(Collectors.toList());
   }
 
-  private static AbstractOrderRequest decodeCSVRow(String input) {
+  private static Optional<AbstractOrderRequest> decodeCSVRow(String input) {
     final String[] values = input.split(",");
 
     final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get("ORDER ID")]);
@@ -53,26 +58,26 @@ public class OrderCSVParser {
     switch (type) {
       case "LIMIT":
         float limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
-        return LimitOrderRequest.builder()
+        return Optional.of(LimitOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
             .timeInForce(tif)
             .ticker(ticker)
             .limit(limit)
-            .build();
+            .build());
       case "MARKET":
-        return MarketOrderRequest.builder()
+        return Optional.of(MarketOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
             .timeInForce(tif)
             .ticker(ticker)
-            .build();
+            .build());
       case "STOP-LIMIT":
         limit = Float.parseFloat(values[INPUT_HEADINGS.get("LIMIT PRICE")]);
         float triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopLimitOrderRequest.builder()
+        return Optional.of(StopLimitOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
@@ -80,19 +85,20 @@ public class OrderCSVParser {
             .ticker(ticker)
             .limit(limit)
             .triggerPrice(triggerPrice)
-            .build();
+            .build());
       case "STOP-MARKET":
         triggerPrice = Float.parseFloat(values[INPUT_HEADINGS.get("TRIGGER PRICE")]);
-        return StopMarketOrderRequest.builder()
+        return Optional.of(StopMarketOrderRequest.builder()
             .clientId(clientId)
             .direction(direction)
             .quantity(quantity)
             .timeInForce(tif)
             .ticker(ticker)
             .triggerPrice(triggerPrice)
-            .build();
+            .build());
       default:
-        throw new UnsupportedOperationException(" Unsupported order type");
+        log.error("Could not parse order since due to unsupported type: {}", type);
+        return Optional.empty();
     }
   }
 

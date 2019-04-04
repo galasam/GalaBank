@@ -11,6 +11,8 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,12 +28,14 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor {
   }
 
   @Override
-  public <T extends AbstractOrder> void process(T order) {
+  public <T extends AbstractOrder> void process(T order)
+      throws OrderDirectionNotSupportedException, OrderTimeInForceNotSupportedException {
     log.debug("Order: {} processed as Active Market order", order.getOrderId());
     processMarketOrder((MarketOrder) order);
   }
 
-  private void processMarketOrder(MarketOrder marketOrder) {
+  private void processMarketOrder(MarketOrder marketOrder)
+      throws OrderDirectionNotSupportedException, OrderTimeInForceNotSupportedException {
     TickerData tickerData = marketState.getTickerQueueGroup(marketOrder);
     if (marketOrder.getDirection() == Direction.BUY) {
       log.debug("Order: {} processed as Buy order", marketOrder.getOrderId());
@@ -42,12 +46,13 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor {
       processDirectedMarketOrder(marketOrder, tickerData,
           tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
     } else {
-      throw new UnsupportedOperationException("order direction not supported");
+      throw new OrderDirectionNotSupportedException(marketOrder.getDirection());
     }
   }
 
   private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
-      SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
+      SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders)
+      throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
     if (limitOrders.isEmpty()) {
       log.debug("Limit order queue empty so no possible limit order matches for market order: {}", marketOrder.getOrderId());
       queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);

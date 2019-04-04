@@ -1,12 +1,13 @@
 package com.gala.sam.tradeEngine.utils.orderValidators;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderValidatorFactory {
 
-  public IOrderValidator getOrderValidator(OrderType type) {
+  public IOrderValidator getOrderValidator(OrderType type) throws OrderTypeNotSupportedException {
     switch(type) {
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderValidator();
@@ -17,7 +18,7 @@ public class OrderValidatorFactory {
       case STOP_MARKET:
         return new StopMarketOrderValidator();
       default:
-        throw new UnsupportedOperationException("Order Type Not supported");
+        throw new OrderTypeNotSupportedException(type);
     }
   }
 

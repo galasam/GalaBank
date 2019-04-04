@@ -19,6 +19,11 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
+import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.ProcessingStopOrderException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderValidators.IOrderValidator;
@@ -39,6 +44,8 @@ import org.springframework.util.StopWatch;
 @RequiredArgsConstructor
 public class MarketService {
 
+  public final static boolean SUCCESS = true;
+  public final static boolean FAILURE= true;
 
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
@@ -57,23 +64,45 @@ public class MarketService {
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
     log.info("Processing Order Time-step with order request: {}", orderRequest);
 
-    IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory
-        .getOrderValidator(orderRequest.getType());
-    List<String> errors = orderValidator.findErrors(orderRequest);
-    if (!errors.isEmpty()) {
-      log.error("Order request could not be validated. Reasons: {}", errors);
+    final AbstractOrder order;
+    try {
+      IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory.getOrderValidator(orderRequest.getType());
+      List<String> errors = orderValidator.findErrors(orderRequest);
+      if (!errors.isEmpty()) {
+        log.error("Order request could not be validated. Reasons: {}", errors);
+        return Optional.empty();
+      } else {
+        log.debug("Order request was validated: {}", orderRequest);
+      }
+
+      IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+          .getEnteredOrderGenerator(orderRequest.getType());
+
+      order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
+      log.debug("Concrete Order generated with id: {}", order.getOrderId());
+
+    } catch (AbstractOrderFieldNotSupportedException e) {
+      log.error(
+          "Concrete order could not be generated since when handling order request {} an exception was raised: {}",
+          orderRequest, e.getStackTrace());
       return Optional.empty();
-    } else {
-      log.debug("Order request was validated: {}", orderRequest);
     }
 
-    IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
-        .getEnteredOrderGenerator(orderRequest.getType());
-    AbstractOrder order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
-    log.debug("Concrete Order generated with id: {}", order.getOrderId());
+    try {
 
-    processOrder(order);
-    processTriggeredStopOrders();
+      processOrder(order);
+
+    } catch (AbstractOrderFieldNotSupportedException e) {
+      log.error("The Order {} could not be processed since when handling order an exception was raised: {}", order.getOrderId(), e.getStackTrace());
+      return Optional.empty();
+    }
+
+    try {
+      processTriggeredStopOrders();
+    } catch (ProcessingStopOrderException e) {
+      log.error("Not all stop orders have been handled correctly since an exception was raised in processing them: {}", e.getStackTrace());
+    }
+
     return Optional.of(order);
   }
 
@@ -81,28 +110,31 @@ public class MarketService {
     return marketState.getTrades();
   }
 
-  private void processOrder(AbstractOrder order) {
+  private void processOrder(AbstractOrder order)
+      throws OrderTypeNotSupportedException, OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
     log.info(String.format("Processing order %s", order.toString()));
 
     AbstractOrderProcessor orderProcessor = orderProcessorFactory
         .getOrderProcessor(marketState, order.getType());
-    withTimer(() -> orderProcessor.process(order), order.getOrderId());
+
+    handleOrderWithTimer(order, orderProcessor);
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
     log.debug("Stop Orders: " + marketState.getStopOrders().toString());
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private void withTimer(Runnable f, int orderId) {
+  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor)
+      throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
-    f.run();
+    orderProcessor.process(order);
     orderProcessorTimer.stop();
-    log.info("Order {} was processed in {} milliseconds", orderId,
+    log.info("Order {} was handled in {} milliseconds", order.getOrderId(),
         orderProcessorTimer.getTotalTimeMillis());
   }
 
-  private void processTriggeredStopOrders() {
+  private void processTriggeredStopOrders() throws ProcessingStopOrderException {
     Iterator<AbstractStopOrder> it = marketState.getStopOrders().iterator();
     while (it.hasNext()) {
       AbstractStopOrder stopOrder = it.next();
@@ -112,7 +144,11 @@ public class MarketService {
         it.remove();
         orderRepository.delete(stopOrder);
         AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
-        processOrder(activeOrder);
+        try {
+          processOrder(activeOrder);
+        } catch (AbstractOrderFieldNotSupportedException e) {
+          throw new ProcessingStopOrderException(stopOrder, e);
+        }
       } else {
         log.debug("Stop order request not Triggered");
       }
@@ -133,7 +169,7 @@ public class MarketService {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {
-        throw new UnsupportedOperationException("orderrequest direction not supported");
+        throw new UnsupportedOperationException("order direction not supported");
       }
     } else {
       log.debug("No previous trade found");

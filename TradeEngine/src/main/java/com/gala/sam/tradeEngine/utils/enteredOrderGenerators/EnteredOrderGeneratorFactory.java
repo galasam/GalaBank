@@ -2,6 +2,7 @@ package com.gala.sam.tradeEngine.utils.enteredOrderGenerators;
 
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,8 @@ public class EnteredOrderGeneratorFactory {
 
   private final EnteredOrderGeneratorState enteredOrderGeneratorState;
 
-  public IEnteredOrderGenerator getEnteredOrderGenerator(OrderType type) {
+  public IEnteredOrderGenerator getEnteredOrderGenerator(OrderType type)
+      throws OrderTypeNotSupportedException {
     switch (type) {
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderGenerator(enteredOrderGeneratorState);
@@ -22,7 +24,7 @@ public class EnteredOrderGeneratorFactory {
       case STOP_MARKET:
         return new StopMarketOrderGenerator(enteredOrderGeneratorState);
       default:
-        throw new UnsupportedOperationException("Order Type Not supported");
+        throw new OrderTypeNotSupportedException(type);
     }
   }
 }
