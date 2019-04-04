@@ -3,18 +3,19 @@ package unit;
 import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.BUY;
 import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.SELL;
 
+import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
-import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,8 +23,8 @@ public class MarketStatusReturnTests {
 
   @Test
   public void orderEnteredIsShownInStatus() {
-
-    val orderProcessorFactory = new OrderProcessorFactory(
+    //Given: an order
+    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
@@ -35,8 +36,11 @@ public class MarketStatusReturnTests {
 
     LimitOrderRequest limitOrderReq = getLimitOrderReq(BUY);
 
-    val limitOrder = marketService.enterOrder(limitOrderReq).get();
-    val publicMarketStatus = marketService.getStatus();
+    //When: order is entered to market
+    AbstractOrder limitOrder = marketService.enterOrder(limitOrderReq).get();
+
+    //Then: it is visible in the correct place in the market status
+    PublicMarketStatus publicMarketStatus = marketService.getStatus();
 
     Assert.assertTrue("A ticker is returned", publicMarketStatus.getOrders().size() > 0);
     Assert.assertTrue("A buy order is returned",
@@ -58,8 +62,8 @@ public class MarketStatusReturnTests {
 
   @Test
   public void orderTradeIsShownInStatus() {
-
-    val orderProcessorFactory = new OrderProcessorFactory(
+    //Given: two matching trades
+    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
     MarketService marketService = new MarketService(
@@ -69,14 +73,18 @@ public class MarketStatusReturnTests {
         orderProcessorFactory,
         new OrderValidatorFactory());
 
-    val buyLimitOrderReq = getLimitOrderReq(BUY);
-    val sellLimitOrderReq = getLimitOrderReq(SELL);
+    LimitOrderRequest buyLimitOrderReq = getLimitOrderReq(BUY);
+    LimitOrderRequest sellLimitOrderReq = getLimitOrderReq(SELL);
 
-    val buyLimitOrder = marketService.enterOrder(buyLimitOrderReq).get();
-    val sellLimitOrder = marketService.enterOrder(sellLimitOrderReq).get();
-    val publicMarketStatus = marketService.getStatus();
+    //When: they are entered on the market
+    AbstractOrder buyLimitOrder = marketService.enterOrder(buyLimitOrderReq).get();
+    AbstractOrder sellLimitOrder = marketService.enterOrder(sellLimitOrderReq).get();
 
-    val trade = Trade.builder()
+    //Then: the resulting trade is visible in the correct place in the
+    //market status and the orders are removed
+    PublicMarketStatus publicMarketStatus = marketService.getStatus();
+
+    Trade trade = Trade.builder()
         .matchQuantity(buyLimitOrderReq.getQuantity())
         .matchPrice(buyLimitOrderReq.getLimit())
         .buyOrder(buyLimitOrder.getOrderId())
