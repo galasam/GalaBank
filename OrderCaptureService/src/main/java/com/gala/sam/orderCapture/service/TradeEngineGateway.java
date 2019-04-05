@@ -28,13 +28,13 @@ public class TradeEngineGateway {
         .getNextServerFromEureka(serviceHostName, false);
     String url = serverInstance.getHomePageUrl() + "/enter-order";
 
-    ResponseEntity<OrderRequestResponse> response = restTemplate
+    ResponseEntity<OrderRequestResponse> restResponseObject = restTemplate
         .postForEntity(url, order, OrderRequestResponse.class);
 
-    if (response.getStatusCode().is2xxSuccessful()) {
-      OrderRequestResponse resp = response.getBody();
-      log.info("Order Entered in to Trade Engine: {}", resp);
-      return resp;
+    if (restResponseObject.getStatusCode().is2xxSuccessful()) {
+      OrderRequestResponse orderRequestResponse = restResponseObject.getBody();
+      log.info("Order Entered in to Trade Engine: {}", orderRequestResponse);
+      return orderRequestResponse;
     } else {
       log.error("trade engine reported that order request {} was not entered in to the market", order);
       throw new OrderNotEnteredException(order);
