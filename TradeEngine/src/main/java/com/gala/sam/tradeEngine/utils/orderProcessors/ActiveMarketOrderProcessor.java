@@ -1,8 +1,5 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
-
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
@@ -11,6 +8,7 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.SortedSet;
@@ -19,12 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ActiveMarketOrderProcessor extends AbstractOrderProcessor {
 
-  private final MarketState marketState;
-
   public ActiveMarketOrderProcessor(IOrderRepository orderRepository,
-      ITradeRepository tradeRepository, MarketState marketState) {
-    super(orderRepository, tradeRepository);
-    this.marketState = marketState;
+      ITradeRepository tradeRepository, MarketState marketState, MarketUtils marketUtils) {
+    super(orderRepository, tradeRepository, marketState, marketUtils);
   }
 
   @Override
@@ -55,17 +50,16 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor {
       throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
     if (limitOrders.isEmpty()) {
       log.debug("Limit order queue empty so no possible limit order matches for market order: {}", marketOrder.getOrderId());
-      queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);
+      marketUtils.queueIfTimeInForce(marketOrder, marketOrders, this::saveOrderToDatabase);
     } else {
       LimitOrder limitOrder = limitOrders.first();
       log.debug("Limit order queue not empty, so trading with best limit order: {}",
           limitOrder.toString());
-      makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
-          this::saveTrade);
+      marketUtils.makeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
       if (limitOrder.isFullyFulfilled()) {
         log.debug("Limit order {} is fully satisfied so removing", limitOrder.getOrderId());
         limitOrders.remove(limitOrder);
-        deleteOrder(limitOrder);
+        deleteOrderFromDatabase(limitOrder);
       }
       if (!marketOrder.isFullyFulfilled()) {
         log.debug("New market order {} is not fully satisfied so continue processing .",

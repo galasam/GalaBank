@@ -1,22 +1,21 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
+import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
-import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
-import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
-import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.LinkedList;
@@ -38,7 +37,7 @@ public class MarketUtilTests {
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     //When queueIfTimeInForce is called
-    queueIfTimeInForce(order, orders, save);
+    new MarketUtils().queueIfTimeInForce(order, orders, save);
 
     /*Then:
       - Order should be saved
@@ -56,7 +55,7 @@ public class MarketUtilTests {
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     //When queueIfTimeInForce is called
-    queueIfTimeInForce(order, orders, save);
+    new MarketUtils().queueIfTimeInForce(order, orders, save);
 
     /*Then:
      - order should not be saved
@@ -103,7 +102,7 @@ public class MarketUtilTests {
     Consumer<Trade> save = mock(Consumer.class);
 
     //When makeTrade is called
-    makeTrade(marketState, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData, save);
+    new MarketUtils().makeTrade(save, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData);
 
     /*Then:
      - LastExecutedTradePrice is updated
@@ -111,7 +110,7 @@ public class MarketUtilTests {
      - the orders are set to be fully satisfied
      */
     verify(tickerData, times(1)).setLastExecutedTradePrice(limitOrderA.getLimit());
-    verify(marketState.getTrades(), times(1)).add(trade);
+    verify(save, times(1)).accept(trade);
     Assert.assertTrue("LimitOrderA should be fully fulfilled.", limitOrderA.isFullyFulfilled());
     Assert
         .assertTrue("LimitOrderB should not be fully fulfilled.", !limitOrderB.isFullyFulfilled());

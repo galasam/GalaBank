@@ -1,17 +1,20 @@
 package unit;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.EnteredOrder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.dataStructures.MarketState;
-import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.OrderProcessor.ActiveLimitOrderProcessor;
+import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
+import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveLimitOrderProcessor;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.junit.Test;
@@ -19,17 +22,18 @@ import org.junit.Test;
 public class LimitOrderProcessorTests {
 
   @Test
-  public void whenAllQueuesAreEmptyTest() {
+  public void whenAllQueuesAreEmptyTest()
+      throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
     //Given a limit order and empty queues
     LimitOrder limitOrder = LimitOrder.builder().build();
 
-    OrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(OrderRepository.class);
-    TradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(TradeRepository.class);
+    IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
+    ITradeRepository ITradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
     MarketState marketState = mock(MarketState.class);
     MarketUtils marketUtils = mock(MarketUtils.class);
 
     ActiveLimitOrderProcessor activeLimitOrderProcessor = new ActiveLimitOrderProcessor(
-        orderRepository, tradeRepository, marketState, marketUtils);
+        orderRepository, ITradeRepository, marketState, marketUtils);
 
     SortedSet<MarketOrder> marketOrders = new TreeSet<>();
     SortedSet<LimitOrder> sameTypeLimitOrders = new TreeSet<>();
@@ -40,7 +44,7 @@ public class LimitOrderProcessorTests {
     activeLimitOrderProcessor.processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders, oppositeTypeLimitOrders);
 
     //Then: queueIfTimeInForce is called with the right parameters
-    verify(marketUtils).queueIfTimeInForce(limitOrder, sameTypeLimitOrders, any());
+    verify(marketUtils).queueIfTimeInForce(eq(limitOrder), eq(sameTypeLimitOrders), any());
   }
 
   @Test

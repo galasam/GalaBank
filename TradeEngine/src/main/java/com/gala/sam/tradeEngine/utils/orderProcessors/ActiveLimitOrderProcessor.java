@@ -1,8 +1,5 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
-
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
@@ -11,6 +8,7 @@ import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.SortedSet;
@@ -19,12 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ActiveLimitOrderProcessor extends AbstractOrderProcessor {
 
-  final MarketState marketState;
-
   public ActiveLimitOrderProcessor(IOrderRepository orderRepository, ITradeRepository tradeRepository,
-      MarketState marketState) {
-    super(orderRepository, tradeRepository);
-    this.marketState = marketState;
+      MarketState marketState, MarketUtils marketUtils) {
+    super(orderRepository, tradeRepository, marketState, marketUtils);
   }
 
   @Override
@@ -54,7 +49,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor {
     }
   }
 
-  private void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
+  public void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
       SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders,
       SortedSet<LimitOrder> oppositeTypeLimitOrders)
@@ -63,28 +58,27 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor {
       log.debug("Market order queue empty, so no possible market order matches for limit order: {}", limitOrder.getOrderId());
       if (oppositeTypeLimitOrders.isEmpty()) {
         log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}", limitOrder.getOrderId());
-        queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrder);
+        marketUtils.queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
       } else {
         LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
         log.debug("Limit order queue not empty, so extracted top order: {}", otherLimitOrder.toString());
         if (limitOrder.limitMatches(otherLimitOrder)) {
           log.debug("Limits match so completing trade with order: {}", otherLimitOrder.getOrderId());
-          makeTrade(marketState, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(),
-              tickerData, this::saveTrade);
+          marketUtils.makeTrade(this::addTradeToStateAndPersist, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(),
+              tickerData);
           removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder);
           continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
               sameTypeLimitOrders, oppositeTypeLimitOrders);
         } else {
           log.debug("Limits do not match, so no trade.");
-          queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrder);
+          marketUtils.queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
         }
       }
     } else {
       MarketOrder marketOrder = marketOrders.first();
       log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
           .toString());
-      makeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
-          this::saveTrade);
+      marketUtils.makeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
       removeOrderIfFulfilled(marketOrders, marketOrder);
       continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
           sameTypeLimitOrders, oppositeTypeLimitOrders);
@@ -108,7 +102,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor {
     if (order.isFullyFulfilled()) {
       log.debug("Order {} is fully satisfied so remove from queue", order.getOrderId());
       orders.remove(order);
-      deleteOrder(order);
+      deleteOrderFromDatabase(order);
     }
   }
 

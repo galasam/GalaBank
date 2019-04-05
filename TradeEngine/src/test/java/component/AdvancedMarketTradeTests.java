@@ -6,6 +6,7 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
@@ -67,15 +68,17 @@ public class AdvancedMarketTradeTests {
     EnteredOrderGeneratorState concreteOrderGenerator = new EnteredOrderGeneratorState();
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
+        new MarketUtils());
 
     EnteredOrderGeneratorFactory enteredOrderGeneratorFactory = new EnteredOrderGeneratorFactory(
         new EnteredOrderGeneratorState());
 
     OrderValidatorFactory orderValidatorFactory = new OrderValidatorFactory();
+    MarketUtils marketUtils = new MarketUtils();
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
-        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory);
+        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory, marketUtils);
 
     //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);

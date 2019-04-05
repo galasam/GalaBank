@@ -1,8 +1,5 @@
 package com.gala.sam.tradeEngine.utils;
 
-import static com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor.FAILURE;
-import static com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor.SUCCESS;
-
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
@@ -25,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MarketUtils {
 
-  public static <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
+  public <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
       SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder)
       throws OrderTimeInForceNotSupportedException {
-    if (order.getTimeInForce().equals(TimeInForce.GTC)) {
+        if (order.getTimeInForce().equals(TimeInForce.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
       saveOrder.accept(order);
@@ -39,8 +36,8 @@ public class MarketUtils {
     }
   }
 
-  public static void makeTrade(MarketState marketState, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
-      TickerData ticketData, Consumer<Trade> saveTrade) throws OrderDirectionNotSupportedException {
+  public void makeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
+      TickerData ticketData) throws OrderDirectionNotSupportedException {
     log.debug("Setting last executed price of {} as {}", ticketData.getName(), ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
@@ -70,14 +67,12 @@ public class MarketUtils {
     } else {
       throw new OrderDirectionNotSupportedException(a.getDirection());
     }
-    marketState.getTrades().add(trade);
     saveTrade.accept(trade);
   }
 
-  public static void updateMarketStateFromOrderRepository(MarketState marketState,
-      IOrderRepository orderRepository) {
-    Iterable<AbstractOrder> ordersFromDatabase = orderRepository
-        .findAll();
+  public void updateMarketStateFromOrderRepository(MarketState marketState,
+          IOrderRepository orderRepository) {
+        Iterable<AbstractOrder> ordersFromDatabase = orderRepository.findAll();
     for (AbstractOrder order : ordersFromDatabase) {
       log.debug("Reading order: {}", order.getOrderId());
       TickerData tickerQueueGroup;

@@ -12,6 +12,7 @@ import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
@@ -26,13 +27,15 @@ public class MarketStatusReturnTests {
     //Given: an order
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
+        new MarketUtils());
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
         orderProcessorFactory,
-        new OrderValidatorFactory());
+        new OrderValidatorFactory(),
+        new MarketUtils());
 
     LimitOrderRequest limitOrderReq = getLimitOrderReq(BUY);
 
@@ -65,13 +68,15 @@ public class MarketStatusReturnTests {
     //Given: two matching trades
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
+        new MarketUtils());
     MarketService marketService = new MarketService(
         RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
         RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
         new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
         orderProcessorFactory,
-        new OrderValidatorFactory());
+        new OrderValidatorFactory(),
+        new MarketUtils());
 
     LimitOrderRequest buyLimitOrderReq = getLimitOrderReq(BUY);
     LimitOrderRequest sellLimitOrderReq = getLimitOrderReq(SELL);
