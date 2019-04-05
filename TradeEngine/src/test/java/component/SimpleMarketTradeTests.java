@@ -1,4 +1,4 @@
-package unit;
+package component;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
@@ -15,6 +15,7 @@ import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import unit.RepositoryMockHelper;
 
 public class SimpleMarketTradeTests {
 
