@@ -1,10 +1,10 @@
 package com.gala.sam.tradeEngine.utils;
 
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.util.List;
@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderCSVParser {
 
+  private final static String CSV_DELIMETER = ",";
+
   private final static String ORDER_ID = "ORDER ID";
   private final static String GROUP_ID = "GROUP ID";
   private final static String DIRECTION = "DIRECTION";
@@ -28,12 +30,14 @@ public class OrderCSVParser {
   private final static String TIME_IN_FORCE = "TIME IN FORCE";
   private final static String TRIGGER_PRICE = "TRIGGER PRICE";
 
+  private final static String HEADER = String
+      .join(CSV_DELIMETER, ORDER_ID, GROUP_ID, DIRECTION, QUANTITY, TICKER, TYPE, LIMIT_PRICE,
+          TIME_IN_FORCE, TRIGGER_PRICE);
+
   private final static String TYPE_LIMIT = "LIMIT";
   private final static String TYPE_MARKET = "MARKET";
   private final static String TYPE_STOP_LIMIT = "STOP-LIMIT";
   private final static String TYPE_STOP_MARKET = "STOP-MARKET";
-
-  private final static String CSV_DELIMETER = ",";
 
   private final static Map<String, Integer> INPUT_HEADINGS = new TreeMap<>();
 
@@ -50,16 +54,20 @@ public class OrderCSVParser {
   }
 
   public static List<AbstractOrderRequest> decodeCSV(List<String> input) {
+    if (input.get(0).equals(HEADER)) {
+      input.remove(0);
+    }
     return decodeCSV(input.stream());
   }
 
   public static List<AbstractOrderRequest> decodeCSV(Stream<String> input) {
-    return input.skip(1)
+    return input
         .map(OrderCSVParser::decodeCSVRow)
         .filter(Optional::isPresent)
         .map(Optional::get)
         .collect(Collectors.toList());
   }
+
 
   private static Optional<AbstractOrderRequest> decodeCSVRow(String input) {
     final String[] values = input.split(CSV_DELIMETER);
