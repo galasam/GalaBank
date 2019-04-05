@@ -28,6 +28,7 @@ public class OrderProcessorFactory {
       case ACTIVE_MARKET:
         return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState);
       default:
+        log.error("Order type {} is not supported so cannot create order processor", type);
         throw new OrderTypeNotSupportedException(type);
     }
   }

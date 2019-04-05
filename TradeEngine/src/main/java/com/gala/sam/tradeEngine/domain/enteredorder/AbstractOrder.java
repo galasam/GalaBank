@@ -13,7 +13,9 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @NonFinal
 @Table(name = "orders")
@@ -59,8 +61,10 @@ public abstract class AbstractOrder {
 
   public void reduceQuantityRemaining(int reduction) {
     if (reduction > quantityRemaining) {
-      throw new IllegalArgumentException("Reduction: " + Integer.toString(reduction)
-          + " larger than remaining quantity: " + Integer.toString(quantityRemaining));
+      log.error("Cannot reduce quantity remaining since reduction {} is larger than initial value {}",
+          reduction, quantityRemaining);
+      throw new IllegalArgumentException("Reduction: " + reduction
+          + " larger than remaining quantity: " + quantityRemaining);
     } else {
       quantityRemaining -= reduction;
     }

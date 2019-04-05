@@ -2,9 +2,11 @@ package com.gala.sam.tradeEngine.utils.orderValidators;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class OrderValidatorFactory {
 
   public IOrderValidator getOrderValidator(OrderType type) throws OrderTypeNotSupportedException {
@@ -18,6 +20,7 @@ public class OrderValidatorFactory {
       case STOP_MARKET:
         return new StopMarketOrderValidator();
       default:
+        log.error("Order type {} is not supported so cannot create order validator", type);
         throw new OrderTypeNotSupportedException(type);
     }
   }

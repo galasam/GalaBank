@@ -36,6 +36,7 @@ public class TradeEngineGateway {
       log.info("Order Entered in to Trade Engine: {}", resp);
       return resp;
     } else {
+      log.error("trade engine reported that order request {} was not entered in to the market", order);
       throw new OrderNotEnteredException(order);
     }
   }

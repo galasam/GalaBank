@@ -35,6 +35,7 @@ public class MarketUtils {
     } else if (order.getTimeInForce().equals(TimeInForce.FOK)) {
       log.debug("Time in force is FOK so drop");
     } else {
+      log.error("Order {} has unsupported timeInForce {} so will not be added to queue", order.getOrderId(), order.getTimeInForce());
       throw new OrderTimeInForceNotSupportedException(order.getTimeInForce());
     }
   }
@@ -68,6 +69,7 @@ public class MarketUtils {
           .build();
       log.debug("Making Sell trade: " + trade.toString());
     } else {
+      log.error("Order {} has unsupported direction {} so trade will not be created", a.getOrderId(), a.getDirection());
       throw new OrderDirectionNotSupportedException(a.getDirection());
     }
     marketState.getTrades().add(trade);
@@ -100,7 +102,7 @@ public class MarketUtils {
               tickerQueueGroup.getSellLimitOrders().add(limitOrder);
               break;
             default:
-              log.error("Unsupported direction {} on order {}", order.getDirection(), order.getOrderId());
+              log.error("Unsupported direction {} on order {} so order will not be loaded", order.getDirection(), order.getOrderId());
           }
           break;
         case ACTIVE_MARKET:
@@ -116,11 +118,11 @@ public class MarketUtils {
               tickerQueueGroup.getSellMarketOrders().add(marketOrder);
               break;
             default:
-              log.error("Unsupported direction {} on order {}", order.getDirection(), order.getOrderId());
+              log.error("Unsupported direction {} on order {} so order will not be loaded", order.getDirection(), order.getOrderId());
           }
           break;
         default:
-          log.error("Unsupported type {} on order {}", order.getType(), order.getOrderId());
+          log.error("Unsupported type {} on order {} so order will not be loaded", order.getType(), order.getOrderId());
       }
     }
   }
