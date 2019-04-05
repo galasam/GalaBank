@@ -7,10 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "AbstractStopOrderRequest")
 @DiscriminatorValue("AbstractStopOrderRequest")
 @NoArgsConstructor
+@ToString(callSuper = true)
 public abstract class AbstractStopOrder extends AbstractOrder {
 
   @Column
