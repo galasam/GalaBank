@@ -31,7 +31,7 @@ public class OrderProcessorFactory {
             marketUtils, orderProcessorUtils);
       case ACTIVE_MARKET:
         return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState,
-            marketUtils);
+            marketUtils, orderProcessorUtils);
       default:
         log.error("Order type {} is not supported so cannot create order processor", type);
         throw new OrderTypeNotSupportedException(type);

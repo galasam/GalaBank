@@ -11,15 +11,21 @@ import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils.MarketOrderProcessingContinuer;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrder> {
+public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrder>
+implements MarketOrderProcessingContinuer {
+
+  private final OrderProcessorUtils orderProcessorUtils;
 
   public ActiveMarketOrderProcessor(IOrderRepository orderRepository,
-      ITradeRepository tradeRepository, MarketState marketState, MarketUtils marketUtils) {
+      ITradeRepository tradeRepository, MarketState marketState, MarketUtils marketUtils,
+      OrderProcessorUtils orderProcessorUtils) {
     super(orderRepository, tradeRepository, marketState, marketUtils);
+    this.orderProcessorUtils = orderProcessorUtils;
   }
 
   @Override
@@ -46,7 +52,7 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
     }
   }
 
-  private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
+  public void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
       SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders)
       throws ProcessingActiveOrderException {
     try {
@@ -57,17 +63,13 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
         LimitOrder limitOrder = limitOrders.first();
         log.debug("Limit order queue not empty, so trading with best limit order: {}",
             limitOrder.toString());
-        marketUtils.makeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
-        if (limitOrder.isFullyFulfilled()) {
-          log.debug("Limit order {} is fully satisfied so removing", limitOrder.getOrderId());
-          limitOrders.remove(limitOrder);
-          deleteOrderFromDatabase(limitOrder);
-        }
-        if (!marketOrder.isFullyFulfilled()) {
-          log.debug("New market order {} is not fully satisfied so continue processing .",
-              marketOrder);
-          processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
-        }
+        marketUtils.makeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder,
+            limitOrder.getLimit(), tickerData);
+        orderProcessorUtils.removeOrderIfFulfilled(limitOrders, limitOrder,
+            this::deleteOrderFromDatabase);
+        orderProcessorUtils
+            .continueProcessingMarketOrderIfNotFulfilled(marketOrder, tickerData, limitOrders,
+                marketOrders, this);
       }
     } catch (AbstractOrderFieldNotSupportedException e) {
       log.error("Order {} has unsupported field {} so will not be processed", marketOrder.getOrderId(), marketOrder.getDirection());

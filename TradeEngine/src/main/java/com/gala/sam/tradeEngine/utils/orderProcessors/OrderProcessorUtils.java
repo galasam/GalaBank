@@ -20,21 +20,43 @@ public class OrderProcessorUtils {
         SortedSet<LimitOrder> oppositeTypeLimitOrders) throws ProcessingActiveOrderException;
   }
 
-  public void continueProcessingLimitOrderIfNotFulfilled(LimitOrder limitOrder,
+  public interface MarketOrderProcessingContinuer {
+
+    void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
+        SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders)
+        throws ProcessingActiveOrderException;
+  }
+
+  public void continueProcessingLimitOrderIfNotFulfilled(LimitOrder order,
       TickerData tickerData, SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders,
       LimitOrderProcessingContinuer limitOrderProcessingContinuer)
       throws ProcessingActiveOrderException {
-    if (!limitOrder.isFullyFulfilled()) {
+    if (!order.isFullyFulfilled()) {
       log.debug("New limit order {} is not fully satisfied, so continue processing it.",
-          limitOrder.getOrderId());
+          order.getOrderId());
       limitOrderProcessingContinuer
-          .processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+          .processDirectedLimitOrder(order, tickerData, marketOrders, sameTypeLimitOrders,
               oppositeTypeLimitOrders);
     } else {
-      log.debug("New limit order {} is fully satisfied, so drop it.", limitOrder.getOrderId());
+      log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
     }
   }
+
+  public void continueProcessingMarketOrderIfNotFulfilled(MarketOrder order, TickerData tickerData,
+      SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders,
+      MarketOrderProcessingContinuer marketOrderProcessingContinuer)
+      throws ProcessingActiveOrderException {
+    if (!order.isFullyFulfilled()) {
+      log.debug("New limit order {} is not fully satisfied, so continue processing it.",
+          order.getOrderId());
+      marketOrderProcessingContinuer
+          .processDirectedMarketOrder(order, tickerData, limitOrders, marketOrders);
+    } else {
+      log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
+    }
+  }
+
 
   public <T extends AbstractOrder> void removeOrderIfFulfilled(SortedSet<T> orders, T order,
       Consumer<AbstractOrder> deleteOrderFromDatabase) {
