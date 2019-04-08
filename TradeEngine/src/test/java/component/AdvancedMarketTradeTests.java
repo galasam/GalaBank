@@ -19,7 +19,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
-import unit.RepositoryMockHelper;
+import helpers.MockHelper;
 
 @Slf4j
 public class AdvancedMarketTradeTests {
@@ -62,23 +62,7 @@ public class AdvancedMarketTradeTests {
     //Given some input orders
     final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
 
-    ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
-    IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
-
-    EnteredOrderGeneratorState concreteOrderGenerator = new EnteredOrderGeneratorState();
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
-
-    EnteredOrderGeneratorFactory enteredOrderGeneratorFactory = new EnteredOrderGeneratorFactory(
-        new EnteredOrderGeneratorState());
-
-    OrderValidatorFactory orderValidatorFactory = new OrderValidatorFactory();
-    MarketUtils marketUtils = new MarketUtils();
-
-    MarketService marketService = new MarketService(tradeRepository, orderRepository,
-        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory, marketUtils);
+    MarketService marketService = MockHelper.getMarketService();
 
     //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);

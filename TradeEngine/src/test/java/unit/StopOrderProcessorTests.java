@@ -10,6 +10,7 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.orderProcessors.StopOrderProcessor;
+import helpers.MockHelper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -26,7 +27,7 @@ public class StopOrderProcessorTests {
     IOrderRepository orderRepository = mock(IOrderRepository.class);
     MarketUtils marketUtils = mock(MarketUtils.class);
     StopOrderProcessor stopOrderProcessor = new StopOrderProcessor(orderRepository,
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class), marketState, marketUtils);
+        MockHelper.getEmptyRepository(ITradeRepository.class), marketState, marketUtils);
     //When: it is processed
     stopOrderProcessor.process(stopOrder);
     //Then: the order is added to the market state stop orders and saved

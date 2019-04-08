@@ -18,6 +18,7 @@ public class OrderProcessorFactory {
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
   private final MarketUtils marketUtils;
+  private final OrderProcessorUtils orderProcessorUtils;
 
   public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type)
       throws OrderTypeNotSupportedException {
@@ -27,7 +28,7 @@ public class OrderProcessorFactory {
         return new StopOrderProcessor(orderRepository, tradeRepository, marketState, marketUtils);
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState,
-            marketUtils);
+            marketUtils, orderProcessorUtils);
       case ACTIVE_MARKET:
         return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState,
             marketUtils);

@@ -16,7 +16,9 @@ import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
+import helpers.MockHelper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,12 +28,12 @@ public class MarketStatusReturnTests {
   public void orderEnteredIsShownInStatus() {
     //Given: an order
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
+        MockHelper.getEmptyRepository(ITradeRepository.class),
+        MockHelper.getEmptyRepository(IOrderRepository.class),
+        new MarketUtils(), new OrderProcessorUtils());
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
+        MockHelper.getEmptyRepository(ITradeRepository.class),
+        MockHelper.getEmptyRepository(IOrderRepository.class),
         new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
         orderProcessorFactory,
         new OrderValidatorFactory(),
@@ -67,12 +69,12 @@ public class MarketStatusReturnTests {
   public void orderTradeIsShownInStatus() {
     //Given: two matching trades
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
+        MockHelper.getEmptyRepository(ITradeRepository.class),
+        MockHelper.getEmptyRepository(IOrderRepository.class),
+        new MarketUtils(), new OrderProcessorUtils());
     MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
+        MockHelper.getEmptyRepository(ITradeRepository.class),
+        MockHelper.getEmptyRepository(IOrderRepository.class),
         new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
         orderProcessorFactory,
         new OrderValidatorFactory(),

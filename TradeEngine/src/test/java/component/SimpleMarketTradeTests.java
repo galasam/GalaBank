@@ -16,24 +16,15 @@ import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-import unit.RepositoryMockHelper;
+import helpers.MockHelper;
 
 public class SimpleMarketTradeTests {
 
   @Test
   public void testSimpleTimeStep() {
     //Given: Limit Buy and Market sell orders that should match
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
-    MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
+    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
+    MarketService marketService = MockHelper.getMarketService();
 
     LimitOrderRequest limitOrder = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -74,17 +65,8 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithMatchingLimits() {
 
     //Give: two limit orders that should match
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
-    MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
+    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
+    MarketService marketService = MockHelper.getMarketService();
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -126,17 +108,8 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithNonMatchingLimits() {
 
     //Given: two limit orders that have non-matching limits
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
-    MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
+    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
+    MarketService marketService = MockHelper.getMarketService();
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
@@ -169,17 +142,8 @@ public class SimpleMarketTradeTests {
   public void testOrderPartialFulfillment() {
 
     //Given: 2 buy orders and a sell order with the quantity of them added together
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils());
-    MarketService marketService = new MarketService(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
+    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
+    MarketService marketService = MockHelper.getMarketService();
 
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
