@@ -1,6 +1,8 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public abstract class AbstractStopOrderRequest extends AbstractOrderRequest {
 
   float triggerPrice;

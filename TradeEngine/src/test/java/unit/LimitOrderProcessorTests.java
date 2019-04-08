@@ -14,6 +14,7 @@ import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveLimitOrderProcessor;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -23,7 +24,7 @@ public class LimitOrderProcessorTests {
 
   @Test
   public void whenAllQueuesAreEmptyTest()
-      throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
+      throws OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException, ProcessingActiveOrderException {
     //Given a limit order and empty queues
     LimitOrder limitOrder = LimitOrder.builder().build();
 

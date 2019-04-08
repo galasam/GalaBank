@@ -4,7 +4,9 @@ package com.gala.sam.tradeEngine.domain.datastructures;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import java.util.Comparator;
 import java.util.TreeSet;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LimitOrderQueue extends TreeSet<LimitOrder> {
 
   private static final Comparator<LimitOrder> price_asc = (LimitOrder a, LimitOrder b) -> {
@@ -39,7 +41,8 @@ public class LimitOrderQueue extends TreeSet<LimitOrder> {
       case PRICE_DECS:
         return price_desc;
       default:
-        throw new UnsupportedOperationException("Sorting method not supported");
+        log.error("Sorting method is not supported so cannot create comparator: {}", method.toString());
+        throw new UnsupportedOperationException("Sorting method not supported: " + method.toString());
     }
   }
 

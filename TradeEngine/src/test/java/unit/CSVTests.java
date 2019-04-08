@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class CSVTests {
 
-  private final static String csvInputHeader = "ORDER ID,GROUP ID,Direction,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
+  private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
   private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
 
   @Test

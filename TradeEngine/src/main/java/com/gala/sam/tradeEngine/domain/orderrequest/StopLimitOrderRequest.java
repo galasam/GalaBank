@@ -2,8 +2,10 @@ package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString(callSuper = true)
 public class StopLimitOrderRequest extends AbstractStopOrderRequest {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_LIMIT;

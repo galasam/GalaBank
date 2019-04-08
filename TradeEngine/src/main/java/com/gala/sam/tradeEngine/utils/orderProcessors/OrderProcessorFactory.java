@@ -5,9 +5,12 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderTy
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class OrderProcessorFactory {
@@ -16,17 +19,21 @@ public class OrderProcessorFactory {
   private final IOrderRepository orderRepository;
   private final MarketUtils marketUtils;
 
-  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type) {
+  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type)
+      throws OrderTypeNotSupportedException {
     switch (type) {
       case STOP_LIMIT:
       case STOP_MARKET:
         return new StopOrderProcessor(orderRepository, tradeRepository, marketState, marketUtils);
       case ACTIVE_LIMIT:
-        return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState, marketUtils);
+        return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState,
+            marketUtils);
       case ACTIVE_MARKET:
-        return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState, marketUtils);
+        return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState,
+            marketUtils);
       default:
-        throw new UnsupportedOperationException("OrderReq type not specified");
+        log.error("Order type {} is not supported so cannot create order processor", type);
+        throw new OrderTypeNotSupportedException(type);
     }
   }
 }

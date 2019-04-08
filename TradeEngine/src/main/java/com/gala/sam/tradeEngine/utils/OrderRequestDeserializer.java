@@ -14,7 +14,9 @@ import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderRequest> {
 
   public OrderRequestDeserializer() {
@@ -79,7 +81,8 @@ public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderReque
             .triggerPrice(triggerPrice)
             .build();
       default:
-        throw new UnsupportedOperationException("Order type not supported");
+        log.error("Order type {} is not supported so cannot deserialize order request", orderType);
+        throw new UnsupportedOperationException();
     }
   }
 }
