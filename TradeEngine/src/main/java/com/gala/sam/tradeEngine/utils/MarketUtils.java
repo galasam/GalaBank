@@ -18,8 +18,10 @@ import java.util.Collection;
 import java.util.SortedSet;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class MarketUtils {
 
   public <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,

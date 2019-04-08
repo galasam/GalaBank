@@ -8,8 +8,10 @@ import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import java.util.SortedSet;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class OrderProcessorUtils {
 
   public interface LimitOrderProcessingContinuer {
