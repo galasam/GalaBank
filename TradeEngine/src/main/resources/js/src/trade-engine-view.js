@@ -9,11 +9,11 @@ class Order extends React.Component {
     console.log(order)
     if (order.limit == null) {
       return (
-        <li className={"order market"} >#{order.orderId}: {order.clientId} made {order.timeInForce} {orderTypeName} Market Order for {order.quantity} shares of {order.ticker} with {order.quantityRemaining} remaining.</li>
+        <li className={"order market"} >#{order.orderId}: {order.clientId} made {order.timeInForce} Market Order for {order.quantity} shares of {order.ticker} with {order.quantityRemaining} remaining.</li>
       );
     } else {
       return (
-        <li className={"order limit"} >#{order.orderId}: {order.clientId} made {order.timeInForce} {orderTypeName} Limit Order for {order.quantity} shares of {order.ticker} at {order.limit} with {order.quantityRemaining} remaining.</li>
+        <li className={"order limit"} >#{order.orderId}: {order.clientId} made {order.timeInForce} Limit Order for {order.quantity} shares of {order.ticker} at {order.limit} with {order.quantityRemaining} remaining.</li>
       );
     }
   }
