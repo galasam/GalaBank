@@ -133,7 +133,46 @@ public class LimitOrderProcessorTests {
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
         eq(limitOrder), eq(tickerData), eq(marketOrders), eq(sameTypeLimitOrders),
         eq(oppositeTypeLimitOrders), eq(activeLimitOrderProcessor));
-    verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(any(), any(), any(), any(), any(), any());
+    verify(orderProcessorUtils).removeOrderIfFulfilled(any(), any(), any());
+  }
+
+  @Test
+  public void whenMarketQueueNotEmpty()
+      throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
+    //Given: non empty market order queue
+    LimitOrder limitOrder = LimitOrder.builder().build();
+    MarketOrder marketOrder = MarketOrder.builder().build();
+
+    IOrderRepository orderRepository = MockHelper
+        .getEmptyRepository(IOrderRepository.class);
+    ITradeRepository ITradeRepository = MockHelper
+        .getEmptyRepository(ITradeRepository.class);
+    MarketState marketState = mock(MarketState.class);
+    MarketUtils marketUtils = mock(MarketUtils.class);
+    OrderProcessorUtils orderProcessorUtils = mock(OrderProcessorUtils.class);
+
+    ActiveLimitOrderProcessor activeLimitOrderProcessor = new ActiveLimitOrderProcessor(
+        orderRepository, ITradeRepository, marketState, marketUtils, orderProcessorUtils);
+
+    SortedSet<MarketOrder> marketOrders = new OrderIdPriorityQueue<>();
+    SortedSet<LimitOrder> sameTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
+    SortedSet<LimitOrder> oppositeTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
+    marketOrders.add(marketOrder);
+    TickerData tickerData = mock(TickerData.class);
+
+    //When: process is called
+    activeLimitOrderProcessor
+        .processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+            oppositeTypeLimitOrders);
+
+    //Then: a trade is made with right params and queueIfTimeInForce is not called
+    verify(marketUtils)
+        .makeTrade(any(), eq(limitOrder), eq(marketOrder), eq(limitOrder.getLimit()),
+            eq(tickerData));
+    verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
+    verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
+        eq(limitOrder), eq(tickerData), eq(marketOrders), eq(sameTypeLimitOrders),
+        eq(oppositeTypeLimitOrders), eq(activeLimitOrderProcessor));
     verify(orderProcessorUtils).removeOrderIfFulfilled(any(), any(), any());
   }
 

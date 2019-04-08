@@ -90,7 +90,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
         MarketOrder marketOrder = marketOrders.first();
         log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
             .toString());
-        marketUtils.makeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+        marketUtils.makeTrade(this::addTradeToStateAndPersist, limitOrder, marketOrder, limitOrder.getLimit(), tickerData);
         orderProcessorUtils
             .removeOrderIfFulfilled(marketOrders, marketOrder, this::deleteOrderFromDatabase);
         orderProcessorUtils
