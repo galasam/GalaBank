@@ -23,6 +23,7 @@ public class OrderCaptureService {
 
   public OrderRequestResponse enterOrder(String csvInput) {
     AbstractOrderRequest orderRequest = parseOrderRequest(csvInput);
+    log.info("Order Request Created: {}", orderRequest);
     OrderRequestResponse response = tradeEngineGateway.enterOrder(orderRequest);
     return response;
   }

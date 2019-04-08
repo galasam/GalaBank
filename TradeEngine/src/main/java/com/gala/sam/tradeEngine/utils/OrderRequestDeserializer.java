@@ -36,7 +36,7 @@ public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderReque
     Direction direction = Direction.valueOf(root.get("direction").asText());
     int quantity = root.get("quantity").asInt();
     TimeInForce timeInForce = TimeInForce.valueOf(root.get("timeInForce").asText());
-    String ticker = root.get("type").asText();
+    String ticker = root.get("ticker").asText();
     final float limit, triggerPrice;
     switch (orderType) {
       case ACTIVE_MARKET:
