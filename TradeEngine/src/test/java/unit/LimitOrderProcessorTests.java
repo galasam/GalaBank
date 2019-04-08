@@ -100,7 +100,9 @@ public class LimitOrderProcessorTests {
       throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
     //Given: empty market order queue and a matching limit order in limit order queue
     LimitOrder limitOrder = LimitOrder.builder().direction(Direction.BUY).limit(20.0f).build();
-    LimitOrder matchingLimitOrder = LimitOrder.builder().direction(Direction.SELL).limit(10.0f)
+    LimitOrder matchingLimitOrderBest = LimitOrder.builder().direction(Direction.SELL).limit(10.0f)
+        .build();
+    LimitOrder matchingLimitOrderWorst = LimitOrder.builder().direction(Direction.SELL).limit(15.0f)
         .build();
 
     IOrderRepository orderRepository = MockHelper
@@ -117,7 +119,8 @@ public class LimitOrderProcessorTests {
     SortedSet<MarketOrder> marketOrders = new OrderIdPriorityQueue<>();
     SortedSet<LimitOrder> sameTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     SortedSet<LimitOrder> oppositeTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
-    oppositeTypeLimitOrders.add(matchingLimitOrder);
+    oppositeTypeLimitOrders.add(matchingLimitOrderWorst);
+    oppositeTypeLimitOrders.add(matchingLimitOrderBest);
     TickerData tickerData = mock(TickerData.class);
 
     //When: process is called
@@ -127,7 +130,7 @@ public class LimitOrderProcessorTests {
 
     //Then: a trade is made with right params and queueIfTimeInForce is not called
     verify(marketUtils)
-        .makeTrade(any(), eq(limitOrder), eq(matchingLimitOrder), eq(matchingLimitOrder.getLimit()),
+        .makeTrade(any(), eq(limitOrder), eq(matchingLimitOrderBest), eq(matchingLimitOrderBest.getLimit()),
             eq(tickerData));
     verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
@@ -141,7 +144,9 @@ public class LimitOrderProcessorTests {
       throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
     //Given: non empty market order queue
     LimitOrder limitOrder = LimitOrder.builder().build();
-    MarketOrder marketOrder = MarketOrder.builder().build();
+    MarketOrder marketOrderFirst = MarketOrder.builder().orderId(1).build();
+    MarketOrder marketOrderSecond = MarketOrder.builder().orderId(2).build();
+
 
     IOrderRepository orderRepository = MockHelper
         .getEmptyRepository(IOrderRepository.class);
@@ -157,7 +162,8 @@ public class LimitOrderProcessorTests {
     SortedSet<MarketOrder> marketOrders = new OrderIdPriorityQueue<>();
     SortedSet<LimitOrder> sameTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     SortedSet<LimitOrder> oppositeTypeLimitOrders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
-    marketOrders.add(marketOrder);
+    marketOrders.add(marketOrderFirst);
+    marketOrders.add(marketOrderSecond);
     TickerData tickerData = mock(TickerData.class);
 
     //When: process is called
@@ -167,7 +173,7 @@ public class LimitOrderProcessorTests {
 
     //Then: a trade is made with right params and queueIfTimeInForce is not called
     verify(marketUtils)
-        .makeTrade(any(), eq(limitOrder), eq(marketOrder), eq(limitOrder.getLimit()),
+        .makeTrade(any(), eq(limitOrder), eq(marketOrderFirst), eq(limitOrder.getLimit()),
             eq(tickerData));
     verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
