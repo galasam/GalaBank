@@ -23,7 +23,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
       ITradeRepository tradeRepository,
       MarketState marketState, MarketUtils marketUtils,
       OrderProcessorUtils orderProcessorUtils) {
-    super(orderRepository, tradeRepository, marketState, marketUtils);
+    super(marketState, marketUtils, orderRepository, tradeRepository);
     this.orderProcessorUtils = orderProcessorUtils;
   }
 
