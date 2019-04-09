@@ -136,13 +136,13 @@ public class MarketService {
   }
 
   private void processTriggeredStopOrders() {
-    Iterator<AbstractStopOrder> it = marketState.getStopOrders().iterator();
-    while (it.hasNext()) {
-      AbstractStopOrder stopOrder = it.next();
+    Iterator<AbstractStopOrder> stopOrderIterator = marketState.getStopOrders().iterator();
+    while (stopOrderIterator.hasNext()) {
+      AbstractStopOrder stopOrder = stopOrderIterator.next();
       log.debug("Testing Trigger on: " + stopOrder.toString());
       if (isStopLossTriggered(stopOrder)) {
         log.debug("Stop order request Triggered");
-        it.remove();
+        stopOrderIterator.remove();
         orderRepository.delete(stopOrder);
         AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
         try {
