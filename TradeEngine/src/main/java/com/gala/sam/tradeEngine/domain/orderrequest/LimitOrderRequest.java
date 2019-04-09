@@ -2,17 +2,17 @@ package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.Value;
 
-@Value
+@Getter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
 public class LimitOrderRequest extends AbstractActiveOrderRequest {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;
 
-  float limit;
+  private final float limit;
 
   @Builder
   public LimitOrderRequest(int clientId, Direction direction, int quantity,

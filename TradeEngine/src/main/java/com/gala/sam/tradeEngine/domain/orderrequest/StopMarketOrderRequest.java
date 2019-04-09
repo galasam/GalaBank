@@ -1,9 +1,10 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 
-@Value
 public class StopMarketOrderRequest extends AbstractStopOrderRequest {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_MARKET;
