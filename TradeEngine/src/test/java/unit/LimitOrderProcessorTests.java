@@ -18,9 +18,6 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Directi
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveLimitOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
 import helpers.MockHelper;
@@ -30,8 +27,7 @@ import org.junit.Test;
 public class LimitOrderProcessorTests {
 
   @Test
-  public void whenAllQueuesAreEmptyTest()
-      throws OrderTimeInForceNotSupportedException, ProcessingActiveOrderException {
+  public void whenAllQueuesAreEmptyTest() {
     //Given a limit order and empty queues
     LimitOrder limitOrder = LimitOrder.builder().build();
 
@@ -57,12 +53,11 @@ public class LimitOrderProcessorTests {
             oppositeTypeLimitOrders);
 
     //Then: queueIfTimeInForce is called with the right parameters
-    verify(marketUtils).queueIfTimeInForce(eq(limitOrder), eq(sameTypeLimitOrders), any());
+    verify(marketUtils).queueIfGTC(eq(limitOrder), eq(sameTypeLimitOrders), any());
   }
 
   @Test
-  public void whenMarketQueueEmptyNonMatchingLimitOrderInLimitQueue()
-      throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
+  public void whenMarketQueueEmptyNonMatchingLimitOrderInLimitQueue() {
     //Given: empty market order queue and a non matching limit order in limit order queue
     LimitOrder limitOrder = LimitOrder.builder().direction(Direction.BUY).limit(10.0f).build();
     LimitOrder nonMatchingLimitOrder = LimitOrder.builder().direction(Direction.SELL).limit(20.0f)
@@ -90,14 +85,13 @@ public class LimitOrderProcessorTests {
         .processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
-    //Then: no trade is made and queueIfTimeInForce is called with the right parameters
-    verify(marketUtils).queueIfTimeInForce(eq(limitOrder), eq(sameTypeLimitOrders), any());
-    verify(marketUtils, never()).makeTrade(any(), any(), any(), anyFloat(), any());
+    //Then: no trade is made and queueIfGTC is called with the right parameters
+    verify(marketUtils).queueIfGTC(eq(limitOrder), eq(sameTypeLimitOrders), any());
+    verify(marketUtils, never()).tryMakeTrade(any(), any(), any(), anyFloat(), any());
   }
 
   @Test
-  public void whenMarketQueueEmptyMatchingLimitOrderInLimitQueue()
-      throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
+  public void whenMarketQueueEmptyMatchingLimitOrderInLimitQueue() {
     //Given: empty market order queue and a matching limit order in limit order queue
     LimitOrder limitOrder = LimitOrder.builder().direction(Direction.BUY).limit(20.0f).build();
     LimitOrder matchingLimitOrderBest = LimitOrder.builder().direction(Direction.SELL).limit(10.0f)
@@ -128,11 +122,11 @@ public class LimitOrderProcessorTests {
         .processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
-    //Then: a trade is made with right params and queueIfTimeInForce is not called
+    //Then: a trade is made with right params and queueIfGTC is not called
     verify(marketUtils)
-        .makeTrade(any(), eq(limitOrder), eq(matchingLimitOrderBest), eq(matchingLimitOrderBest.getLimit()),
+        .tryMakeTrade(any(), eq(limitOrder), eq(matchingLimitOrderBest), eq(matchingLimitOrderBest.getLimit()),
             eq(tickerData));
-    verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
+    verify(marketUtils, never()).queueIfGTC(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
         eq(limitOrder), eq(tickerData), eq(marketOrders), eq(sameTypeLimitOrders),
         eq(oppositeTypeLimitOrders), eq(activeLimitOrderProcessor));
@@ -140,8 +134,7 @@ public class LimitOrderProcessorTests {
   }
 
   @Test
-  public void whenMarketQueueNotEmpty()
-      throws ProcessingActiveOrderException, AbstractOrderFieldNotSupportedException {
+  public void whenMarketQueueNotEmpty() {
     //Given: non empty market order queue
     LimitOrder limitOrder = LimitOrder.builder().build();
     MarketOrder marketOrderFirst = MarketOrder.builder().orderId(1).build();
@@ -171,11 +164,11 @@ public class LimitOrderProcessorTests {
         .processDirectedLimitOrder(limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
-    //Then: a trade is made with right params and queueIfTimeInForce is not called
+    //Then: a trade is made with right params and queueIfGTC is not called
     verify(marketUtils)
-        .makeTrade(any(), eq(limitOrder), eq(marketOrderFirst), eq(limitOrder.getLimit()),
+        .tryMakeTrade(any(), eq(limitOrder), eq(marketOrderFirst), eq(limitOrder.getLimit()),
             eq(tickerData));
-    verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
+    verify(marketUtils, never()).queueIfGTC(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
         eq(limitOrder), eq(tickerData), eq(marketOrders), eq(sameTypeLimitOrders),
         eq(oppositeTypeLimitOrders), eq(activeLimitOrderProcessor));
