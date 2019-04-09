@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
 
-  private final IOrderRepository orderRepository;
-  private final ITradeRepository tradeRepository;
   protected final MarketState marketState;
   protected final MarketUtils marketUtils;
+  private final IOrderRepository orderRepository;
+  private final ITradeRepository tradeRepository;
 
   protected void saveOrderToDatabase(AbstractOrder order) {
     orderRepository.save(order);

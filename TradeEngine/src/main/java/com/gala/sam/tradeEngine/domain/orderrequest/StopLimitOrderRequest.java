@@ -10,7 +10,7 @@ public class StopLimitOrderRequest extends AbstractStopOrderRequest {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_LIMIT;
 
-  float limit;
+  private final float limit;
 
   @Builder
   public StopLimitOrderRequest(int clientId, Direction direction, int quantity,

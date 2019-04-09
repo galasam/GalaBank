@@ -103,7 +103,8 @@ public class MarketService {
       orderProcessor = orderProcessorFactory
           .getOrderProcessor(marketState, order.getType());
     } catch (OrderTypeNotSupportedException e) {
-      log.error("Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
+      log.error(
+          "Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
           order.getOrderId(), e.toString());
       return;
     }

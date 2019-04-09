@@ -6,15 +6,15 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import java.util.LinkedList;
@@ -101,7 +101,8 @@ public class MarketUtilTests {
     Consumer<Trade> save = mock(Consumer.class);
 
     //When makeTrade is called
-    new MarketUtils().tryMakeTrade(save, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData);
+    new MarketUtils()
+        .tryMakeTrade(save, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData);
 
     /*Then:
      - LastExecutedTradePrice is updated

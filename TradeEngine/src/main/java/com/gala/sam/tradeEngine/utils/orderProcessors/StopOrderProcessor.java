@@ -12,7 +12,7 @@ public class StopOrderProcessor extends AbstractOrderProcessor<AbstractStopOrder
 
   public StopOrderProcessor(IOrderRepository orderRepository, ITradeRepository tradeRepository,
       MarketState marketState, MarketUtils marketUtils) {
-    super(orderRepository, tradeRepository, marketState, marketUtils);
+    super(marketState, marketUtils, orderRepository, tradeRepository);
   }
 
   @Override

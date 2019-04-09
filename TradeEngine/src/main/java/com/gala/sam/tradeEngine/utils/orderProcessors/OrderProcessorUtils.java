@@ -13,20 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderProcessorUtils {
 
-  public interface LimitOrderProcessingContinuer {
-
-    void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
-        SortedSet<MarketOrder> marketOrders,
-        SortedSet<LimitOrder> sameTypeLimitOrders,
-        SortedSet<LimitOrder> oppositeTypeLimitOrders);
-  }
-
-  public interface MarketOrderProcessingContinuer {
-
-    void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
-        SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders);
-  }
-
   public void continueProcessingLimitOrderIfNotFulfilled(LimitOrder order,
       TickerData tickerData, SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders,
@@ -62,5 +48,19 @@ public class OrderProcessorUtils {
       orders.remove(order);
       deleteOrderFromDatabase.accept(order);
     }
+  }
+
+  public interface LimitOrderProcessingContinuer {
+
+    void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
+        SortedSet<MarketOrder> marketOrders,
+        SortedSet<LimitOrder> sameTypeLimitOrders,
+        SortedSet<LimitOrder> oppositeTypeLimitOrders);
+  }
+
+  public interface MarketOrderProcessingContinuer {
+
+    void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
+        SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders);
   }
 }

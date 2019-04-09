@@ -14,14 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrder>
-implements MarketOrderProcessingContinuer {
+    implements MarketOrderProcessingContinuer {
 
   private final OrderProcessorUtils orderProcessorUtils;
 
   public ActiveMarketOrderProcessor(IOrderRepository orderRepository,
       ITradeRepository tradeRepository, MarketState marketState, MarketUtils marketUtils,
       OrderProcessorUtils orderProcessorUtils) {
-    super(orderRepository, tradeRepository, marketState, marketUtils);
+    super(marketState, marketUtils, orderRepository, tradeRepository);
     this.orderProcessorUtils = orderProcessorUtils;
   }
 
@@ -42,14 +42,16 @@ implements MarketOrderProcessingContinuer {
       processDirectedMarketOrder(marketOrder, tickerData,
           tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
     } else {
-      log.error("Order {} has unsupported direction {} so will not be processed", marketOrder.getOrderId(), marketOrder.getDirection());
+      log.error("Order {} has unsupported direction {} so will not be processed",
+          marketOrder.getOrderId(), marketOrder.getDirection());
     }
   }
 
   public void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
       SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
     if (limitOrders.isEmpty()) {
-      log.debug("Limit order queue empty so no possible limit order matches for market order: {}", marketOrder.getOrderId());
+      log.debug("Limit order queue empty so no possible limit order matches for market order: {}",
+          marketOrder.getOrderId());
       marketUtils.queueIfGTC(marketOrder, marketOrders, this::saveOrderToDatabase);
     } else {
       LimitOrder limitOrder = limitOrders.first();

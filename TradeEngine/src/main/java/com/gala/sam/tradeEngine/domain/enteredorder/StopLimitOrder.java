@@ -9,8 +9,10 @@ import javax.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity(name = "StopLimitOrderRequest")
 @DiscriminatorValue("StopLimitOrderRequest")
