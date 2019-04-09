@@ -4,7 +4,6 @@ import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.exception.ProcessingOrderException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
     tradeRepository.save(order);
   }
 
-  public abstract void process(T order)
-      throws ProcessingOrderException;
+  public abstract void process(T order);
 
 }

@@ -1,6 +1,6 @@
 package unit;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.tryMakeTrade;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfGTC;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -18,7 +18,6 @@ import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMet
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -31,7 +30,7 @@ import org.junit.Test;
 public class MarketUtilTests {
 
   @Test
-  public void testQueueIfTimeInForce() throws OrderTimeInForceNotSupportedException {
+  public void testQueueIfTimeInForce() {
     //Given: GTC order
     SortedSet<LimitOrder> orders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
@@ -49,7 +48,7 @@ public class MarketUtilTests {
   }
 
   @Test
-  public void testQueueIfTimeNotInForce() throws OrderTimeInForceNotSupportedException {
+  public void testQueueIfTimeNotInForce() {
     //Given: FOK order
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
@@ -102,8 +101,8 @@ public class MarketUtilTests {
 
     Consumer<Trade> save = mock(Consumer.class);
 
-    //When makeTrade is called
-    makeTrade(marketState, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData, save);
+    //When tryMakeTrade is called
+    tryMakeTrade(marketState, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData, save);
 
     /*Then:
      - LastExecutedTradePrice is updated

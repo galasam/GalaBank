@@ -21,7 +21,6 @@ import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGenerat
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.ProcessingOrderException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderValidators.IOrderValidator;
@@ -84,16 +83,7 @@ public class MarketService {
       return Optional.empty();
     }
 
-    try {
-
-      processOrder(order);
-
-    } catch (ProcessingOrderException e) {
-      log.error(
-          "The Order {} could not be processed and will be dropped since when handling it an exception was raised: {}",
-          order.getOrderId(), e.getStackTrace());
-      return Optional.empty();
-    }
+    tryProcessOrder(order);
 
     processTriggeredStopOrders();
 
@@ -104,8 +94,7 @@ public class MarketService {
     return marketState.getTrades();
   }
 
-  private void processOrder(AbstractOrder order)
-      throws ProcessingOrderException {
+  private void tryProcessOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
 
     final AbstractOrderProcessor orderProcessor;
@@ -115,7 +104,7 @@ public class MarketService {
     } catch (OrderTypeNotSupportedException e) {
       log.error("Cannot create order processor so order {} will not be processed",
           order.getOrderId());
-      throw new ProcessingOrderException(order, e);
+      return;
     }
 
     handleOrderWithTimer(order, orderProcessor);
@@ -125,8 +114,7 @@ public class MarketService {
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor)
-      throws ProcessingOrderException {
+  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
     orderProcessor.process(order);
@@ -145,13 +133,7 @@ public class MarketService {
         stopOrderIterator.remove();
         orderRepository.delete(stopOrder);
         AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
-        try {
-          processOrder(activeOrder);
-        } catch (ProcessingOrderException e) {
-          log.error(
-              "Active Order {} (from triggered stop order) will be dropped since when processing it an exception was raised: {}",
-              stopOrder.getOrderId(), e.getStackTrace());
-        }
+        tryProcessOrder(activeOrder);
       } else {
         log.debug("Stop order request not Triggered");
       }
