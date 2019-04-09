@@ -1,7 +1,7 @@
 package unit;
 
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfGTC;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,8 +37,8 @@ public class MarketUtilTests {
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
-    //When queueIfTimeInForce is called
-    queueIfTimeInForce(order, orders, save);
+    //When queueIfGTC is called
+    queueIfGTC(order, orders, save);
 
     /*Then:
       - Order should be saved
@@ -55,8 +55,8 @@ public class MarketUtilTests {
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
-    //When queueIfTimeInForce is called
-    queueIfTimeInForce(order, orders, save);
+    //When queueIfGTC is called
+    queueIfGTC(order, orders, save);
 
     /*Then:
      - order should not be saved

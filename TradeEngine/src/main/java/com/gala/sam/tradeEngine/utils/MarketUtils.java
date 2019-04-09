@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MarketUtils {
 
-  public static <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
+  public static <T extends AbstractActiveOrder> void queueIfGTC(T order,
       SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder)
       throws OrderTimeInForceNotSupportedException {
     if (order.getTimeInForce().equals(TimeInForce.GTC)) {

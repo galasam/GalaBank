@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfGTC;
 
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
@@ -13,7 +13,6 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +67,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
         log.debug("Market order queue empty, so no possible market order matches for limit order: {}", limitOrder.getOrderId());
         if (oppositeTypeLimitOrders.isEmpty()) {
           log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}", limitOrder.getOrderId());
-          queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrder);
+          queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
         } else {
           LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
           log.debug("Limit order queue not empty, so extracted top order: {}", otherLimitOrder.toString());
@@ -81,7 +80,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
                 sameTypeLimitOrders, oppositeTypeLimitOrders);
           } else {
             log.debug("Limits do not match, so no trade.");
-            queueIfTimeInForce(limitOrder, sameTypeLimitOrders, this::saveOrder);
+            queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
           }
         }
       } else {

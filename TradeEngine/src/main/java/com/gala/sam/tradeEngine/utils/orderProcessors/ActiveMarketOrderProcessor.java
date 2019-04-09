@@ -1,11 +1,10 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
 import static com.gala.sam.tradeEngine.utils.MarketUtils.makeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfGTC;
 
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
@@ -13,7 +12,6 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +57,7 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
     try {
       if (limitOrders.isEmpty()) {
         log.debug("Limit order queue empty so no possible limit order matches for market order: {}", marketOrder.getOrderId());
-        queueIfTimeInForce(marketOrder, marketOrders, this::saveOrder);
+        queueIfGTC(marketOrder, marketOrders, this::saveOrder);
       } else {
         LimitOrder limitOrder = limitOrders.first();
         log.debug("Limit order queue not empty, so trading with best limit order: {}",
