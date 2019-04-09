@@ -3,7 +3,11 @@ package com.gala.sam.orderCapture.service;
 import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
@@ -19,13 +23,13 @@ public class OrderCaptureService {
 
   public OrderRequestResponse enterOrder(String csvInput) {
     AbstractOrderRequest orderRequest = parseOrderRequest(csvInput);
+    log.info("Order Request Created: {}", orderRequest);
     OrderRequestResponse response = tradeEngineGateway.enterOrder(orderRequest);
     return response;
   }
 
   private AbstractOrderRequest parseOrderRequest(String csvInput) {
-    final Stream<String> inputRows = Pattern.compile("\n").splitAsStream(csvInput);
-    final List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(inputRows);
+    final List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
     if (orders.size() > 1) {
       log.warn("Multiple orders {} passed in but only the first is used", orders.size());
     }

@@ -7,6 +7,8 @@ import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +55,10 @@ public class OrderCSVParser {
     INPUT_HEADINGS.put(TRIGGER_PRICE, 8);
   }
 
+  public static List<AbstractOrderRequest> decodeCSV(String csv) {
+    return decodeCSV(new ArrayList<>(Arrays.asList(csv.split("\n"))));
+  }
+
   public static List<AbstractOrderRequest> decodeCSV(List<String> input) {
     if (input.get(0).equals(HEADER)) {
       input.remove(0);
@@ -60,7 +66,7 @@ public class OrderCSVParser {
     return decodeCSV(input.stream());
   }
 
-  public static List<AbstractOrderRequest> decodeCSV(Stream<String> input) {
+  private static List<AbstractOrderRequest> decodeCSV(Stream<String> input) {
     return input
         .map(OrderCSVParser::decodeCSVRow)
         .filter(Optional::isPresent)
