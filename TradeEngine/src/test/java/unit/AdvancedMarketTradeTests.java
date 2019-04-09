@@ -1,15 +1,17 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.repository.OrderRepository;
-import com.gala.sam.tradeEngine.repository.TradeRepository;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.ConcreteOrderGenerator;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
-import com.gala.sam.tradeEngine.utils.OrderProcessor.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -55,20 +57,29 @@ public class AdvancedMarketTradeTests {
 
   private void runTest(int phase, int testNumber) throws IOException {
     log.info(String.format("Running test %d", testNumber));
-    final List<OrderReq> orders = readOrders(phase, testNumber);
+    //Given some input orders
+    final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
 
-    TradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(TradeRepository.class);
-    OrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(OrderRepository.class);
+    ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
+    IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
 
-    ConcreteOrderGenerator concreteOrderGenerator = new ConcreteOrderGenerator();
+    EnteredOrderGeneratorState concreteOrderGenerator = new EnteredOrderGeneratorState();
     OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(TradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(OrderRepository.class));
+        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
+        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
+
+    EnteredOrderGeneratorFactory enteredOrderGeneratorFactory = new EnteredOrderGeneratorFactory(
+        new EnteredOrderGeneratorState());
+
+    OrderValidatorFactory orderValidatorFactory = new OrderValidatorFactory();
 
     MarketService marketService = new MarketService(tradeRepository, orderRepository,
-        concreteOrderGenerator, orderProcessorFactory);
+        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory);
+
+    //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);
 
+    //Then: the produced trades should match the expected outputs
     final List<Trade> trades = marketService.getAllMatchedTrades();
     final List<Trade> tradesReference = readTrades(phase, testNumber);
     Assert.assertEquals(
@@ -83,7 +94,7 @@ public class AdvancedMarketTradeTests {
     return TradeCSVParser.decodeCSV(inputText);
   }
 
-  private List<OrderReq> readOrders(int phase, int testNumber) throws IOException {
+  private List<AbstractOrderRequest> readOrders(int phase, int testNumber) throws IOException {
     log.debug("Reading Orders from file");
     String filepath = getInputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);

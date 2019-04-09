@@ -1,14 +1,11 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.Order;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RestEntryPoint {
 
-
   final MarketService marketService;
 
   @PostMapping("/enter-order")
-  public com.gala.sam.tradeEngine.domain.EnteredOrder.Order enterOrder(
-      @RequestBody String csvInput) {
-    final Stream<String> inputRows = Pattern.compile("\n").splitAsStream(csvInput);
-    final List<OrderReq> orders = OrderCSVParser.decodeCSV(inputRows);
-    final OrderReq order = orders.get(0);
-    Order enteredOrder = marketService.enterOrder(order);
-    log.info("OrderReq entered into Trading Engine: {}", enteredOrder);
-    return enteredOrder;
+  public <T extends AbstractOrderRequest> OrderRequestResponse enterOrder(@RequestBody T order) {
+    log.info("Order request received into Trading Engine: {}", order.toString());
+    if(marketService.enterOrder(order).isPresent()) {
+      log.info("Order request successfully entered into Trading Engine: {}", order.toString());
+      return OrderRequestResponse.Success();
+    } else {
+      log.info("Order request failed to be entered into Trading Engine: {}", order.toString());
+      return OrderRequestResponse.Error();
+    }
   }
 
   @GetMapping("trades")

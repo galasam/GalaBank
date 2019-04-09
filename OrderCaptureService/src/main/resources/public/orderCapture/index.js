@@ -2,44 +2,16 @@
 class OrderSystem extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      placedOrders: []
-    }
-  }
-
-  addOrder(order) {
-    const newPlacedOrders = this.state.placedOrders.slice();
-    newPlacedOrders.push(order)
-    this.setState({
-      placedOrders: newPlacedOrders
-    })
   }
 
   render() {
     return (
       <div>
-        <OrderForm
-          addOrder={this.addOrder.bind(this)}
-        />
-        <OrderList
-          placedOrders={this.state.placedOrders}
-        />
+        <OrderForm />
       </div>
     );
   }
 
-}
-
-class OrderList extends React.Component {
-  render() {
-    return (
-      <ul>
-      {this.props.placedOrders.map((order) =>
-        <li key={order.orderId}>{order.orderId} {order.direction} {order.quantity} {order.ticker}</li>
-      )}
-      </ul>
-    );
-  }
 }
 
 class OrderForm extends React.Component {
@@ -72,7 +44,6 @@ class OrderForm extends React.Component {
       processData: false,
       data: this.state.submitValue,
     }).done( (ret) => {
-      this.props.addOrder(ret);
       this.setState({
         feedback: {type: "positive"}
       })

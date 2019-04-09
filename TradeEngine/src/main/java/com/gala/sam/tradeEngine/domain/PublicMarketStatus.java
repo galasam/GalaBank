@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.domain;
 
-import com.gala.sam.tradeEngine.domain.EnteredOrder.ActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -17,8 +17,8 @@ public class PublicMarketStatus {
   public static class Ticker {
 
     String name;
-    List<ActiveOrder> buy;
-    List<ActiveOrder> sell;
+    List<AbstractActiveOrder> buy;
+    List<AbstractActiveOrder> sell;
   }
 
 }

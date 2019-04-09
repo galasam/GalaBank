@@ -1,9 +1,9 @@
 package unit;
 
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.DIRECTION;
-import com.gala.sam.tradeEngine.domain.OrderReq.OrderReq.TIME_IN_FORCE;
-import com.gala.sam.tradeEngine.domain.OrderReq.StopLimitOrderReq;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
@@ -21,23 +21,26 @@ public class CSVTests {
   @Test
   public void canDecodeCSVStopLimitOrder() {
 
+    //Given: A CSV string
     final String limitOrderInput = "1,1,BUY,999,Fred,STOP-LIMIT,3.14,GTC,666";
-    final OrderReq limitOrderOutput = StopLimitOrderReq.builder()
+    final AbstractOrderRequest limitOrderOutput = StopLimitOrderRequest.builder()
         .triggerPrice(666)
         .clientId(1)
-        .direction(DIRECTION.BUY)
+        .direction(Direction.BUY)
         .quantity(999)
         .ticker("Fred")
         .limit(3.14f)
-        .timeInForce(TIME_IN_FORCE.GTC)
+        .timeInForce(TimeInForce.GTC)
         .build();
 
     final List<String> csvInput = new ArrayList<>();
     csvInput.add(csvInputHeader);
     csvInput.add(limitOrderInput);
 
-    List<OrderReq> orders = OrderCSVParser.decodeCSV(csvInput);
+    //When: CSV is decoded
+    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
 
+    //Then: A single order should be returned correctly
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
     Assert.assertEquals("Decoder should decode a stop limit order correctly", orders.get(0),
         limitOrderOutput);
@@ -45,6 +48,7 @@ public class CSVTests {
 
   @Test
   public void canEncodeTradeToCSV() {
+    //Given: A trade object
     final Trade tradeInput = Trade.builder()
         .buyOrder(64)
         .sellOrder(118)
@@ -62,8 +66,10 @@ public class CSVTests {
     final List<Trade> inputTrades = new LinkedList<>();
     inputTrades.add(tradeInput);
 
+    //When: the trade is encoded in to CSV
     final List<String> output = TradeCSVParser.encodeCSV(inputTrades);
 
+    //Then: the returned CSV should be correct
     Assert.assertEquals("Encoder should encode a trade correctly", output, outputTest);
   }
 
