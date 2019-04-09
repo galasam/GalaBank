@@ -1,4 +1,4 @@
-package unit;
+package component;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.Trade;
@@ -6,6 +6,7 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
@@ -18,6 +19,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import helpers.MockHelper;
 
 @Slf4j
 public class AdvancedMarketTradeTests {
@@ -60,21 +62,7 @@ public class AdvancedMarketTradeTests {
     //Given some input orders
     final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
 
-    ITradeRepository tradeRepository = RepositoryMockHelper.getEmptyRepository(ITradeRepository.class);
-    IOrderRepository orderRepository = RepositoryMockHelper.getEmptyRepository(IOrderRepository.class);
-
-    EnteredOrderGeneratorState concreteOrderGenerator = new EnteredOrderGeneratorState();
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        RepositoryMockHelper.getEmptyRepository(ITradeRepository.class),
-        RepositoryMockHelper.getEmptyRepository(IOrderRepository.class));
-
-    EnteredOrderGeneratorFactory enteredOrderGeneratorFactory = new EnteredOrderGeneratorFactory(
-        new EnteredOrderGeneratorState());
-
-    OrderValidatorFactory orderValidatorFactory = new OrderValidatorFactory();
-
-    MarketService marketService = new MarketService(tradeRepository, orderRepository,
-        enteredOrderGeneratorFactory, orderProcessorFactory, orderValidatorFactory);
+    MarketService marketService = MockHelper.getMarketService();
 
     //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);

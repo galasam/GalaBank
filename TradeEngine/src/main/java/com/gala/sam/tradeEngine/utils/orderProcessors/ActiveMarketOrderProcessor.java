@@ -1,8 +1,5 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.tryMakeTrade;
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfGTC;
-
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
@@ -10,18 +7,22 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils.MarketOrderProcessingContinuer;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrder> {
+public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrder>
+implements MarketOrderProcessingContinuer {
 
-  private final MarketState marketState;
+  private final OrderProcessorUtils orderProcessorUtils;
 
   public ActiveMarketOrderProcessor(IOrderRepository orderRepository,
-      ITradeRepository tradeRepository, MarketState marketState) {
-    super(orderRepository, tradeRepository);
-    this.marketState = marketState;
+      ITradeRepository tradeRepository, MarketState marketState, MarketUtils marketUtils,
+      OrderProcessorUtils orderProcessorUtils) {
+    super(orderRepository, tradeRepository, marketState, marketUtils);
+    this.orderProcessorUtils = orderProcessorUtils;
   }
 
   @Override
@@ -45,28 +46,22 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
     }
   }
 
-  private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
+  public void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
       SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
     if (limitOrders.isEmpty()) {
       log.debug("Limit order queue empty so no possible limit order matches for market order: {}", marketOrder.getOrderId());
-      queueIfGTC(marketOrder, marketOrders, this::saveOrder);
+      marketUtils.queueIfGTC(marketOrder, marketOrders, this::saveOrderToDatabase);
     } else {
       LimitOrder limitOrder = limitOrders.first();
       log.debug("Limit order queue not empty, so trading with best limit order: {}",
           limitOrder.toString());
-      tryMakeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
-          this::saveTrade);
-      if (limitOrder.isFullyFulfilled()) {
-        log.debug("Limit order {} is fully satisfied so removing", limitOrder.getOrderId());
-        limitOrders.remove(limitOrder);
-        deleteOrder(limitOrder);
-      }
-      if (!marketOrder.isFullyFulfilled()) {
-        log.debug("New market order {} is not fully satisfied so continue processing .",
-            marketOrder);
-        processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
-      }
+      marketUtils.tryMakeTrade(this::addTradeToStateAndPersist, marketOrder, limitOrder,
+          limitOrder.getLimit(), tickerData);
+      orderProcessorUtils.removeOrderIfFulfilled(limitOrders, limitOrder,
+          this::deleteOrderFromDatabase);
+      orderProcessorUtils
+          .continueProcessingMarketOrderIfNotFulfilled(marketOrder, tickerData, limitOrders,
+              marketOrders, this);
     }
   }
-
 }

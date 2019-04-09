@@ -1,6 +1,5 @@
 package com.gala.sam.tradeEngine.service;
 
-import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromOrderRepository;
 import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
 
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
@@ -17,6 +16,7 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
@@ -46,13 +46,14 @@ public class MarketService {
   private final EnteredOrderGeneratorFactory concreteOrderGeneratorFactory;
   private final OrderProcessorFactory orderProcessorFactory;
   private final OrderValidatorFactory orderValidatorFactory;
-  private MarketState marketState = new MarketState();
+  private final MarketUtils marketUtils;
+  private final MarketState marketState = new MarketState();
 
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
     updateMarketStateFromTradeRepository(marketState, tradeRepository);
-    updateMarketStateFromOrderRepository(marketState, orderRepository);
+    marketUtils.updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {

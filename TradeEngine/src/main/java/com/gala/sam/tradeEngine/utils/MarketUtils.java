@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MarketUtils {
 
-  public static <T extends AbstractActiveOrder> void queueIfGTC(T order,
+  public <T extends AbstractActiveOrder> void queueIfGTC(T order,
       SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder) {
-    if (order.getTimeInForce().equals(TimeInForce.GTC)) {
+        if (order.getTimeInForce().equals(TimeInForce.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
       saveOrder.accept(order);
@@ -34,8 +34,8 @@ public class MarketUtils {
     }
   }
 
-  public static void tryMakeTrade(MarketState marketState, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
-      TickerData ticketData, Consumer<Trade> saveTrade) {
+  public void tryMakeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
+      TickerData ticketData) {
     log.debug("Setting last executed price of {} as {}", ticketData.getName(), ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
@@ -66,14 +66,12 @@ public class MarketUtils {
       log.error("Order {} has unsupported direction {} so trade will not be created", a.getOrderId(), a.getDirection());
       return;
     }
-    marketState.getTrades().add(trade);
     saveTrade.accept(trade);
   }
 
-  public static void updateMarketStateFromOrderRepository(MarketState marketState,
-      IOrderRepository orderRepository) {
-    Iterable<AbstractOrder> ordersFromDatabase = orderRepository
-        .findAll();
+  public void updateMarketStateFromOrderRepository(MarketState marketState,
+          IOrderRepository orderRepository) {
+        Iterable<AbstractOrder> ordersFromDatabase = orderRepository.findAll();
     for (AbstractOrder order : ordersFromDatabase) {
       log.debug("Reading order: {}", order.getOrderId());
       TickerData tickerQueueGroup;
