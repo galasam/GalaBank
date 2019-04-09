@@ -12,6 +12,8 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Directi
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
+import java.io.IOException;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,40 +57,43 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
       SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders,
       SortedSet<LimitOrder> oppositeTypeLimitOrders) {
-    try {
-      if (marketOrders.isEmpty()) {
-        log.debug("Market order queue empty, so no possible market order matches for limit order: {}", limitOrder.getOrderId());
-        if (oppositeTypeLimitOrders.isEmpty()) {
-          log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}", limitOrder.getOrderId());
-          queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
-        } else {
-          LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
-          log.debug("Limit order queue not empty, so extracted top order: {}", otherLimitOrder.toString());
-          if (limitOrder.limitMatches(otherLimitOrder)) {
-            log.debug("Limits match so completing trade with order: {}", otherLimitOrder.getOrderId());
-              tryMakeTrade(marketState, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(),
-                  tickerData, this::saveTrade);
-            removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder);
-            continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
-                sameTypeLimitOrders, oppositeTypeLimitOrders);
-          } else {
-            log.debug("Limits do not match, so no trade.");
-            queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
-          }
-        }
+    if (marketOrders.isEmpty()) {
+      log.debug("Market order queue empty, so no possible market order matches for limit order: {}", limitOrder.getOrderId());
+      if (oppositeTypeLimitOrders.isEmpty()) {
+        log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}", limitOrder.getOrderId());
+        queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
       } else {
-        MarketOrder marketOrder = marketOrders.first();
-        log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
-            .toString());
-        tryMakeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
-            this::saveTrade);
-        removeOrderIfFulfilled(marketOrders, marketOrder);
-        continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
-            sameTypeLimitOrders, oppositeTypeLimitOrders);
-
+        LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
+        log.debug("Limit order queue not empty, so extracted top order: {}", otherLimitOrder.toString());
+        final boolean limitsMatch;
+        try {
+          limitsMatch = limitOrder.limitMatches(otherLimitOrder);
+        } catch (OrderDirectionNotSupportedException e) {
+          log.error("During matching an exception was raised so order {} will not be processed: {}", limitOrder.getOrderId(), e.toString());
+          return;
+        }
+        if (limitsMatch) {
+          log.debug("Limits match so completing trade with order: {}", otherLimitOrder.getOrderId());
+            tryMakeTrade(marketState, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(),
+                tickerData, this::saveTrade);
+          removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder);
+          continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
+              sameTypeLimitOrders, oppositeTypeLimitOrders);
+        } else {
+          log.debug("Limits do not match, so no trade.");
+          queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrder);
+        }
       }
-    } catch (AbstractOrderFieldNotSupportedException e) {
-      log.error("Order {} has unsupported field {} so will not be processed", limitOrder.getOrderId(), limitOrder.getDirection());
+    } else {
+      MarketOrder marketOrder = marketOrders.first();
+      log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
+          .toString());
+      tryMakeTrade(marketState, marketOrder, limitOrder, limitOrder.getLimit(), tickerData,
+          this::saveTrade);
+      removeOrderIfFulfilled(marketOrders, marketOrder);
+      continueProcessingLimitOrderIfNotFulfilled(limitOrder, tickerData, marketOrders,
+          sameTypeLimitOrders, oppositeTypeLimitOrders);
+
     }
   }
 

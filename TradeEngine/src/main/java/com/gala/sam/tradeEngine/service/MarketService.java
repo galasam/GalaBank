@@ -79,7 +79,7 @@ public class MarketService {
     } catch (AbstractOrderFieldNotSupportedException e) {
       log.error(
           "Concrete order could not be generated so Order Request {} will be dropped since when handling it an exception was raised: {}",
-          orderRequest, e.getStackTrace());
+          orderRequest, e.toString());
       return Optional.empty();
     }
 
@@ -102,8 +102,8 @@ public class MarketService {
       orderProcessor = orderProcessorFactory
           .getOrderProcessor(marketState, order.getType());
     } catch (OrderTypeNotSupportedException e) {
-      log.error("Cannot create order processor so order {} will not be processed",
-          order.getOrderId());
+      log.error("Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
+          order.getOrderId(), e.toString());
       return;
     }
 
