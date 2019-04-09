@@ -11,7 +11,6 @@ import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGenerat
 import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
-import com.gala.sam.tradeEngine.utils.orderProcessors.StopOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.ArrayList;
 import org.springframework.data.repository.CrudRepository;

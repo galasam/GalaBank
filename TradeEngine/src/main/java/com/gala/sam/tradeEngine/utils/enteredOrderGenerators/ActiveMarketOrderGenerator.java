@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils.enteredOrderGenerators;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

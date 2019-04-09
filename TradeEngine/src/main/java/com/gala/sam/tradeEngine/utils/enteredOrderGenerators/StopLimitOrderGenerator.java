@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.utils.enteredOrderGenerators;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.enteredorder.StopLimitOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

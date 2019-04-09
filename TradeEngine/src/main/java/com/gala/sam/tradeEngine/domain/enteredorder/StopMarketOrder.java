@@ -9,7 +9,8 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Entity(name = "StopMarketOrderRequest") @DiscriminatorValue("StopMarketOrderRequest")
+@Entity(name = "StopMarketOrderRequest")
+@DiscriminatorValue("StopMarketOrderRequest")
 public class StopMarketOrder extends AbstractStopOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_MARKET;

@@ -41,8 +41,10 @@ public class LimitOrderQueue extends TreeSet<LimitOrder> {
       case PRICE_DECS:
         return price_desc;
       default:
-        log.error("Sorting method is not supported so cannot create comparator: {}", method.toString());
-        throw new UnsupportedOperationException("Sorting method not supported: " + method.toString());
+        log.error("Sorting method is not supported so cannot create comparator: {}",
+            method.toString());
+        throw new UnsupportedOperationException(
+            "Sorting method not supported: " + method.toString());
     }
   }
 

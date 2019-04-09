@@ -48,7 +48,8 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
           tickerData.getSellLimitOrders(),
           tickerData.getBuyLimitOrders());
     } else {
-      log.error("Order {} has unsupported direction {} so will not be processed", limitOrder.getOrderId(), limitOrder.getDirection());
+      log.error("Order {} has unsupported direction {} so will not be processed",
+          limitOrder.getOrderId(), limitOrder.getDirection());
     }
   }
 
@@ -57,9 +58,11 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
       SortedSet<LimitOrder> sameTypeLimitOrders,
       SortedSet<LimitOrder> oppositeTypeLimitOrders) {
     if (marketOrders.isEmpty()) {
-      log.debug("Market order queue empty, so no possible market order matches for limit order: {}", limitOrder.getOrderId());
+      log.debug("Market order queue empty, so no possible market order matches for limit order: {}",
+          limitOrder.getOrderId());
       if (oppositeTypeLimitOrders.isEmpty()) {
-        log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}", limitOrder.getOrderId());
+        log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}",
+            limitOrder.getOrderId());
         marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
       } else {
         LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();

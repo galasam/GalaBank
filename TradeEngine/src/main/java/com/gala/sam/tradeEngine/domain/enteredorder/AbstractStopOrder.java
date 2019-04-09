@@ -12,14 +12,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-@Getter @Setter @NoArgsConstructor
-@Entity(name = "AbstractStopOrderRequest") @DiscriminatorValue("AbstractStopOrderRequest")
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity(name = "AbstractStopOrderRequest")
+@DiscriminatorValue("AbstractStopOrderRequest")
 public abstract class AbstractStopOrder extends AbstractOrder {
 
   @Column
   private float triggerPrice;
 
-  public AbstractStopOrder(OrderType orderType, int orderId, int clientId, Direction direction, int quantity,
+  public AbstractStopOrder(OrderType orderType, int orderId, int clientId, Direction direction,
+      int quantity,
       TimeInForce timeInForce, String ticker, float triggerPrice) {
     super(orderType, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.triggerPrice = triggerPrice;

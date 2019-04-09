@@ -1,10 +1,10 @@
 package unit;
 
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import java.util.ArrayList;

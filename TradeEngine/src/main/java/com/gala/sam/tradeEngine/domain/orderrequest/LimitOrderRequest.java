@@ -1,10 +1,8 @@
 package com.gala.sam.tradeEngine.domain.orderrequest;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
 
 @Getter
 @ToString(callSuper = true)

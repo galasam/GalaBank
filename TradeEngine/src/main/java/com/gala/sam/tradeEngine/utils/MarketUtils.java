@@ -1,18 +1,17 @@
 package com.gala.sam.tradeEngine.utils;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.function.Consumer;
@@ -23,22 +22,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class MarketUtils {
 
+  public static void updateMarketStateFromTradeRepository(MarketState marketState,
+      ITradeRepository tradeRepository) {
+    marketState.getTrades().addAll((Collection<Trade>) tradeRepository.findAll());
+  }
+
   public <T extends AbstractActiveOrder> void queueIfGTC(T order,
       SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder) {
-        if (order.getTimeInForce().equals(TimeInForce.GTC)) {
+    if (order.getTimeInForce().equals(TimeInForce.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
       saveOrder.accept(order);
     } else if (order.getTimeInForce().equals(TimeInForce.FOK)) {
       log.debug("Time in force is FOK so drop");
     } else {
-      log.error("Order {} has unsupported timeInForce {} so will not be added to queue", order.getOrderId(), order.getTimeInForce());
+      log.error("Order {} has unsupported timeInForce {} so will not be added to queue",
+          order.getOrderId(), order.getTimeInForce());
     }
   }
 
-  public void tryMakeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
+  public void tryMakeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b,
+      float limit,
       TickerData ticketData) {
-    log.debug("Setting last executed price of {} as {}", ticketData.getName(), ticketData.getLastExecutedTradePrice());
+    log.debug("Setting last executed price of {} as {}", ticketData.getName(),
+        ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
     a.reduceQuantityRemaining(tradeQuantity);
@@ -65,15 +72,16 @@ public class MarketUtils {
           .build();
       log.debug("Making Sell trade: " + trade.toString());
     } else {
-      log.error("Order {} has unsupported direction {} so trade will not be created", a.getOrderId(), a.getDirection());
+      log.error("Order {} has unsupported direction {} so trade will not be created",
+          a.getOrderId(), a.getDirection());
       return;
     }
     saveTrade.accept(trade);
   }
 
   public void updateMarketStateFromOrderRepository(MarketState marketState,
-          IOrderRepository orderRepository) {
-        Iterable<AbstractOrder> ordersFromDatabase = orderRepository.findAll();
+      IOrderRepository orderRepository) {
+    Iterable<AbstractOrder> ordersFromDatabase = orderRepository.findAll();
     for (AbstractOrder order : ordersFromDatabase) {
       log.debug("Reading order: {}", order.getOrderId());
       TickerData tickerQueueGroup;
@@ -96,7 +104,8 @@ public class MarketUtils {
               tickerQueueGroup.getSellLimitOrders().add(limitOrder);
               break;
             default:
-              log.error("Unsupported direction {} on order {} so order will not be loaded", order.getDirection(), order.getOrderId());
+              log.error("Unsupported direction {} on order {} so order will not be loaded",
+                  order.getDirection(), order.getOrderId());
           }
           break;
         case ACTIVE_MARKET:
@@ -112,18 +121,15 @@ public class MarketUtils {
               tickerQueueGroup.getSellMarketOrders().add(marketOrder);
               break;
             default:
-              log.error("Unsupported direction {} on order {} so order will not be loaded", order.getDirection(), order.getOrderId());
+              log.error("Unsupported direction {} on order {} so order will not be loaded",
+                  order.getDirection(), order.getOrderId());
           }
           break;
         default:
-          log.error("Unsupported type {} on order {} so order will not be loaded", order.getType(), order.getOrderId());
+          log.error("Unsupported type {} on order {} so order will not be loaded", order.getType(),
+              order.getOrderId());
       }
     }
-  }
-
-  public static void updateMarketStateFromTradeRepository(MarketState marketState,
-      ITradeRepository tradeRepository) {
-    marketState.getTrades().addAll((Collection<Trade>) tradeRepository.findAll());
   }
 
 }

@@ -124,7 +124,8 @@ public class LimitOrderProcessorTests {
 
     //Then: a trade is made with right params and queueIfGTC is not called
     verify(marketUtils)
-        .tryMakeTrade(any(), eq(limitOrder), eq(matchingLimitOrderBest), eq(matchingLimitOrderBest.getLimit()),
+        .tryMakeTrade(any(), eq(limitOrder), eq(matchingLimitOrderBest),
+            eq(matchingLimitOrderBest.getLimit()),
             eq(tickerData));
     verify(marketUtils, never()).queueIfGTC(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingLimitOrderIfNotFulfilled(
@@ -139,7 +140,6 @@ public class LimitOrderProcessorTests {
     LimitOrder limitOrder = LimitOrder.builder().build();
     MarketOrder marketOrderFirst = MarketOrder.builder().orderId(1).build();
     MarketOrder marketOrderSecond = MarketOrder.builder().orderId(2).build();
-
 
     IOrderRepository orderRepository = MockHelper
         .getEmptyRepository(IOrderRepository.class);

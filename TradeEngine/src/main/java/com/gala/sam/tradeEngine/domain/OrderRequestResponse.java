@@ -13,9 +13,9 @@ import lombok.ToString;
 @ToString
 public class OrderRequestResponse {
 
-  enum ResponseType {SUCCESS, ERROR};
-
   ResponseType responseType;
+
+  ;
 
   public static OrderRequestResponse Success() {
     return new OrderRequestResponse(ResponseType.SUCCESS);
@@ -24,5 +24,7 @@ public class OrderRequestResponse {
   public static OrderRequestResponse Error() {
     return new OrderRequestResponse(ResponseType.ERROR);
   }
+
+  enum ResponseType {SUCCESS, ERROR}
 
 }
