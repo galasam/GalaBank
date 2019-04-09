@@ -17,7 +17,6 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInF
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -30,14 +29,14 @@ import org.junit.Test;
 public class MarketUtilTests {
 
   @Test
-  public void testQueueIfTimeInForce() throws OrderTimeInForceNotSupportedException {
+  public void testQueueIfTimeInForce() {
     //Given: GTC order
     SortedSet<LimitOrder> orders = new LimitOrderQueue(SortingMethod.PRICE_ASC);
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.GTC).orderId(1).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     //When queueIfTimeInForce is called
-    new MarketUtils().queueIfTimeInForce(order, orders, save);
+    new MarketUtils().queueIfGTC(order, orders, save);
 
     /*Then:
       - Order should be saved
@@ -48,14 +47,14 @@ public class MarketUtilTests {
   }
 
   @Test
-  public void testQueueIfTimeNotInForce() throws OrderTimeInForceNotSupportedException {
+  public void testQueueIfTimeNotInForce() {
     //Given: FOK order
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
 
     //When queueIfTimeInForce is called
-    new MarketUtils().queueIfTimeInForce(order, orders, save);
+    new MarketUtils().queueIfGTC(order, orders, save);
 
     /*Then:
      - order should not be saved
@@ -102,7 +101,7 @@ public class MarketUtilTests {
     Consumer<Trade> save = mock(Consumer.class);
 
     //When makeTrade is called
-    new MarketUtils().makeTrade(save, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData);
+    new MarketUtils().tryMakeTrade(save, limitOrderA, limitOrderB, limitOrderA.getLimit(), tickerData);
 
     /*Then:
      - LastExecutedTradePrice is updated

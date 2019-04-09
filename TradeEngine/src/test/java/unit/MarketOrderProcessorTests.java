@@ -18,8 +18,6 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.ProcessingActiveOrderException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveMarketOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
 import helpers.MockHelper;
@@ -30,7 +28,7 @@ public class MarketOrderProcessorTests {
 
   @Test
   public void whenLimitQueueIsEmpty()
-      throws ProcessingActiveOrderException, OrderTimeInForceNotSupportedException, OrderDirectionNotSupportedException {
+      throws OrderDirectionNotSupportedException {
     //Given limit queue that is empty
     MarketOrder marketOrder = MarketOrder.builder().build();
 
@@ -54,14 +52,13 @@ public class MarketOrderProcessorTests {
         .processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
 
     //Then: queueIfTimeInForce is called with the right parameters
-    verify(marketUtils).queueIfTimeInForce(eq(marketOrder), eq(marketOrders), any());
-    verify(marketUtils, never()).makeTrade(any(), any(), any(), anyFloat(), any());
+    verify(marketUtils).queueIfGTC(eq(marketOrder), eq(marketOrders), any());
+    verify(marketUtils, never()).tryMakeTrade(any(), any(), any(), anyFloat(), any());
 
   }
 
   @Test
-  public void whenLimitQueueIsNotEmpty()
-      throws ProcessingActiveOrderException, OrderTimeInForceNotSupportedException {
+  public void whenLimitQueueIsNotEmpty() {
     //Given limit queue with a limit order in it
     MarketOrder marketOrder = MarketOrder.builder().build();
     LimitOrder limitOrderBest = LimitOrder.builder().limit(10).build();
@@ -89,8 +86,8 @@ public class MarketOrderProcessorTests {
         .processDirectedMarketOrder(marketOrder, tickerData, limitOrders, marketOrders);
 
     //Then: queueIfTimeInForce is not called and a trade is made
-    verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
-    verify(marketUtils, never()).queueIfTimeInForce(any(), any(), any());
+    verify(marketUtils, never()).queueIfGTC(any(), any(), any());
+    verify(marketUtils, never()).queueIfGTC(any(), any(), any());
     verify(orderProcessorUtils).continueProcessingMarketOrderIfNotFulfilled(
         eq(marketOrder), eq(tickerData), eq(limitOrders), eq(marketOrders),
         eq(activeMarketOrderProcessor));
