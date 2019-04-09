@@ -167,9 +167,9 @@ public class MarketService {
   public PublicMarketStatus getStatus() {
     class TickerProcessorHelper {
 
-      List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
+      private List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
 
-      void processTicker(String name, TickerData data) {
+      private void processTicker(String name, TickerData data) {
         SortedSet<AbstractActiveOrder> buyOrders = getActiveOrders(data.getBuyLimitOrders(),
             data.getBuyMarketOrders());
         SortedSet<AbstractActiveOrder> sellOrders = getActiveOrders(data.getSellLimitOrders(),
