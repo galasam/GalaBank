@@ -1,27 +1,25 @@
 package com.gala.sam.orderCapture.entrypoint;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.gala.sam.orderCapture.service.TradeEngineService;
-import lombok.RequiredArgsConstructor;
+import com.gala.sam.orderCapture.service.OrderCaptureService;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 public class RestEntryPoint {
 
-  @Autowired
-  final TradeEngineService tradeEngineService;
+  final OrderCaptureService orderCaptureService;
 
   @PostMapping("/enter-order")
-  public JsonNode enterOrder(@RequestBody String csvInput){
-    JsonNode order = tradeEngineService.enterOrder(csvInput);
-    log.info("Order Entered in to Trade Engine: {}", order);
-    return order;
+  public OrderRequestResponse enterOrder(@RequestBody String csvInput) {
+    log.info("CSV received: {}", csvInput);
+    OrderRequestResponse response = orderCaptureService.enterOrder(csvInput);
+    return response;
   }
 
 }

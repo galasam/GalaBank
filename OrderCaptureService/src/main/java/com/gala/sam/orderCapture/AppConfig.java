@@ -1,6 +1,6 @@
 package com.gala.sam.orderCapture;
 
-import com.gala.sam.orderCapture.service.TradeEngineService;
+import com.gala.sam.orderCapture.service.TradeEngineGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -16,8 +16,8 @@ public class AppConfig {
   }
 
   @Bean
-  public TradeEngineService tradeEngineService() {
-    return new TradeEngineService(TRADE_ENGINE_HOSTNAME);
+  public TradeEngineGateway tradeEngineService() {
+    return new TradeEngineGateway(TRADE_ENGINE_HOSTNAME);
   }
 
 }

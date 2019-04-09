@@ -1,0 +1,20 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="header :: copy"></head>
+
+<body>
+
+<h1>Galabank Trade Monitoring System</h1>
+<h3>Welcome to Trade Monitoring System. Here you can: view executed trades</h3>
+
+<div id="root"></div>
+
+<link href="/tradeEngine/index.css" rel="stylesheet"/>
+
+<!-- Load our React component. -->
+<script src="/tradeEngine/bundle.js" ></script>
+
+</body>
+</html>

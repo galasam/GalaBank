@@ -2,8 +2,14 @@
 spring:
   application:
     name: trade-engine
+  thymeleaf:
+    enabled: true
+    cache: false
+    prefix: classpath:/templates/
   freemarker:
     enabled: false
+
+debug: false
 
 # Discovery Server Access
 eureka:

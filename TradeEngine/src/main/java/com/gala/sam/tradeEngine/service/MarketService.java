@@ -1,85 +1,163 @@
 package com.gala.sam.tradeEngine.service;
 
-import com.gala.sam.tradeEngine.domain.*;
-import com.gala.sam.tradeEngine.domain.ReadyOrder.DIRECTION;
-import com.gala.sam.tradeEngine.domain.dataStructures.TickerData;
+import static com.gala.sam.tradeEngine.utils.MarketUtils.updateMarketStateFromTradeRepository;
+
+import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
+import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.OrderIdPriorityQueue;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
+import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.IEnteredOrderGenerator;
+import com.gala.sam.tradeEngine.utils.exception.AbstractOrderFieldNotSupportedException;
+import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
+import com.gala.sam.tradeEngine.utils.orderProcessors.AbstractOrderProcessor;
+import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderValidators.IOrderValidator;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.*;
-
-import static com.gala.sam.tradeEngine.utils.MarketUtils.queueIfTimeInForce;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class MarketService {
 
-  private List<Trade> trades = new ArrayList<>();
-  private Map<String, TickerData> tickerQueues = new TreeMap<>();
-  private List<StopOrder> stopOrders = new LinkedList<>();
+  private final ITradeRepository tradeRepository;
+  private final IOrderRepository orderRepository;
+  private final EnteredOrderGeneratorFactory concreteOrderGeneratorFactory;
+  private final OrderProcessorFactory orderProcessorFactory;
+  private final OrderValidatorFactory orderValidatorFactory;
+  private final MarketUtils marketUtils;
+  private final MarketState marketState = new MarketState();
 
-  public void clear() {
-    trades = new ArrayList<>();
-    tickerQueues = new TreeMap<>();
-    stopOrders = new LinkedList<>();
+  @PostConstruct
+  void init() {
+    log.info("Getting existing trades from database");
+    updateMarketStateFromTradeRepository(marketState, tradeRepository);
+    marketUtils.updateMarketStateFromOrderRepository(marketState, orderRepository);
   }
 
-  public void enterOrder(Order order) {
-    log.info("Processing Triggered Stop Orders");
-    processOrder(order);
+  public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
+    log.info("Processing Order Time-step with order request: {}", orderRequest);
+
+    final AbstractOrder order;
+    try {
+      IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory
+          .getOrderValidator(orderRequest.getType());
+      List<String> errors = orderValidator.findErrors(orderRequest);
+      if (!errors.isEmpty()) {
+        log.error("Order request could not be validated. Reasons: {}", errors);
+        return Optional.empty();
+      } else {
+        log.debug("Order request was validated: {}", orderRequest);
+      }
+
+      IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+          .getEnteredOrderGenerator(orderRequest.getType());
+
+      order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
+      log.debug("Concrete Order generated with id: {}", order.getOrderId());
+
+    } catch (AbstractOrderFieldNotSupportedException e) {
+      log.error(
+          "Concrete order could not be generated so Order Request {} will be dropped since when handling it an exception was raised: {}",
+          orderRequest, e.toString());
+      return Optional.empty();
+    }
+
+    tryProcessOrder(order);
+
     processTriggeredStopOrders();
+
+    return Optional.of(order);
   }
-
-
 
   public List<Trade> getAllMatchedTrades() {
-    return trades;
+    return marketState.getTrades();
   }
 
-  private void processOrder(Order order) {
+  private void tryProcessOrder(AbstractOrder order) {
     log.info(String.format("Processing order %s", order.toString()));
-    if(order instanceof StopOrder) {
-      stopOrders.add((StopOrder) order);
-    } else if(order instanceof LimitOrder) {
-      processLimitOrder((LimitOrder) order);
-    } else if(order instanceof MarketOrder) {
-      processMarketOrder((MarketOrder) order);
-    } else {
-      throw new UnsupportedOperationException("Order type not specified");
+
+    final AbstractOrderProcessor orderProcessor;
+    try {
+      orderProcessor = orderProcessorFactory
+          .getOrderProcessor(marketState, order.getType());
+    } catch (OrderTypeNotSupportedException e) {
+      log.error("Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
+          order.getOrderId(), e.toString());
+      return;
     }
-    log.info("Ticker queues: " + tickerQueues.toString());
-    log.info("Stop Orders: " + stopOrders.toString());
-    log.info("Trades: " + trades.toString());
+
+    handleOrderWithTimer(order, orderProcessor);
+
+    log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
+    log.debug("Stop Orders: " + marketState.getStopOrders().toString());
+    log.debug("Trades: " + marketState.getTrades().toString());
+  }
+
+  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor) {
+    StopWatch orderProcessorTimer = new StopWatch();
+    orderProcessorTimer.start();
+    orderProcessor.process(order);
+    orderProcessorTimer.stop();
+    log.info("Order {} was handled in {} milliseconds", order.getOrderId(),
+        orderProcessorTimer.getTotalTimeMillis());
   }
 
   private void processTriggeredStopOrders() {
-    Iterator<StopOrder> it = stopOrders.iterator();
-    while(it.hasNext()) {
-      StopOrder stopOrder = it.next();
-      log.info("Testing Trigger on: " + stopOrder.toString());
-      if(isStopLossTriggered(stopOrder)) {
-        log.info("Stop Order Triggered");
-        it.remove();
-        ReadyOrder readyOrder = stopOrder.getReadyOrder();
-        processOrder(readyOrder);
+    Iterator<AbstractStopOrder> stopOrderIterator = marketState.getStopOrders().iterator();
+    while (stopOrderIterator.hasNext()) {
+      AbstractStopOrder stopOrder = stopOrderIterator.next();
+      log.debug("Testing Trigger on: " + stopOrder.toString());
+      if (isStopLossTriggered(stopOrder)) {
+        log.debug("Stop order request Triggered");
+        stopOrderIterator.remove();
+        orderRepository.delete(stopOrder);
+        AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
+        tryProcessOrder(activeOrder);
       } else {
-        log.info("Stop Order not Triggered");
+        log.debug("Stop order request not Triggered");
       }
     }
   }
 
-  private boolean isStopLossTriggered(StopOrder stopOrder) {
-    ReadyOrder readyOrder = stopOrder.getReadyOrder();
-    Optional<Float> lastExec = getTickerQueueGroup(readyOrder).getLastExecutedTradePrice();
+  private boolean isStopLossTriggered(AbstractStopOrder stopOrder) {
+    AbstractActiveOrder activeOrder = stopOrder.toActiveOrder();
+    Optional<Float> lastExec = marketState.getTickerQueueGroup(activeOrder)
+        .getLastExecutedTradePrice();
     log.debug("Checking if there has been a previous trade");
-    if(lastExec.isPresent()) {
+    if (lastExec.isPresent()) {
       log.debug("Previous trade found, checking direction");
-      if(readyOrder.getDirection().equals(DIRECTION.BUY)) {
+      if (activeOrder.getDirection().equals(Direction.BUY)) {
         log.debug("Buy direction: testing trigger");
         return stopOrder.getTriggerPrice() <= lastExec.get();
-      } else if(readyOrder.getDirection().equals(DIRECTION.SELL)) {
+      } else if (activeOrder.getDirection().equals(Direction.SELL)) {
         log.debug("Sell direction: testing trigger");
         return stopOrder.getTriggerPrice() >= lastExec.get();
       } else {
-        throw new UnsupportedOperationException("Order direction not supported");
+        log.error("Stop Order {} has unsupported direction {} so cannot be triggered",
+            stopOrder.getOrderId(), stopOrder.getDirection());
+        return false;
       }
     } else {
       log.debug("No previous trade found");
@@ -87,113 +165,39 @@ public class MarketService {
     }
   }
 
-  private void processMarketOrder(MarketOrder marketOrder) {
-    TickerData tickerData = getTickerQueueGroup(marketOrder);
-    if (marketOrder.getDirection() == DIRECTION.BUY) {
-      processDirectedMarketOrder(marketOrder, tickerData,
-          tickerData.getSellLimitOrders(),tickerData.getBuyMarketOrders());
-    } else if (marketOrder.getDirection() == DIRECTION.SELL) {
-      processDirectedMarketOrder(marketOrder, tickerData,
-          tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
-    } else {
-      throw new UnsupportedOperationException("Order direction not supported");
-    }
-  }
+  public PublicMarketStatus getStatus() {
+    class TickerProcessorHelper {
 
-  private TickerData getTickerQueueGroup(ReadyOrder marketOrder) {
-    TickerData queues = tickerQueues.get(marketOrder.getTicker());
-    if(queues == null) {
-      queues = new TickerData();
-      tickerQueues.put(marketOrder.getTicker(), queues);
-    }
-    return queues;
-  }
+      private List<PublicMarketStatus.Ticker> tickers = new ArrayList<>();
 
-  private void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
-                                          SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders) {
-    log.debug("Checking Limit Order queue");
-    if(limitOrders.isEmpty()) {
-      log.debug("Limit Order queue empty, so check if time in force");
-      queueIfTimeInForce(marketOrder, marketOrders);
-    } else {
-      LimitOrder limitOrder = limitOrders.first();
-      log.debug("Limit Order queue not empty, so trading with best limit order: " + limitOrder.toString());
-      limitOrders.remove(limitOrder);
-      makeTrade(marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
-    }
-  }
+      private void processTicker(String name, TickerData data) {
+        SortedSet<AbstractActiveOrder> buyOrders = getActiveOrders(data.getBuyLimitOrders(),
+            data.getBuyMarketOrders());
+        SortedSet<AbstractActiveOrder> sellOrders = getActiveOrders(data.getSellLimitOrders(),
+            data.getSellMarketOrders());
 
-  private void makeTrade(ReadyOrder a, ReadyOrder b, float limit, TickerData ticketData) {
-    ticketData.setLastExecutedTradePrice(limit);
-    if(a.getDirection().equals(DIRECTION.BUY)) {
-      Trade trade = Trade.builder()
-          .buyOrder(a.getOrderId())
-          .sellOrder(b.getOrderId())
-          .matchQuantity(a.getQuantity())
-          .matchPrice(limit)
-          .build();
-      log.debug("Making Buy trade: " + trade.toString());
-      trades.add(trade);
-    } else if(a.getDirection().equals(DIRECTION.SELL)) {
-      Trade trade = Trade.builder()
-          .buyOrder(b.getOrderId())
-          .sellOrder(a.getOrderId())
-          .matchQuantity(a.getQuantity())
-          .matchPrice(limit)
-          .build();
-      log.debug("Making Sell trade: " + trade.toString());
-      trades.add(trade);
-    } else {
-      throw new UnsupportedOperationException("Order direction not supported");
-    }
-  }
-
-  private void processLimitOrder(LimitOrder limitOrder) {
-    TickerData tickerData = getTickerQueueGroup(limitOrder);
-    if (limitOrder.getDirection() == DIRECTION.BUY) {
-      processDirectedLimitOrder(limitOrder, tickerData,
-          tickerData.getSellMarketOrders(),
-          tickerData.getBuyLimitOrders(),
-          tickerData.getSellLimitOrders());
-    } else if (limitOrder.getDirection() == DIRECTION.SELL) {
-      processDirectedLimitOrder(limitOrder, tickerData,
-          tickerData.getBuyMarketOrders(),
-          tickerData.getSellLimitOrders(),
-          tickerData.getBuyLimitOrders());
-    } else {
-      throw new UnsupportedOperationException("Order direction not supported");
-    }
-  }
-
-  private void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
-                                         SortedSet<MarketOrder> marketOrders,
-                                         SortedSet<LimitOrder> sameTypeLimitOrders,
-                                         SortedSet<LimitOrder> oppositeTypeLimitOrders) {
-    log.debug("Checking main.Market Order queue");
-    if(marketOrders.isEmpty()) {
-      log.debug("main.Market Order queue empty, so checking Limit orders");
-      if(oppositeTypeLimitOrders.isEmpty()) {
-        log.debug("Limit Order queue empty, so check if time in force");
-        queueIfTimeInForce(limitOrder, sameTypeLimitOrders);
-      } else {
-        LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
-        log.debug("Limit Order queue not empty, so checking if best order matches: " + otherLimitOrder.toString());
-
-        if(limitOrder.limitMatches(otherLimitOrder)) {
-          log.debug("Limits match so completing trade");
-          oppositeTypeLimitOrders.remove(otherLimitOrder);
-          makeTrade(limitOrder, otherLimitOrder, otherLimitOrder.getLimit(), tickerData);
-        } else {
-          log.debug("Limits do not match, so check if time in force");
-          queueIfTimeInForce(limitOrder, sameTypeLimitOrders);
+        if (!(buyOrders.isEmpty() && sellOrders.isEmpty())) {
+          tickers.add(PublicMarketStatus.Ticker.builder()
+              .name(name)
+              .buy(new ArrayList<>(buyOrders))
+              .sell(new ArrayList<>(sellOrders))
+              .build());
         }
       }
-    } else {
-      log.debug("main.Market Order queue not empty, so trading with oldest order: " + limitOrder.toString());
-      MarketOrder marketOrder = marketOrders.first();
-      marketOrders.remove(marketOrder);
-      makeTrade(marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
-    }
-  }
 
+      private SortedSet<AbstractActiveOrder> getActiveOrders(SortedSet<LimitOrder> buyLimitOrders,
+          SortedSet<MarketOrder> buyMarketOrders) {
+        SortedSet<AbstractActiveOrder> buyOrders = new OrderIdPriorityQueue<>();
+        buyOrders.addAll(buyLimitOrders);
+        buyOrders.addAll(buyMarketOrders);
+        return buyOrders;
+      }
+    }
+    TickerProcessorHelper h = new TickerProcessorHelper();
+    marketState.getTickerQueues().forEach(h::processTicker);
+    return PublicMarketStatus.builder()
+        .trades(getAllMatchedTrades())
+        .orders(h.tickers)
+        .build();
+  }
 }

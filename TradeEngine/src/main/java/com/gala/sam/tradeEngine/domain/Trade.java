@@ -1,15 +1,24 @@
 package com.gala.sam.tradeEngine.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Trade {
 
-    int buyOrder;
-    int sellOrder;
-    int matchQuantity;
-    float matchPrice;
+  @Id
+  int buyOrder;
+  int sellOrder;
+  String ticker;
+  int matchQuantity;
+  float matchPrice;
 
 }
