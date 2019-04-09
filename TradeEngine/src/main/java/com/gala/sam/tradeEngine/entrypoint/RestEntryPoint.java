@@ -22,12 +22,12 @@ public class RestEntryPoint {
 
   @PostMapping("/enter-order")
   public <T extends AbstractOrderRequest> OrderRequestResponse enterOrder(@RequestBody T order) {
-    log.info("Order request received into Trading Engine: {}", order);
+    log.info("Order request received into Trading Engine: {}", order.toString());
     if(marketService.enterOrder(order).isPresent()) {
-      log.info("Order request successfully entered into Trading Engine: {}", order);
+      log.info("Order request successfully entered into Trading Engine: {}", order.toString());
       return OrderRequestResponse.Success();
     } else {
-      log.info("Order request failed to be entered into Trading Engine: {}", order);
+      log.info("Order request failed to be entered into Trading Engine: {}", order.toString());
       return OrderRequestResponse.Error();
     }
   }

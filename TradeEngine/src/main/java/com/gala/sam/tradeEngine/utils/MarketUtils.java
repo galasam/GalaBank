@@ -13,7 +13,6 @@ import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.function.Consumer;
@@ -22,9 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MarketUtils {
 
-  public <T extends AbstractActiveOrder> void queueIfTimeInForce(T order,
-      SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder)
-      throws OrderTimeInForceNotSupportedException {
+  public <T extends AbstractActiveOrder> void queueIfGTC(T order,
+      SortedSet<T> sameTypeLimitOrders, Consumer<AbstractOrder> saveOrder) {
         if (order.getTimeInForce().equals(TimeInForce.GTC)) {
       log.debug("Time in force is GTC so add to queue");
       sameTypeLimitOrders.add(order);
@@ -33,12 +31,11 @@ public class MarketUtils {
       log.debug("Time in force is FOK so drop");
     } else {
       log.error("Order {} has unsupported timeInForce {} so will not be added to queue", order.getOrderId(), order.getTimeInForce());
-      throw new OrderTimeInForceNotSupportedException(order.getTimeInForce());
     }
   }
 
-  public void makeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
-      TickerData ticketData) throws OrderDirectionNotSupportedException {
+  public void tryMakeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b, float limit,
+      TickerData ticketData) {
     log.debug("Setting last executed price of {} as {}", ticketData.getName(), ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);
     int tradeQuantity = Math.min(a.getQuantity(), b.getQuantity());
@@ -67,7 +64,7 @@ public class MarketUtils {
       log.debug("Making Sell trade: " + trade.toString());
     } else {
       log.error("Order {} has unsupported direction {} so trade will not be created", a.getOrderId(), a.getDirection());
-      throw new OrderDirectionNotSupportedException(a.getDirection());
+      return;
     }
     saveTrade.accept(trade);
   }
