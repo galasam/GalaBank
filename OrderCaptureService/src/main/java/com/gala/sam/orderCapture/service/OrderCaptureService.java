@@ -31,7 +31,7 @@ public class OrderCaptureService {
   private AbstractOrderRequest parseOrderRequest(String csvInput) {
     final List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
     if (orders.size() > 1) {
-      log.warn("Multiple orders {} passed in but only one used", orders.size());
+      log.warn("Multiple orders {} passed in but only the first is used", orders.size());
     }
     return orders.get(0);
   }

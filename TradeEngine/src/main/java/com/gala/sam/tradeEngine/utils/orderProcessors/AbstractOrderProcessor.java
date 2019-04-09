@@ -6,10 +6,6 @@ import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.exception.OrderTimeInForceNotSupportedException;
-
-import com.gala.sam.tradeEngine.utils.exception.ProcessingOrderException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,7 +37,6 @@ public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
     saveTradeToDatabase(trade);
   }
 
-  public abstract void process(T order)
-      throws ProcessingOrderException;
+  public abstract void process(T order);
 
 }
