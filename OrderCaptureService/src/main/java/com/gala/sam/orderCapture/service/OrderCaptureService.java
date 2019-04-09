@@ -28,7 +28,7 @@ public class OrderCaptureService {
     final List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(inputRows);
     if (orders.size() > 1) {
       log.warn("Multiple orders {} passed in but only the first is used", orders.size());
-    }
+    }o
     return orders.get(0);
   }
 
