@@ -9,8 +9,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Entity(name = "MarketOrderRequest")
-@DiscriminatorValue("MarketOrderRequest")
+@Entity(name = "MarketOrderRequest") @DiscriminatorValue("MarketOrderRequest")
 public class MarketOrder extends AbstractActiveOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_MARKET;

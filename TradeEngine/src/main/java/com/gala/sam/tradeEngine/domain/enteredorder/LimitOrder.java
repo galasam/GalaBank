@@ -11,16 +11,14 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-@Getter
-@NoArgsConstructor
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
-@Entity(name = "LimitOrderRequest")
-@DiscriminatorValue("LimitOrderRequest")
 @Slf4j
+@ToString(callSuper = true)
+@Getter @Setter @NoArgsConstructor
+@Entity(name = "LimitOrderRequest") @DiscriminatorValue("LimitOrderRequest")
 public class LimitOrder extends AbstractActiveOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;

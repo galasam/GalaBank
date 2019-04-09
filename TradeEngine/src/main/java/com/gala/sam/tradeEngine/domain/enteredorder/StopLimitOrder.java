@@ -9,11 +9,10 @@ import javax.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@NoArgsConstructor
-@Entity(name = "StopLimitOrderRequest")
-@DiscriminatorValue("StopLimitOrderRequest")
+@Getter @Setter @NoArgsConstructor
+@Entity(name = "StopLimitOrderRequest") @DiscriminatorValue("StopLimitOrderRequest")
 public class StopLimitOrder extends AbstractStopOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_LIMIT;

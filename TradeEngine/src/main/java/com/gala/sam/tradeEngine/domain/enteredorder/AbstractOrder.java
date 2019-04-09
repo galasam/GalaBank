@@ -11,37 +11,35 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Data
-@NonFinal
-@Table(name = "orders")
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "Order_Type")
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
+@Entity @Table(name = "orders")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) @DiscriminatorColumn(name = "Order_Type")
 public abstract class AbstractOrder {
 
   OrderType type;
 
   @Id
   @Column
-  int orderId;
+  private int orderId;
   @Column
-  int clientId;
+  private int clientId;
   @Column
-  Direction direction;
+  private Direction direction;
   @Column
-  int quantity;
+  private int quantity;
   @Column
-  int quantityRemaining;
+  private int quantityRemaining;
   @Column
-  TimeInForce timeInForce;
+  private TimeInForce timeInForce;
   @Column
-  String ticker;
+  private String ticker;
 
   public AbstractOrder(OrderType type, int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker) {
@@ -70,3 +68,4 @@ public abstract class AbstractOrder {
     }
   }
 }
+

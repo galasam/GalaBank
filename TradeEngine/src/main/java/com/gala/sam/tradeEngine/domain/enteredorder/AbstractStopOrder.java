@@ -6,26 +6,23 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInF
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Entity(name = "AbstractStopOrderRequest")
-@DiscriminatorValue("AbstractStopOrderRequest")
-@NoArgsConstructor
 @ToString(callSuper = true)
+@Getter @Setter @NoArgsConstructor
+@Entity(name = "AbstractStopOrderRequest") @DiscriminatorValue("AbstractStopOrderRequest")
 public abstract class AbstractStopOrder extends AbstractOrder {
 
   @Column
-  float triggerPrice;
+  private float triggerPrice;
 
   public AbstractStopOrder(OrderType orderType, int orderId, int clientId, Direction direction, int quantity,
       TimeInForce timeInForce, String ticker, float triggerPrice) {
     super(orderType, orderId, clientId, direction, quantity, timeInForce, ticker);
     this.triggerPrice = triggerPrice;
-  }
-
-  public float getTriggerPrice() {
-    return triggerPrice;
   }
 
   public abstract AbstractActiveOrder toActiveOrder();
