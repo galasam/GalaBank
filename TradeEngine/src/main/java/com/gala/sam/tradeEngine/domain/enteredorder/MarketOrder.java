@@ -6,9 +6,11 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInF
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "MarketOrderRequest")
 @DiscriminatorValue("MarketOrderRequest")
 public class MarketOrder extends AbstractActiveOrder {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class OrderValidatorFactory {
 
   public IOrderValidator getOrderValidator(OrderType type) throws OrderTypeNotSupportedException {
-    switch(type) {
+    switch (type) {
       case ACTIVE_LIMIT:
         return new ActiveLimitOrderValidator();
       case ACTIVE_MARKET:

@@ -1,9 +1,9 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
 import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
+import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.service.MarketService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class RestEntryPoint {
   @PostMapping("/enter-order")
   public <T extends AbstractOrderRequest> OrderRequestResponse enterOrder(@RequestBody T order) {
     log.info("Order request received into Trading Engine: {}", order.toString());
-    if(marketService.enterOrder(order).isPresent()) {
+    if (marketService.enterOrder(order).isPresent()) {
       log.info("Order request successfully entered into Trading Engine: {}", order.toString());
       return OrderRequestResponse.Success();
     } else {
@@ -40,6 +40,11 @@ public class RestEntryPoint {
   @GetMapping("status")
   public PublicMarketStatus status() {
     return marketService.getStatus();
+  }
+
+  @PostMapping("reset")
+  public void reset() {
+    marketService.reset();
   }
 
 }

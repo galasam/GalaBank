@@ -1,31 +1,43 @@
-package component;
+package com.gala.sam.tradeEngine.intergration;
 
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
-import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
-import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import helpers.MockHelper;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class SimpleMarketTradeTests {
+
+  @MockBean
+  ITradeRepository tradeRepository;
+  @MockBean
+  IOrderRepository orderRepository;
+
+  @Autowired
+  MarketService marketService;
+
+  @Before
+  public void resetMarketService() {
+    marketService.reset();
+  }
 
   @Test
   public void testSimpleTimeStep() {
     //Given: Limit Buy and Market sell orders that should match
-    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
-    MarketService marketService = MockHelper.getMarketService();
-
     LimitOrderRequest limitOrder = LimitOrderRequest.builder()
         .direction(Direction.BUY)
         .quantity(999)
@@ -65,9 +77,6 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithMatchingLimits() {
 
     //Give: two limit orders that should match
-    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
-    MarketService marketService = MockHelper.getMarketService();
-
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
         .quantity(999)
@@ -108,9 +117,6 @@ public class SimpleMarketTradeTests {
   public void testTimeStepWithNonMatchingLimits() {
 
     //Given: two limit orders that have non-matching limits
-    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
-    MarketService marketService = MockHelper.getMarketService();
-
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
         .quantity(999)
@@ -142,9 +148,6 @@ public class SimpleMarketTradeTests {
   public void testOrderPartialFulfillment() {
 
     //Given: 2 buy orders and a sell order with the quantity of them added together
-    OrderProcessorFactory orderProcessorFactory = MockHelper.getOrderProcessorFactor();
-    MarketService marketService = MockHelper.getMarketService();
-
     LimitOrderRequest limitOrderA = LimitOrderRequest.builder()
         .direction(Direction.BUY)
         .quantity(10)

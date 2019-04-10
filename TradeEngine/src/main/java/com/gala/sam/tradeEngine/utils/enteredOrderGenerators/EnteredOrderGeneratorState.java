@@ -18,4 +18,7 @@ public class EnteredOrderGeneratorState {
     return nextOrderId;
   }
 
+  public void reset() {
+    currentOrderIndex = InitialOrderIndex;
+  }
 }

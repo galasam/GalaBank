@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.datastructures;
 
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractStopOrder;
-import com.gala.sam.tradeEngine.domain.Trade;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +16,18 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MarketState {
+
+  public static MarketState injectStopOrders(List<AbstractStopOrder> stopOrders) {
+    MarketState marketState = new MarketState();
+    marketState.stopOrders = stopOrders;
+    return marketState;
+  }
+
+  public void reset() {
+    trades.clear();
+    getTickerQueues().clear();
+    stopOrders.clear();
+  }
 
   private List<Trade> trades = new ArrayList<>();
   private Map<String, TickerData> tickerQueues = new TreeMap<>();

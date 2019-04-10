@@ -2,7 +2,6 @@ package com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers;
 
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractStopOrderRequest;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StopOrderValidatorHelper {
