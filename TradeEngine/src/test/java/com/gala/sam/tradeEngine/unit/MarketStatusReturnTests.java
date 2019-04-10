@@ -13,7 +13,10 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInF
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
+import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
+import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,20 +25,50 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
 public class MarketStatusReturnTests {
+
+  @TestConfiguration
+  static class Config {
+    @Autowired
+    ITradeRepository tradeRepository;
+    @Autowired
+    IOrderRepository orderRepository;
+    @Autowired
+    EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
+    @Autowired
+    OrderProcessorFactory orderProcessorFactory;
+    @Autowired
+    OrderValidatorFactory orderValidatorFactory;
+    @Autowired
+    MarketUtils marketUtils;
+    @Autowired
+    MarketState marketState;
+
+    @Bean
+    public MarketService marketService() {
+      return new MarketService(tradeRepository, orderRepository, enteredOrderGeneratorFactory,
+          orderProcessorFactory, orderValidatorFactory, marketUtils, marketState);
+    }
+  }
 
   @MockBean
   ITradeRepository tradeRepository;
   @MockBean
   IOrderRepository orderRepository;
   @MockBean
+  EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
+  @MockBean
   OrderProcessorFactory orderProcessorFactory;
+  @MockBean
+  OrderValidatorFactory orderValidatorFactory;
+  @MockBean
+  MarketUtils marketUtils;
   @MockBean
   MarketState marketState;
 
