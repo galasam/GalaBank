@@ -105,8 +105,7 @@ public class MarketService {
 
     final AbstractOrderProcessor orderProcessor;
     try {
-      orderProcessor = orderProcessorFactory
-          .getOrderProcessor(order.getType());
+      orderProcessor = orderProcessorFactory.getOrderProcessor(order.getType());
     } catch (OrderTypeNotSupportedException e) {
       log.error(
           "Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
@@ -114,14 +113,14 @@ public class MarketService {
       return;
     }
 
-    handleOrderWithTimer(order, orderProcessor);
+    handleOrderWithTimer(orderProcessor, order);
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
     log.debug("Stop Orders: " + marketState.getStopOrders().toString());
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor) {
+  private void handleOrderWithTimer(AbstractOrderProcessor orderProcessor, AbstractOrder order) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
     orderProcessor.process(marketState, order);
