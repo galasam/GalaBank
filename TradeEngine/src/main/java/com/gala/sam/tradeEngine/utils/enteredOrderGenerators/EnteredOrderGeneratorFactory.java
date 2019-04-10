@@ -5,14 +5,15 @@ import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderTy
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
 @Slf4j
 public class EnteredOrderGeneratorFactory {
 
-  private final EnteredOrderGeneratorState enteredOrderGeneratorState;
+  @Autowired
+  private EnteredOrderGeneratorState enteredOrderGeneratorState;
 
   public IEnteredOrderGenerator getEnteredOrderGenerator(OrderType type)
       throws OrderTypeNotSupportedException {
@@ -29,5 +30,9 @@ public class EnteredOrderGeneratorFactory {
         log.error("Order type {} is not supported so cannot create entered order generator", type);
         throw new OrderTypeNotSupportedException(type);
     }
+  }
+
+  public void reset() {
+    enteredOrderGeneratorState.reset();
   }
 }

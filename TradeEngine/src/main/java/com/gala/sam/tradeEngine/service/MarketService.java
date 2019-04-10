@@ -31,29 +31,40 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import javax.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class MarketService {
 
-  private final ITradeRepository tradeRepository;
-  private final IOrderRepository orderRepository;
-  private final EnteredOrderGeneratorFactory concreteOrderGeneratorFactory;
-  private final OrderProcessorFactory orderProcessorFactory;
-  private final OrderValidatorFactory orderValidatorFactory;
-  private final MarketUtils marketUtils;
-  private final MarketState marketState = new MarketState();
+  @Autowired
+  private ITradeRepository tradeRepository;
+  @Autowired
+  private IOrderRepository orderRepository;
+  @Autowired
+  private EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
+  @Autowired
+  private OrderProcessorFactory orderProcessorFactory;
+  @Autowired
+  private OrderValidatorFactory orderValidatorFactory;
+  @Autowired
+  private MarketUtils marketUtils;
+  @Autowired
+  MarketState marketState;
 
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
     updateMarketStateFromTradeRepository(marketState, tradeRepository);
     marketUtils.updateMarketStateFromOrderRepository(marketState, orderRepository);
+  }
+
+  public void reset() {
+    marketState.reset();
+    enteredOrderGeneratorFactory.reset();
   }
 
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
@@ -71,7 +82,7 @@ public class MarketService {
         log.debug("Order request was validated: {}", orderRequest);
       }
 
-      IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+      IEnteredOrderGenerator enteredOrderGenerator = enteredOrderGeneratorFactory
           .getEnteredOrderGenerator(orderRequest.getType());
 
       order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
@@ -101,7 +112,7 @@ public class MarketService {
     final AbstractOrderProcessor orderProcessor;
     try {
       orderProcessor = orderProcessorFactory
-          .getOrderProcessor(marketState, order.getType());
+          .getOrderProcessor(order.getType());
     } catch (OrderTypeNotSupportedException e) {
       log.error(
           "Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
@@ -119,7 +130,7 @@ public class MarketService {
   private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
-    orderProcessor.process(order);
+    orderProcessor.process(marketState, order);
     orderProcessorTimer.stop();
     log.info("Order {} was handled in {} milliseconds", order.getOrderId(),
         orderProcessorTimer.getTotalTimeMillis());

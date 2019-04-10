@@ -6,15 +6,17 @@ import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequiredArgsConstructor
 public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
 
-  protected final MarketState marketState;
-  protected final MarketUtils marketUtils;
-  private final IOrderRepository orderRepository;
-  private final ITradeRepository tradeRepository;
+  @Autowired
+  protected MarketUtils marketUtils;
+  @Autowired
+  private IOrderRepository orderRepository;
+  @Autowired
+  private ITradeRepository tradeRepository;
 
   protected void saveOrderToDatabase(AbstractOrder order) {
     orderRepository.save(order);
@@ -28,15 +30,15 @@ public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
     tradeRepository.save(trade);
   }
 
-  protected void addTradeToState(Trade trade) {
-    marketState.getTrades().add(trade);
+  protected void addTradeToState(List<Trade> trades, Trade trade) {
+    trades.add(trade);
   }
 
-  protected void addTradeToStateAndPersist(Trade trade) {
-    addTradeToState(trade);
+  protected void addTradeToStateAndPersist(List<Trade> trades, Trade trade) {
+    addTradeToState(trades, trade);
     saveTradeToDatabase(trade);
   }
 
-  public abstract void process(T order);
+  public abstract void process(MarketState marketState, T order);
 
 }

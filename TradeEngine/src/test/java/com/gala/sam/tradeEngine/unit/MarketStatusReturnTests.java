@@ -1,52 +1,62 @@
 package com.gala.sam.tradeEngine.unit;
 
 import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.BUY;
-import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.SELL;
+import static org.mockito.BDDMockito.given;
 
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
+import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
+import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
-import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorFactory;
-import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGeneratorState;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
-import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
-import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
-import com.gala.sam.tradeEngine.helpers.MockHelper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class MarketStatusReturnTests {
+
+  @MockBean
+  ITradeRepository tradeRepository;
+  @MockBean
+  IOrderRepository orderRepository;
+  @MockBean
+  OrderProcessorFactory orderProcessorFactory;
+  @MockBean
+  MarketState marketState;
+
+  @Autowired
+  MarketService marketService;
 
   @Test
   public void orderEnteredIsShownInStatus() {
-    //Given: an order
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        MockHelper.getEmptyRepository(ITradeRepository.class),
-        MockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils(), new OrderProcessorUtils());
-    MarketService marketService = new MarketService(
-        MockHelper.getEmptyRepository(ITradeRepository.class),
-        MockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
+    //Given: an order in the ticker queue
+    LimitOrder limitOrder = getLimitOrder(BUY);
+    TickerData tickerData = new TickerData(limitOrder.getTicker());
+    tickerData.getBuyLimitOrders().add(limitOrder);
+    Map<String, TickerData> tickerQueues = new TreeMap<>();
+    tickerQueues.put(limitOrder.getTicker(), tickerData);
+    given(marketState.getTickerQueues()).willReturn(tickerQueues);
+    given(marketState.getTrades()).willReturn(new ArrayList<>());
 
-    LimitOrderRequest limitOrderReq = getLimitOrderReq(BUY);
-
-    //When: order is entered to market
-    AbstractOrder limitOrder = marketService.enterOrder(limitOrderReq).get();
-
-    //Then: it is visible in the correct place in the market status
+    //When: get market status
     PublicMarketStatus publicMarketStatus = marketService.getStatus();
 
+    //Then: it is visible in the correct place in the market status
     Assert.assertTrue("A ticker is returned", publicMarketStatus.getOrders().size() > 0);
     Assert.assertTrue("A buy order is returned",
         publicMarketStatus.getOrders().get(0).getBuy().size() > 0);
@@ -54,8 +64,9 @@ public class MarketStatusReturnTests {
         publicMarketStatus.getOrders().get(0).getBuy().get(0));
   }
 
-  private LimitOrderRequest getLimitOrderReq(Direction direction) {
-    return LimitOrderRequest.builder()
+  private LimitOrder getLimitOrder(Direction direction) {
+    return LimitOrder.builder()
+        .orderId(1)
         .clientId(1)
         .direction(direction)
         .quantity(1)
@@ -67,40 +78,30 @@ public class MarketStatusReturnTests {
 
   @Test
   public void orderTradeIsShownInStatus() {
-    //Given: two matching trades
-    OrderProcessorFactory orderProcessorFactory = new OrderProcessorFactory(
-        MockHelper.getEmptyRepository(ITradeRepository.class),
-        MockHelper.getEmptyRepository(IOrderRepository.class),
-        new MarketUtils(), new OrderProcessorUtils());
-    MarketService marketService = new MarketService(
-        MockHelper.getEmptyRepository(ITradeRepository.class),
-        MockHelper.getEmptyRepository(IOrderRepository.class),
-        new EnteredOrderGeneratorFactory(new EnteredOrderGeneratorState()),
-        orderProcessorFactory,
-        new OrderValidatorFactory(),
-        new MarketUtils());
-
-    LimitOrderRequest buyLimitOrderReq = getLimitOrderReq(BUY);
-    LimitOrderRequest sellLimitOrderReq = getLimitOrderReq(SELL);
+    //Given: a trade in the trades list
+    Trade trade = getTrade();
+    List<Trade> trades = new ArrayList<>();
+    trades.add(trade);
+    given(marketState.getTrades()).willReturn(trades);
+    given(marketState.getTickerQueues()).willReturn(new TreeMap<>());
 
     //When: they are entered on the market
-    AbstractOrder buyLimitOrder = marketService.enterOrder(buyLimitOrderReq).get();
-    AbstractOrder sellLimitOrder = marketService.enterOrder(sellLimitOrderReq).get();
+    PublicMarketStatus publicMarketStatus = marketService.getStatus();
 
     //Then: the resulting trade is visible in the correct place in the
     //market status and the orders are removed
-    PublicMarketStatus publicMarketStatus = marketService.getStatus();
-
-    Trade trade = Trade.builder()
-        .matchQuantity(buyLimitOrderReq.getQuantity())
-        .matchPrice(buyLimitOrderReq.getLimit())
-        .buyOrder(buyLimitOrder.getOrderId())
-        .sellOrder(sellLimitOrder.getOrderId())
-        .ticker(buyLimitOrder.getTicker())
-        .build();
-
     Assert.assertTrue("A trade is shown", publicMarketStatus.getTrades().size() > 0);
     Assert.assertEquals("It is the correct trade", trade, publicMarketStatus.getTrades().get(0));
     Assert.assertEquals("No orders are shown", 0, publicMarketStatus.getOrders().size());
+  }
+
+  private Trade getTrade() {
+    return Trade.builder()
+        .buyOrder(1)
+        .sellOrder(2)
+        .ticker("Greggs")
+        .matchQuantity(10)
+        .matchPrice(1.2f)
+        .build();
   }
 }

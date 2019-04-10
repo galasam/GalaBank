@@ -8,6 +8,7 @@ import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -15,23 +16,23 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class OrderProcessorFactory {
 
-  private final ITradeRepository tradeRepository;
-  private final IOrderRepository orderRepository;
-  private final MarketUtils marketUtils;
-  private final OrderProcessorUtils orderProcessorUtils;
+  @Autowired
+  StopOrderProcessor stopOrderProcessor;
+  @Autowired
+  ActiveLimitOrderProcessor activeLimitOrderProcessor;
+  @Autowired
+  ActiveMarketOrderProcessor activeMarketOrderProcessor;
 
-  public AbstractOrderProcessor getOrderProcessor(MarketState marketState, OrderType type)
+  public AbstractOrderProcessor getOrderProcessor(OrderType type)
       throws OrderTypeNotSupportedException {
     switch (type) {
       case STOP_LIMIT:
       case STOP_MARKET:
-        return new StopOrderProcessor(orderRepository, tradeRepository, marketState, marketUtils);
+        return stopOrderProcessor;
       case ACTIVE_LIMIT:
-        return new ActiveLimitOrderProcessor(orderRepository, tradeRepository, marketState,
-            marketUtils, orderProcessorUtils);
+        return activeLimitOrderProcessor;
       case ACTIVE_MARKET:
-        return new ActiveMarketOrderProcessor(orderRepository, tradeRepository, marketState,
-            marketUtils, orderProcessorUtils);
+        return activeMarketOrderProcessor;
       default:
         log.error("Order type {} is not supported so cannot create order processor", type);
         throw new OrderTypeNotSupportedException(type);

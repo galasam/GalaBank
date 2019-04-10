@@ -10,26 +10,44 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.orderProcessors.StopOrderProcessor;
-import com.gala.sam.tradeEngine.helpers.MockHelper;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 public class StopOrderProcessorTests {
+
+  @TestConfiguration
+  static class Config {
+    @Bean
+    public StopOrderProcessor stopOrderProcessor() {
+      return new StopOrderProcessor();
+    }
+  }
+
+  @MockBean
+  IOrderRepository orderRepository;
+  @MockBean
+  ITradeRepository tradeRepository;
+  @MockBean
+  MarketUtils marketUtils;
+
+  @Autowired
+  StopOrderProcessor stopOrderProcessor;
 
   @Test
   public void stopOrderIsAddedToStopOrderList() {
     //Given a stop order
     AbstractStopOrder stopOrder = StopLimitOrder.builder().build();
     List<AbstractStopOrder> stopOrders = mock(List.class);
-    MarketState marketState = new MarketState(new LinkedList<>(), new TreeMap<>(), stopOrders);
-    IOrderRepository orderRepository = mock(IOrderRepository.class);
-    MarketUtils marketUtils = mock(MarketUtils.class);
-    StopOrderProcessor stopOrderProcessor = new StopOrderProcessor(orderRepository,
-        MockHelper.getEmptyRepository(ITradeRepository.class), marketState, marketUtils);
+    MarketState marketState = MarketState.injectStopOrders(stopOrders);
     //When: it is processed
-    stopOrderProcessor.process(stopOrder);
+    stopOrderProcessor.process(marketState, stopOrder);
     //Then: the order is added to the market state stop orders and saved
     verify(stopOrders).add(stopOrder);
     verify(orderRepository).save(stopOrder);
