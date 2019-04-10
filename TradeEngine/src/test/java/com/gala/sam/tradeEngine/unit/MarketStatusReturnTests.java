@@ -1,4 +1,4 @@
-package unit;
+package com.gala.sam.tradeEngine.unit;
 
 import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.BUY;
 import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.SELL;
@@ -18,7 +18,7 @@ import com.gala.sam.tradeEngine.utils.enteredOrderGenerators.EnteredOrderGenerat
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
 import com.gala.sam.tradeEngine.utils.orderValidators.OrderValidatorFactory;
-import helpers.MockHelper;
+import com.gala.sam.tradeEngine.helpers.MockHelper;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -15,8 +15,6 @@ public class OrderRequestResponse {
 
   ResponseType responseType;
 
-  ;
-
   public static OrderRequestResponse Success() {
     return new OrderRequestResponse(ResponseType.SUCCESS);
   }
@@ -25,6 +23,6 @@ public class OrderRequestResponse {
     return new OrderRequestResponse(ResponseType.ERROR);
   }
 
-  enum ResponseType {SUCCESS, ERROR}
+  public enum ResponseType {SUCCESS, ERROR}
 
 }

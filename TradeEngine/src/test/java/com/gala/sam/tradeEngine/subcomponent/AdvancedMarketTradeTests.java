@@ -1,4 +1,4 @@
-package component;
+package com.gala.sam.tradeEngine.subcomponent;
 
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
@@ -6,7 +6,7 @@ import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
-import helpers.MockHelper;
+import com.gala.sam.tradeEngine.helpers.MockHelper;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;

@@ -1,4 +1,4 @@
-package component;
+package com.gala.sam.tradeEngine.subcomponent;
 
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
@@ -7,7 +7,7 @@ import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorFactory;
-import helpers.MockHelper;
+import com.gala.sam.tradeEngine.helpers.MockHelper;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
