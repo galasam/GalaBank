@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
+@ToString
 @Table(name = "orders")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "Order_Type")

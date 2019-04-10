@@ -1,25 +1,40 @@
-package component;
+package com.gala.sam.tradeEngine.intergration;
 
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;
 import com.gala.sam.tradeEngine.utils.FileIO;
 import com.gala.sam.tradeEngine.utils.OrderCSVParser;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
-import helpers.MockHelper;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@Slf4j
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AdvancedMarketTradeTests {
 
   private static final String relativeDirectoryOfTestFiles = "/src/test/resources/Market Test Cases/";
   private static final String absoluteDirectoryOfTestFiles = Paths
       .get(System.getProperty("user.dir"), relativeDirectoryOfTestFiles).toString();
+
+  @MockBean
+  ITradeRepository tradeRepository;
+  @MockBean
+  IOrderRepository orderRepository;
+
+  @Autowired
+  MarketService marketService;
+
 
   @Test
   public void correctlyHandlesPhase1TestCases() throws IOException {
@@ -51,11 +66,9 @@ public class AdvancedMarketTradeTests {
   }
 
   private void runTest(int phase, int testNumber) throws IOException {
-    log.info(String.format("Running test %d", testNumber));
     //Given some input orders
     final List<AbstractOrderRequest> orders = readOrders(phase, testNumber);
-
-    MarketService marketService = MockHelper.getMarketService();
+    marketService.reset();
 
     //When: they are entered in to the market
     orders.stream().forEach(marketService::enterOrder);
@@ -69,14 +82,12 @@ public class AdvancedMarketTradeTests {
   }
 
   private List<Trade> readTrades(int phase, int testNumber) throws IOException {
-    log.debug("Reading Orders from file");
     String filepath = getOutputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);
     return TradeCSVParser.decodeCSV(inputText);
   }
 
   private List<AbstractOrderRequest> readOrders(int phase, int testNumber) throws IOException {
-    log.debug("Reading Orders from file");
     String filepath = getInputFilePath(phase, testNumber);
     final List<String> inputText = FileIO.readTestFile(filepath);
     return OrderCSVParser.decodeCSV(inputText);

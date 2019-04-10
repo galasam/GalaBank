@@ -17,6 +17,18 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MarketState {
 
+  public static MarketState injectStopOrders(List<AbstractStopOrder> stopOrders) {
+    MarketState marketState = new MarketState();
+    marketState.stopOrders = stopOrders;
+    return marketState;
+  }
+
+  public void reset() {
+    trades.clear();
+    getTickerQueues().clear();
+    stopOrders.clear();
+  }
+
   private List<Trade> trades = new ArrayList<>();
   private Map<String, TickerData> tickerQueues = new TreeMap<>();
   private List<AbstractStopOrder> stopOrders = new LinkedList<>();

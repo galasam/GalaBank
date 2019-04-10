@@ -43,17 +43,22 @@ public class MarketService {
 
   private final ITradeRepository tradeRepository;
   private final IOrderRepository orderRepository;
-  private final EnteredOrderGeneratorFactory concreteOrderGeneratorFactory;
+  private final EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
   private final OrderProcessorFactory orderProcessorFactory;
   private final OrderValidatorFactory orderValidatorFactory;
   private final MarketUtils marketUtils;
-  private final MarketState marketState = new MarketState();
+  private final MarketState marketState;
 
   @PostConstruct
   void init() {
     log.info("Getting existing trades from database");
     updateMarketStateFromTradeRepository(marketState, tradeRepository);
     marketUtils.updateMarketStateFromOrderRepository(marketState, orderRepository);
+  }
+
+  public void reset() {
+    marketState.reset();
+    enteredOrderGeneratorFactory.reset();
   }
 
   public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
@@ -71,7 +76,7 @@ public class MarketService {
         log.debug("Order request was validated: {}", orderRequest);
       }
 
-      IEnteredOrderGenerator enteredOrderGenerator = concreteOrderGeneratorFactory
+      IEnteredOrderGenerator enteredOrderGenerator = enteredOrderGeneratorFactory
           .getEnteredOrderGenerator(orderRequest.getType());
 
       order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
@@ -100,8 +105,7 @@ public class MarketService {
 
     final AbstractOrderProcessor orderProcessor;
     try {
-      orderProcessor = orderProcessorFactory
-          .getOrderProcessor(marketState, order.getType());
+      orderProcessor = orderProcessorFactory.getOrderProcessor(order.getType());
     } catch (OrderTypeNotSupportedException e) {
       log.error(
           "Cannot create order processor so order {} will not be processed since handling it an exception was raised: {}",
@@ -109,17 +113,17 @@ public class MarketService {
       return;
     }
 
-    handleOrderWithTimer(order, orderProcessor);
+    handleOrderWithTimer(orderProcessor, order);
 
     log.debug("Ticker queues: " + marketState.getTickerQueues().toString());
     log.debug("Stop Orders: " + marketState.getStopOrders().toString());
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private void handleOrderWithTimer(AbstractOrder order, AbstractOrderProcessor orderProcessor) {
+  private void handleOrderWithTimer(AbstractOrderProcessor orderProcessor, AbstractOrder order) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
-    orderProcessor.process(order);
+    orderProcessor.process(marketState, order);
     orderProcessorTimer.stop();
     log.info("Order {} was handled in {} milliseconds", order.getOrderId(),
         orderProcessorTimer.getTotalTimeMillis());

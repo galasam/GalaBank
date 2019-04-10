@@ -1,9 +1,11 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
+import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderProcessorUtils {
 
-  public void continueProcessingLimitOrderIfNotFulfilled(LimitOrder order,
+  public void continueProcessingLimitOrderIfNotFulfilled(List<Trade> trades, LimitOrder order,
       TickerData tickerData, SortedSet<MarketOrder> marketOrders,
       SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders,
       LimitOrderProcessingContinuer limitOrderProcessingContinuer) {
@@ -21,21 +23,22 @@ public class OrderProcessorUtils {
       log.debug("New limit order {} is not fully satisfied, so continue processing it.",
           order.getOrderId());
       limitOrderProcessingContinuer
-          .processDirectedLimitOrder(order, tickerData, marketOrders, sameTypeLimitOrders,
-              oppositeTypeLimitOrders);
+          .processDirectedLimitOrder(trades, order, tickerData, marketOrders,
+              sameTypeLimitOrders, oppositeTypeLimitOrders);
     } else {
       log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
     }
   }
 
-  public void continueProcessingMarketOrderIfNotFulfilled(MarketOrder order, TickerData tickerData,
-      SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders,
+  public void continueProcessingMarketOrderIfNotFulfilled(List<Trade> trades,
+      MarketOrder order, TickerData tickerData, SortedSet<LimitOrder> limitOrders,
+      SortedSet<MarketOrder> marketOrders,
       MarketOrderProcessingContinuer marketOrderProcessingContinuer) {
     if (!order.isFullyFulfilled()) {
       log.debug("New limit order {} is not fully satisfied, so continue processing it.",
           order.getOrderId());
       marketOrderProcessingContinuer
-          .processDirectedMarketOrder(order, tickerData, limitOrders, marketOrders);
+          .processDirectedMarketOrder(trades, order, tickerData, limitOrders, marketOrders);
     } else {
       log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
     }
@@ -52,7 +55,7 @@ public class OrderProcessorUtils {
 
   public interface LimitOrderProcessingContinuer {
 
-    void processDirectedLimitOrder(LimitOrder limitOrder, TickerData tickerData,
+    void processDirectedLimitOrder(List<Trade> trades, LimitOrder limitOrder, TickerData tickerData,
         SortedSet<MarketOrder> marketOrders,
         SortedSet<LimitOrder> sameTypeLimitOrders,
         SortedSet<LimitOrder> oppositeTypeLimitOrders);
@@ -60,7 +63,7 @@ public class OrderProcessorUtils {
 
   public interface MarketOrderProcessingContinuer {
 
-    void processDirectedMarketOrder(MarketOrder marketOrder, TickerData tickerData,
-        SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders);
+    void processDirectedMarketOrder(List<Trade> trades, MarketOrder marketOrder,
+        TickerData tickerData, SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders);
   }
 }
