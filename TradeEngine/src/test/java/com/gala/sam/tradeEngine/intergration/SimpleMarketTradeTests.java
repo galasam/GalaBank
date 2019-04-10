@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.subcomponent;
+package com.gala.sam.tradeEngine.intergration;
 
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
