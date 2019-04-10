@@ -42,4 +42,9 @@ public class RestEntryPoint {
     return marketService.getStatus();
   }
 
+  @PostMapping("reset")
+  public void reset() {
+    marketService.reset();
+  }
+
 }
