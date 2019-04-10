@@ -7,16 +7,14 @@ import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public abstract class AbstractOrderProcessor<T extends AbstractOrder> {
 
-  @Autowired
-  protected MarketUtils marketUtils;
-  @Autowired
-  private IOrderRepository orderRepository;
-  @Autowired
-  private ITradeRepository tradeRepository;
+  protected final MarketUtils marketUtils;
+  private final IOrderRepository orderRepository;
+  private final ITradeRepository tradeRepository;
 
   protected void saveOrderToDatabase(AbstractOrder order) {
     orderRepository.save(order);

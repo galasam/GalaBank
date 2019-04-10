@@ -1,27 +1,19 @@
 package com.gala.sam.tradeEngine.utils.orderProcessors;
 
-import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.repository.IOrderRepository;
-import com.gala.sam.tradeEngine.repository.ITradeRepository;
-import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderProcessorFactory {
 
-  @Autowired
-  StopOrderProcessor stopOrderProcessor;
-  @Autowired
-  ActiveLimitOrderProcessor activeLimitOrderProcessor;
-  @Autowired
-  ActiveMarketOrderProcessor activeMarketOrderProcessor;
+  private final StopOrderProcessor stopOrderProcessor;
+  private final ActiveLimitOrderProcessor activeLimitOrderProcessor;
+  private final ActiveMarketOrderProcessor activeMarketOrderProcessor;
 
   public AbstractOrderProcessor getOrderProcessor(OrderType type)
       throws OrderTypeNotSupportedException {

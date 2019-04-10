@@ -4,16 +4,17 @@ package com.gala.sam.tradeEngine.utils.enteredOrderGenerators;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
 import com.gala.sam.tradeEngine.utils.exception.OrderTypeNotSupportedException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class EnteredOrderGeneratorFactory {
 
-  @Autowired
-  private EnteredOrderGeneratorState enteredOrderGeneratorState;
+  private final EnteredOrderGeneratorState enteredOrderGeneratorState;
 
   public IEnteredOrderGenerator getEnteredOrderGenerator(OrderType type)
       throws OrderTypeNotSupportedException {

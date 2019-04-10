@@ -6,12 +6,14 @@ import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.tradeEngine.repository.IOrderRepository;
+import com.gala.sam.tradeEngine.repository.ITradeRepository;
+import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils.LimitOrderProcessingContinuer;
 import java.util.List;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,8 +21,15 @@ import org.springframework.stereotype.Component;
 public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder> implements
     LimitOrderProcessingContinuer {
 
-  @Autowired
-  private OrderProcessorUtils orderProcessorUtils;
+  private final OrderProcessorUtils orderProcessorUtils;
+
+  public ActiveLimitOrderProcessor(MarketUtils marketUtils,
+      IOrderRepository orderRepository,
+      ITradeRepository tradeRepository,
+      OrderProcessorUtils orderProcessorUtils) {
+    super(marketUtils, orderRepository, tradeRepository);
+    this.orderProcessorUtils = orderProcessorUtils;
+  }
 
   @Override
   public void process(MarketState marketState, LimitOrder order) {

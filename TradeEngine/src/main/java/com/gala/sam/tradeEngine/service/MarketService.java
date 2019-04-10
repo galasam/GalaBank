@@ -31,29 +31,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MarketService {
 
-  @Autowired
-  private ITradeRepository tradeRepository;
-  @Autowired
-  private IOrderRepository orderRepository;
-  @Autowired
-  private EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
-  @Autowired
-  private OrderProcessorFactory orderProcessorFactory;
-  @Autowired
-  private OrderValidatorFactory orderValidatorFactory;
-  @Autowired
-  private MarketUtils marketUtils;
-  @Autowired
-  MarketState marketState;
+  private final ITradeRepository tradeRepository;
+  private final IOrderRepository orderRepository;
+  private final EnteredOrderGeneratorFactory enteredOrderGeneratorFactory;
+  private final OrderProcessorFactory orderProcessorFactory;
+  private final OrderValidatorFactory orderValidatorFactory;
+  private final MarketUtils marketUtils;
+  private final MarketState marketState;
 
   @PostConstruct
   void init() {

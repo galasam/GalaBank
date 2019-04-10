@@ -5,23 +5,19 @@ import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
 import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
+@RequiredArgsConstructor
 public class TradeEngineGateway {
 
-  protected String serviceHostName;
-  @Autowired
-  RestTemplate restTemplate;
-  @Autowired
-  private EurekaClient discoveryClient;
-
-  public TradeEngineGateway(String serviceHostName) {
-    this.serviceHostName = serviceHostName;
-  }
+  protected final String serviceHostName;
+  private final RestTemplate restTemplate;
+  private final EurekaClient discoveryClient;
 
   public OrderRequestResponse enterOrder(AbstractOrderRequest order) {
     InstanceInfo serverInstance = discoveryClient
