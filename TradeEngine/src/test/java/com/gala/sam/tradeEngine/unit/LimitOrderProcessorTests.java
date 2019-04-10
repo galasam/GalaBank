@@ -20,27 +20,18 @@ import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveLimitOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
-import com.gala.sam.tradeEngine.utils.orderProcessors.StopOrderProcessor;
 import java.util.List;
 import java.util.SortedSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class LimitOrderProcessorTests {
-
-  @TestConfiguration
-  static class Config {
-    @Bean
-    public ActiveLimitOrderProcessor activeLimitOrderProcessor() {
-      return new ActiveLimitOrderProcessor();
-    }
-  }
 
   @MockBean
   IOrderRepository orderRepository;
@@ -67,7 +58,8 @@ public class LimitOrderProcessorTests {
 
     //When: process is called
     activeLimitOrderProcessor
-        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders,
+            sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
     //Then: queueIfTimeInForce is called with the right parameters
@@ -90,7 +82,8 @@ public class LimitOrderProcessorTests {
 
     //When: process is called
     activeLimitOrderProcessor
-        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders,
+            sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
     //Then: no trade is made and queueIfGTC is called with the right parameters
@@ -117,7 +110,8 @@ public class LimitOrderProcessorTests {
 
     //When: process is called
     activeLimitOrderProcessor
-        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders,
+            sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
     //Then: a trade is made with right params and queueIfGTC is not called
@@ -149,7 +143,8 @@ public class LimitOrderProcessorTests {
 
     //When: process is called
     activeLimitOrderProcessor
-        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders, sameTypeLimitOrders,
+        .processDirectedLimitOrder(trades, limitOrder, tickerData, marketOrders,
+            sameTypeLimitOrders,
             oppositeTypeLimitOrders);
 
     //Then: a trade is made with right params and queueIfGTC is not called

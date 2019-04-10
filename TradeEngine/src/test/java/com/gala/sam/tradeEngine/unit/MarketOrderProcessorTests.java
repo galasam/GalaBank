@@ -17,8 +17,6 @@ import com.gala.sam.tradeEngine.domain.enteredorder.MarketOrder;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveLimitOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.ActiveMarketOrderProcessor;
 import com.gala.sam.tradeEngine.utils.orderProcessors.OrderProcessorUtils;
 import java.util.List;
@@ -26,21 +24,13 @@ import java.util.SortedSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class MarketOrderProcessorTests {
-
-  @TestConfiguration
-  static class Config {
-    @Bean
-    public ActiveMarketOrderProcessor activeMarketOrderProcessor() {
-      return new ActiveMarketOrderProcessor();
-    }
-  }
 
   @MockBean
   IOrderRepository orderRepository;
@@ -55,8 +45,7 @@ public class MarketOrderProcessorTests {
   ActiveMarketOrderProcessor activeMarketOrderProcessor;
 
   @Test
-  public void whenLimitQueueIsEmpty()
-      throws OrderDirectionNotSupportedException {
+  public void whenLimitQueueIsEmpty() {
     //Given limit queue that is empty
     MarketOrder marketOrder = MarketOrder.builder().build();
 
