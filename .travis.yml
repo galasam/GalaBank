@@ -3,3 +3,8 @@ install: mvn compile
 script: mvn test
 jdk:
  - oraclejdk8
+addons:
+  sonarcloud:
+    organization: "galasam_GalaBank" # the key of the org you chose at step #3
+    token:
+      secure: SONAR_TOKEN # encrypted value of your token
