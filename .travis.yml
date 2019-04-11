@@ -1,5 +1,12 @@
 language: java
 install: mvn compile
-script: mvn test
+script:
+  - mvn test
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 jdk:
  - oraclejdk8
+addons:
+  sonarcloud:
+    organization: "galasam-github" # the key of the org you chose at step #3
+    token:
+      secure: $SONAR_TOKEN # encrypted value of your token
