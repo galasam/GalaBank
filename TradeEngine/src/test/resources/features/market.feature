@@ -7,4 +7,9 @@ Feature: Enter Order
     When order is entered in to market
     Then order is rejected
 
+  Scenario: entering a valid order is successfully
+    Given a valid order
+    When order is entered in to market
+    Then order is successfully entered
+
 

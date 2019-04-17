@@ -1,13 +1,15 @@
 package com.gala.sam.tradeEngine.acceptance;
 
 import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
+import com.gala.sam.tradeEngine.domain.OrderRequestResponse.ResponseType;
 import cucumber.api.java.en.Then;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ResponseStepDefinitions {
+public class OrderResponseStepDefinitions {
 
   @Autowired
+  private
   StepDefinitionWorldState worldState;
 
   @Then("order is rejected")
@@ -16,4 +18,9 @@ public class ResponseStepDefinitions {
         worldState.response.getResponseType());
   }
 
+  @Then("order is successfully entered")
+  public void orderIsSuccessfullyEntered() {
+    Assert.assertEquals("Response is successful", ResponseType.SUCCESS,
+        worldState.response.getResponseType());
+  }
 }
