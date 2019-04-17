@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class StepDefinitionWorldState {
 
-    @Autowired
-    RestEntryPoint restEntryPoint;
+  @Autowired
+  RestEntryPoint restEntryPoint;
 
-    AbstractOrderRequest orderRequest;
-    OrderRequestResponse response;
+  AbstractOrderRequest orderRequest;
+  OrderRequestResponse response;
 
 }
