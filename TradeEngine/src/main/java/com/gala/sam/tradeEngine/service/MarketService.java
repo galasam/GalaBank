@@ -61,12 +61,13 @@ public class MarketService {
     enteredOrderGeneratorFactory.reset();
   }
 
-  public Optional<AbstractOrder> enterOrder(AbstractOrderRequest orderRequest) {
+  @SuppressWarnings("unchecked")
+  public <T extends AbstractOrderRequest, S extends AbstractOrder> Optional<S> enterOrder(T orderRequest) {
     log.info("Processing Order Time-step with order request: {}", orderRequest);
 
-    final AbstractOrder order;
+    final S order;
     try {
-      IOrderValidator<AbstractOrderRequest> orderValidator = orderValidatorFactory
+      IOrderValidator<T> orderValidator = orderValidatorFactory
           .getOrderValidator(orderRequest.getType());
       List<String> errors = orderValidator.findErrors(orderRequest);
       if (!errors.isEmpty()) {
@@ -76,7 +77,7 @@ public class MarketService {
         log.debug("Order request was validated: {}", orderRequest);
       }
 
-      IEnteredOrderGenerator enteredOrderGenerator = enteredOrderGeneratorFactory
+      IEnteredOrderGenerator<T,S> enteredOrderGenerator = enteredOrderGeneratorFactory
           .getEnteredOrderGenerator(orderRequest.getType());
 
       order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
@@ -100,10 +101,11 @@ public class MarketService {
     return marketState.getTrades();
   }
 
-  private void tryProcessOrder(AbstractOrder order) {
+  @SuppressWarnings("unchecked")
+  private <T extends AbstractOrder> void tryProcessOrder(T order) {
     log.info(String.format("Processing order %s", order.toString()));
 
-    final AbstractOrderProcessor orderProcessor;
+    final AbstractOrderProcessor<T> orderProcessor;
     try {
       orderProcessor = orderProcessorFactory.getOrderProcessor(order.getType());
     } catch (OrderTypeNotSupportedException e) {
@@ -120,7 +122,7 @@ public class MarketService {
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private void handleOrderWithTimer(AbstractOrderProcessor orderProcessor, AbstractOrder order) {
+  private <T extends AbstractOrder> void handleOrderWithTimer(AbstractOrderProcessor<T> orderProcessor, T order) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
     orderProcessor.process(marketState, order);
