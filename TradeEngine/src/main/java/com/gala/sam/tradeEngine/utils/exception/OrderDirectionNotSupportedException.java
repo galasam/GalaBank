@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.utils.exception;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
 
 public class OrderDirectionNotSupportedException extends AbstractOrderFieldNotSupportedException {
 

@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.unit;
 
-import static com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction.BUY;
+import static com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction.BUY;
 import static org.mockito.BDDMockito.given;
 
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
@@ -8,8 +8,8 @@ import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.repository.IOrderRepository;
 import com.gala.sam.tradeEngine.repository.ITradeRepository;
 import com.gala.sam.tradeEngine.service.MarketService;

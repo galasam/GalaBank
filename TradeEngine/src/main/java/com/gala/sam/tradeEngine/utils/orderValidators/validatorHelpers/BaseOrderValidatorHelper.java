@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
 import java.util.ArrayList;
 import java.util.List;
 

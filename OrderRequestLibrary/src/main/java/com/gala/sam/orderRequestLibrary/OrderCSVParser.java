@@ -1,12 +1,12 @@
-package com.gala.sam.tradeEngine.utils;
+package com.gala.sam.orderRequestLibrary;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.LimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.MarketOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopLimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopMarketOrderRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

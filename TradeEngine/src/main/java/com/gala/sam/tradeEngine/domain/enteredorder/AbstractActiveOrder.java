@@ -1,9 +1,9 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.utils.AbstractActiveOrderDeserializer;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

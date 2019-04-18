@@ -1,11 +1,11 @@
 package com.gala.sam.tradeEngine.unit;
 
+import com.gala.sam.orderRequestLibrary.OrderCSVParser;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
-import com.gala.sam.tradeEngine.utils.OrderCSVParser;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopLimitOrderRequest;
 import com.gala.sam.tradeEngine.utils.TradeCSVParser;
 import java.util.ArrayList;
 import java.util.LinkedList;

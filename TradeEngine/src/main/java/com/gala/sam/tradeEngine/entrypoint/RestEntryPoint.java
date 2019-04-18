@@ -1,9 +1,9 @@
 package com.gala.sam.tradeEngine.entrypoint;
 
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.Trade;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeEngine.service.MarketService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

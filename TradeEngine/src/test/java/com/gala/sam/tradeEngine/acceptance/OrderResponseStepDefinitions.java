@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.acceptance;
 
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse.ResponseType;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse.ResponseType;
 import cucumber.api.java.en.Then;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;

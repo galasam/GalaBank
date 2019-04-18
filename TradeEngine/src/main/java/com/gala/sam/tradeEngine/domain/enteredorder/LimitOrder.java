@@ -1,8 +1,8 @@
 package com.gala.sam.tradeEngine.domain.enteredorder;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
