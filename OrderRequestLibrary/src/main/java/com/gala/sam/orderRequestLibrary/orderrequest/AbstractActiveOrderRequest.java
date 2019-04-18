@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain.orderrequest;
+package com.gala.sam.orderRequestLibrary.orderrequest;
 
 public abstract class AbstractActiveOrderRequest extends AbstractOrderRequest {
 

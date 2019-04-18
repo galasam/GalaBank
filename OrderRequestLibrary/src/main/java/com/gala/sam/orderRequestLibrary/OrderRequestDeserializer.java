@@ -1,18 +1,18 @@
-package com.gala.sam.tradeEngine.utils;
+package com.gala.sam.orderRequestLibrary;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.OrderType;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.StopLimitOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.OrderType;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.LimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.MarketOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopLimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopMarketOrderRequest;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 

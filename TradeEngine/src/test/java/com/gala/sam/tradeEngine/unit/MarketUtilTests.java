@@ -12,8 +12,8 @@ import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMet
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
 import java.util.SortedSet;
 import java.util.TreeSet;

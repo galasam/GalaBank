@@ -52,10 +52,11 @@
 
     <dependency>
       <groupId>com.gala.sam</groupId>
-      <artifactId>TradeEngine</artifactId>
-      <version>${project.version}</version>
+      <artifactId>OrderRequestLibrary</artifactId>
+      <version>2.0.2.RELEASE</version>
       <scope>compile</scope>
     </dependency>
+
 
   </dependencies>
 

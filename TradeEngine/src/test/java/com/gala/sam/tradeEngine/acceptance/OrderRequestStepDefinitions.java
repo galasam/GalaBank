@@ -1,7 +1,7 @@
 package com.gala.sam.tradeEngine.acceptance;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.LimitOrderRequest;
 import cucumber.api.java.en.Given;
 import org.springframework.beans.factory.annotation.Autowired;
 
