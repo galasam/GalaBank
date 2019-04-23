@@ -17,8 +17,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "AbstractStopOrderRequest")
-@DiscriminatorValue("AbstractStopOrderRequest")
 public abstract class AbstractStopOrder extends AbstractOrder {
 
   @Column

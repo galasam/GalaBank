@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "MarketOrderRequest")
-@DiscriminatorValue("MarketOrderRequest")
+@Entity(name = "MarketOrder")
+@DiscriminatorValue("MarketOrder")
 public class MarketOrder extends AbstractActiveOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_MARKET;

@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "LimitOrderRequest")
-@DiscriminatorValue("LimitOrderRequest")
+@Entity(name = "LimitOrder")
+@DiscriminatorValue("LimitOrder")
 public class LimitOrder extends AbstractActiveOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;
