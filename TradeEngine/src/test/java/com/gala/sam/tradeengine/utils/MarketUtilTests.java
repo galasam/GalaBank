@@ -1,4 +1,4 @@
-package com.gala.sam.tradeengine.unit;
+package com.gala.sam.tradeengine.utils;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -6,6 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue.SortingMethod;
@@ -20,8 +21,10 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 @SuppressWarnings("unchecked")
+@Category(UnitTest.class)
 public class MarketUtilTests {
 
   @Test

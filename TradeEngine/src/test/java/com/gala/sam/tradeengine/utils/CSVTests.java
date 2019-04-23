@@ -1,6 +1,7 @@
-package com.gala.sam.tradeengine.unit;
+package com.gala.sam.tradeengine.utils;
 
 import com.gala.sam.orderrequestlibrary.OrderCSVParser;
+import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
@@ -12,7 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(UnitTest.class)
 public class CSVTests {
 
   private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
