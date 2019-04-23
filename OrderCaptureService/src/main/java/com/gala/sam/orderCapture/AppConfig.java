@@ -3,7 +3,6 @@ package com.gala.sam.orderCapture;
 import com.gala.sam.orderCapture.service.TradeEngineGateway;
 import com.netflix.discovery.EurekaClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
