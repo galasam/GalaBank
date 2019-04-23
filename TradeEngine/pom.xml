@@ -106,7 +106,6 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <!-- <skip>true</skip> -->
               <executable>npm</executable>
               <arguments>
                 <argument>install</argument>
