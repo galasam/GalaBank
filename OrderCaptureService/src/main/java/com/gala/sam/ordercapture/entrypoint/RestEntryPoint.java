@@ -18,8 +18,7 @@ public class RestEntryPoint {
   @PostMapping("/enter-order")
   public OrderRequestResponse enterOrder(@RequestBody String csvInput) {
     log.info("CSV received: {}", csvInput);
-    OrderRequestResponse response = orderCaptureService.enterOrder(csvInput);
-    return response;
+    return orderCaptureService.enterOrder(csvInput);
   }
 
 }
