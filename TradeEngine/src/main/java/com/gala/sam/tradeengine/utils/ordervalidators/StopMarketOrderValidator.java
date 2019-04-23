@@ -12,7 +12,7 @@ public class StopMarketOrderValidator implements IOrderValidator<StopMarketOrder
   public List<String> findErrors(StopMarketOrderRequest order) {
     List<String> errors = BaseOrderValidatorHelper.findErrors(order);
     errors.addAll(StopOrderValidatorHelper.findErrors(order));
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       log.debug("StopLimitOrderValidator has found {} errors on order {} : {}",
           errors.size(), order, errors);
     }

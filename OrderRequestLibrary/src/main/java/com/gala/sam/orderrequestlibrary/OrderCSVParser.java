@@ -22,28 +22,28 @@ public class OrderCSVParser {
 
   private OrderCSVParser() {}
 
-  private final static String CSV_DELIMETER = ",";
+  private static final String CSV_DELIMETER = ",";
 
-  private final static String ORDER_ID = "ORDER ID";
-  private final static String GROUP_ID = "GROUP ID";
-  private final static String DIRECTION = "DIRECTION";
-  private final static String QUANTITY = "QUANTITY";
-  private final static String TICKER = "TICKER";
-  private final static String TYPE = "TYPE";
-  private final static String LIMIT_PRICE = "LIMIT PRICE";
-  private final static String TIME_IN_FORCE = "TIME IN FORCE";
-  private final static String TRIGGER_PRICE = "TRIGGER PRICE";
+  private static final String ORDER_ID = "ORDER ID";
+  private static final String GROUP_ID = "GROUP ID";
+  private static final String DIRECTION = "DIRECTION";
+  private static final String QUANTITY = "QUANTITY";
+  private static final String TICKER = "TICKER";
+  private static final String TYPE = "TYPE";
+  private static final String LIMIT_PRICE = "LIMIT PRICE";
+  private static final String TIME_IN_FORCE = "TIME IN FORCE";
+  private static final String TRIGGER_PRICE = "TRIGGER PRICE";
 
-  private final static String HEADER = String
+  private static final String HEADER = String
       .join(CSV_DELIMETER, ORDER_ID, GROUP_ID, DIRECTION, QUANTITY, TICKER, TYPE, LIMIT_PRICE,
           TIME_IN_FORCE, TRIGGER_PRICE);
 
-  private final static String TYPE_LIMIT = "LIMIT";
-  private final static String TYPE_MARKET = "MARKET";
-  private final static String TYPE_STOP_LIMIT = "STOP-LIMIT";
-  private final static String TYPE_STOP_MARKET = "STOP-MARKET";
+  private static final String TYPE_LIMIT = "LIMIT";
+  private static final String TYPE_MARKET = "MARKET";
+  private static final String TYPE_STOP_LIMIT = "STOP-LIMIT";
+  private static final String TYPE_STOP_MARKET = "STOP-MARKET";
 
-  private final static Map<String, Integer> INPUT_HEADINGS = new TreeMap<>();
+  private static final Map<String, Integer> INPUT_HEADINGS = new TreeMap<>();
 
   static {
     INPUT_HEADINGS.put(ORDER_ID, 0);

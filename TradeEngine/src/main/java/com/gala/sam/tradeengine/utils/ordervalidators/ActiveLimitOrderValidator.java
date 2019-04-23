@@ -13,7 +13,7 @@ public class ActiveLimitOrderValidator implements IOrderValidator<LimitOrderRequ
   public List<String> findErrors(LimitOrderRequest order) {
     List<String> errors = BaseOrderValidatorHelper.findErrors(order);
     errors.addAll(findErrorsInLimitPrice(order.getLimit()));
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       log.debug("ActiveLimitOrderValidator has found {} errors on order {} : {}",
           errors.size(), order, errors);
     }

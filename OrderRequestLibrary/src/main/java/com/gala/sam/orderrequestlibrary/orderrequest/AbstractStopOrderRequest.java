@@ -1,8 +1,10 @@
 package com.gala.sam.orderrequestlibrary.orderrequest;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractStopOrderRequest extends AbstractOrderRequest {
 
   private final float triggerPrice;

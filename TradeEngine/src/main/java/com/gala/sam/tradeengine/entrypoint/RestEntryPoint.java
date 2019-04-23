@@ -25,10 +25,10 @@ public class RestEntryPoint {
     log.info("Order request received into Trading Engine: {}", order.toString());
     if (marketService.enterOrder(order).isPresent()) {
       log.info("Order request successfully entered into Trading Engine: {}", order.toString());
-      return OrderRequestResponse.Success();
+      return OrderRequestResponse.success();
     } else {
       log.info("Order request failed to be entered into Trading Engine: {}", order.toString());
-      return OrderRequestResponse.Error();
+      return OrderRequestResponse.error();
     }
   }
 

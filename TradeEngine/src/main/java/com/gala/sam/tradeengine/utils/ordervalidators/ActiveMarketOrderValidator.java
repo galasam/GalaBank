@@ -10,7 +10,7 @@ public class ActiveMarketOrderValidator implements IOrderValidator<MarketOrderRe
 
   public List<String> findErrors(MarketOrderRequest order) {
     List<String> errors = BaseOrderValidatorHelper.findErrors(order);
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       log.debug("ActiveMarketOrderValidator has found {} errors on order {} : {}",
           errors.size(), order, errors);
     }

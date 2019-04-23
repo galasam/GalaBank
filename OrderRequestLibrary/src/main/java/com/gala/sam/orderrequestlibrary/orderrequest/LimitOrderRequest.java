@@ -1,11 +1,13 @@
 package com.gala.sam.orderrequestlibrary.orderrequest;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class LimitOrderRequest extends AbstractActiveOrderRequest {
 
   private static final OrderType ORDER_TYPE = OrderType.ACTIVE_LIMIT;

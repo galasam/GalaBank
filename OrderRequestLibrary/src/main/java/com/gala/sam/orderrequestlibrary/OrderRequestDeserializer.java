@@ -29,7 +29,7 @@ public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderReque
 
   @Override
   public AbstractOrderRequest deserialize(JsonParser jsonParser,
-      DeserializationContext ctx) throws IOException, JsonProcessingException {
+      DeserializationContext ctx) throws IOException {
     JsonNode root = jsonParser.getCodec().readTree(jsonParser);
     OrderType orderType = OrderType.valueOf(root.get("type").asText());
     int clientId = root.get("clientId").asInt();
@@ -37,7 +37,8 @@ public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderReque
     int quantity = root.get("quantity").asInt();
     TimeInForce timeInForce = TimeInForce.valueOf(root.get("timeInForce").asText());
     String ticker = root.get("ticker").asText();
-    final float limit, triggerPrice;
+    final float limit;
+    final float triggerPrice;
     switch (orderType) {
       case ACTIVE_MARKET:
         return MarketOrderRequest.builder()

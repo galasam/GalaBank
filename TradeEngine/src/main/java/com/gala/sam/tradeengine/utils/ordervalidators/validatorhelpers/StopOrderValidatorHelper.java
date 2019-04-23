@@ -15,7 +15,7 @@ public class StopOrderValidatorHelper {
     return errors;
   }
 
-  static private List<String> findErrorsInTriggerPrice(float triggerPrice) {
+  private static List<String> findErrorsInTriggerPrice(float triggerPrice) {
     List<String> errors = new ArrayList<>();
     if (triggerPrice < 0) {
       errors.add("Trigger price is negative");
