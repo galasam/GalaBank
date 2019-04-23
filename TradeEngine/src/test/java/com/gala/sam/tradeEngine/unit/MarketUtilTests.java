@@ -9,23 +9,19 @@ import static org.mockito.Mockito.verify;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeEngine.domain.datastructures.LimitOrderQueue.SortingMethod;
-import com.gala.sam.tradeEngine.domain.datastructures.MarketState;
 import com.gala.sam.tradeEngine.domain.datastructures.TickerData;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeEngine.utils.MarketUtils;
-import com.gala.sam.tradeEngine.utils.exception.OrderDirectionNotSupportedException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Test;
 
+@SuppressWarnings("unchecked")
 public class MarketUtilTests {
 
   @Test
@@ -49,6 +45,7 @@ public class MarketUtilTests {
   @Test
   public void testQueueIfTimeNotInForce() {
     //Given: FOK order
+    @SuppressWarnings("SortedCollectionWithNonComparableKeys")
     SortedSet<LimitOrder> orders = new TreeSet<>();
     LimitOrder order = LimitOrder.builder().timeInForce(TimeInForce.FOK).build();
     Consumer<AbstractOrder> save = mock(Consumer.class);
@@ -65,11 +62,9 @@ public class MarketUtilTests {
   }
 
   @Test
-  public void testMakeTradeCreatesTradeCorrectly() throws OrderDirectionNotSupportedException {
+  public void testMakeTradeCreatesTradeCorrectly() {
     //Given: Two limit orders that should match
     TickerData tickerData = mock(TickerData.class);
-    List<Trade> trades = mock(List.class);
-    MarketState marketState = new MarketState(trades, new TreeMap<>(), new LinkedList<>());
 
     LimitOrder limitOrderA = LimitOrder.builder()
         .orderId(1)

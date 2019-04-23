@@ -1,4 +1,4 @@
-package com.gala.sam.tradeEngine.domain.orderrequest;
+package com.gala.sam.orderRequestLibrary.orderrequest;
 
 import lombok.ToString;
 

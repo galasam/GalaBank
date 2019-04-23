@@ -1,6 +1,6 @@
 package com.gala.sam.tradeEngine.utils.orderValidators;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.StopMarketOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.StopMarketOrderRequest;
 import com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers.BaseOrderValidatorHelper;
 import com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers.StopOrderValidatorHelper;
 import java.util.List;

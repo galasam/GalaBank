@@ -1,8 +1,8 @@
 package com.gala.sam.orderCapture.service;
 
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest;
-import com.gala.sam.tradeEngine.utils.OrderCSVParser;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderRequestLibrary.OrderCSVParser;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

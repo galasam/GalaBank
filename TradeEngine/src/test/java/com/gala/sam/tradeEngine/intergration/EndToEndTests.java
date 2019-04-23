@@ -4,16 +4,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse;
-import com.gala.sam.tradeEngine.domain.OrderRequestResponse.ResponseType;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse;
+import com.gala.sam.orderRequestLibrary.OrderRequestResponse.ResponseType;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus;
 import com.gala.sam.tradeEngine.domain.PublicMarketStatus.Ticker;
 import com.gala.sam.tradeEngine.domain.Trade;
 import com.gala.sam.tradeEngine.domain.enteredorder.AbstractActiveOrder;
 import com.gala.sam.tradeEngine.domain.enteredorder.LimitOrder;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.tradeEngine.domain.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderRequestLibrary.orderrequest.AbstractOrderRequest.TimeInForce;
+import com.gala.sam.orderRequestLibrary.orderrequest.LimitOrderRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;

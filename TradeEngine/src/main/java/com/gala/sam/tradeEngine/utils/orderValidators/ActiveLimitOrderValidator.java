@@ -2,7 +2,7 @@ package com.gala.sam.tradeEngine.utils.orderValidators;
 
 import static com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers.LimitOrderValidatorHelper.findErrorsInLimitPrice;
 
-import com.gala.sam.tradeEngine.domain.orderrequest.LimitOrderRequest;
+import com.gala.sam.orderRequestLibrary.orderrequest.LimitOrderRequest;
 import com.gala.sam.tradeEngine.utils.orderValidators.validatorHelpers.BaseOrderValidatorHelper;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
