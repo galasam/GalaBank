@@ -1,9 +1,12 @@
-package com.gala.sam.tradeengine.utils.ordervalidators.validatorHelpers;
+package com.gala.sam.tradeengine.utils.ordervalidators.validatorhelpers;
 
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractStopOrderRequest;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StopOrderValidatorHelper {
 
   public static List<String> findErrors(AbstractStopOrderRequest order) {

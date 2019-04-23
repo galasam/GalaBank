@@ -10,8 +10,10 @@ import java.util.List;
 
 public class FileIO {
 
+  private FileIO() {}
+
   public static boolean fileExists(String filename) {
-    return Files.exists(new java.io.File(filename).toPath());
+    return new java.io.File(filename).exists();
   }
 
   public static List<String> readTestFile(String filename) throws IOException {

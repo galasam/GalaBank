@@ -194,7 +194,7 @@ public class SimpleMarketTradeTests {
         .build();
 
     List<Trade> results = marketService.getAllMatchedTrades();
-    Assert.assertEquals("Should result in two trades", results.size(), 2);
+    Assert.assertEquals("Should result in two trades", 2, results.size());
     Assert.assertEquals("First half of market order should match with limit order A", tradeA,
         results.get(0));
     Assert.assertEquals("Second half of market order should match with limit order B", tradeB,

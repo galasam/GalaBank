@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderCSVParser {
 
+  private OrderCSVParser() {}
+
   private final static String CSV_DELIMETER = ",";
 
   private final static String ORDER_ID = "ORDER ID";
@@ -78,7 +80,6 @@ public class OrderCSVParser {
   private static Optional<AbstractOrderRequest> decodeCSVRow(String input) {
     final String[] values = input.split(CSV_DELIMETER);
 
-    final int orderId = Integer.parseInt(values[INPUT_HEADINGS.get(ORDER_ID)]);
     final int clientId = Integer.parseInt(values[INPUT_HEADINGS.get(GROUP_ID)]);
     final Direction direction = Direction.valueOf(values[INPUT_HEADINGS.get(DIRECTION)]);
     final int quantity = Integer.parseInt(values[INPUT_HEADINGS.get(QUANTITY)]);
