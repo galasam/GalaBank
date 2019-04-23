@@ -18,8 +18,8 @@ public class TradeCSVParser {
   static final String MATCH_PRICE = "MATCH PRICE";
   static final String TICKER = "TICKER";
 
-  private final static Map<String, Integer> HEADINGS = new TreeMap<>();
-  private final static String OUTPUT_HEADER = String
+  private static final Map<String, Integer> HEADINGS = new TreeMap<>();
+  private static final String OUTPUT_HEADER = String
       .join(",", BUY_ORDER, SELL_ORDER, MATCH_QTY, MATCH_PRICE, TICKER);
 
   static {
