@@ -18,8 +18,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "StopLimitOrderRequest")
-@DiscriminatorValue("StopLimitOrderRequest")
+@Entity(name = "StopLimitOrder")
+@DiscriminatorValue("StopLimitOrder")
 public class StopLimitOrder extends AbstractStopOrder {
 
   private static final OrderType ORDER_TYPE = OrderType.STOP_LIMIT;
