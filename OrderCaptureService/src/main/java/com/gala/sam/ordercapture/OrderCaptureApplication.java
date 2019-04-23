@@ -12,7 +12,7 @@ public class OrderCaptureApplication {
 
   public static void main(String[] args) {
     System.setProperty("spring.config.name", "order-capture");
-    SpringApplication.run(OrderCaptureApplication.class, args);
+    SpringApplication.run(OrderCaptureApplication.class);
     log.info("Order Capture Started");
   }
 }
