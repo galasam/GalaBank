@@ -12,7 +12,7 @@ public class TradeApplication {
 
   public static void main(String[] args) {
     System.setProperty("spring.config.name", "trade-engine");
-    SpringApplication.run(TradeApplication.class, args);
+    SpringApplication.run(TradeApplication.class);
     log.info("Trade Engine Started");
   }
 }
