@@ -1,4 +1,4 @@
-package com.gala.sam.tradeengine.intergration;
+package com.gala.sam.tradeengine.repository;
 
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
