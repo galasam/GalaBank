@@ -9,16 +9,22 @@ import java.util.stream.Stream;
 
 public class TradeCSVParser {
 
+  static final String BUY_ORDER = "BUY ORDER";
+  static final String SELL_ORDER = "SELL ORDER";
+  static final String MATCH_QTY = "MATCH QTY";
+  static final String MATCH_PRICE = "MATCH PRICE";
+  static final String TICKER = "TICKER";
+
   private final static Map<String, Integer> HEADINGS = new TreeMap<>();
   private final static String OUTPUT_HEADER = String
-      .join(",", "BUY ORDER", "SELL ORDER", "MATCH QTY", "MATCH PRICE", "TICKER");
+      .join(",", BUY_ORDER, SELL_ORDER, MATCH_QTY, MATCH_PRICE, TICKER);
 
   static {
-    HEADINGS.put("BUY ORDER", 0);
-    HEADINGS.put("SELL ORDER", 1);
-    HEADINGS.put("MATCH QTY", 2);
-    HEADINGS.put("MATCH PRICE", 3);
-    HEADINGS.put("TICKER", 4);
+    HEADINGS.put(BUY_ORDER, 0);
+    HEADINGS.put(SELL_ORDER, 1);
+    HEADINGS.put(MATCH_QTY, 2);
+    HEADINGS.put(MATCH_PRICE, 3);
+    HEADINGS.put(TICKER, 4);
   }
 
   public static List<String> encodeCSV(List<Trade> output) {
@@ -55,11 +61,11 @@ public class TradeCSVParser {
   private static Trade decodeCSVRow(String input) {
     final String[] values = input.split(",");
 
-    final int buyOrderId = Integer.parseInt(values[HEADINGS.get("BUY ORDER")]);
-    final int sellOrderId = Integer.parseInt(values[HEADINGS.get("SELL ORDER")]);
-    final int quantity = Integer.parseInt(values[HEADINGS.get("MATCH QTY")]);
-    final float price = Float.parseFloat(values[HEADINGS.get("MATCH PRICE")]);
-    final String ticker = values[HEADINGS.get("TICKER")];
+    final int buyOrderId = Integer.parseInt(values[HEADINGS.get(BUY_ORDER)]);
+    final int sellOrderId = Integer.parseInt(values[HEADINGS.get(SELL_ORDER)]);
+    final int quantity = Integer.parseInt(values[HEADINGS.get(MATCH_QTY)]);
+    final float price = Float.parseFloat(values[HEADINGS.get(MATCH_PRICE)]);
+    final String ticker = values[HEADINGS.get(TICKER)];
     return Trade.builder()
         .buyOrder(buyOrderId)
         .sellOrder(sellOrderId)
