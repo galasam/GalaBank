@@ -4,8 +4,6 @@ import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direct
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.OrderType;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
