@@ -1,5 +1,6 @@
 package com.gala.sam.tradeengine.utils;
 
+import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.utils.FileIO;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,7 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(UnitTest.class)
 public class FileOperationTests {
 
   private static final String relativeTestResourcesDirPath = "src/test/resources";

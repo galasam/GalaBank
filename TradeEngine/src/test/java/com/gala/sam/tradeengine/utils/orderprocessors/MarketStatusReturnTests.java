@@ -3,6 +3,7 @@ package com.gala.sam.tradeengine.utils.orderprocessors;
 import static com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction.BUY;
 import static org.mockito.BDDMockito.given;
 
+import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.PublicMarketStatus;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -30,6 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+@Category(UnitTest.class)
 @RunWith(SpringRunner.class)
 public class MarketStatusReturnTests {
 

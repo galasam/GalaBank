@@ -1,11 +1,12 @@
 package com.gala.sam.tradeengine.repository;
 
+import com.gala.sam.tradeengine.IntegrationTest;
 import com.gala.sam.tradeengine.domain.Trade;
-import com.gala.sam.tradeengine.repository.ITradeRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Category(IntegrationTest.class)
 public class RepositoryTests {
 
   @Autowired

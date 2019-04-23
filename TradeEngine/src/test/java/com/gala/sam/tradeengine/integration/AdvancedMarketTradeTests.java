@@ -1,6 +1,7 @@
 package com.gala.sam.tradeengine.integration;
 
 import com.gala.sam.orderrequestlibrary.OrderCSVParser;
+import com.gala.sam.tradeengine.IntegrationTest;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Category(IntegrationTest.class)
 public class AdvancedMarketTradeTests {
 
   private static final String relativeDirectoryOfTestFiles = "/src/test/resources/Market Test Cases/";

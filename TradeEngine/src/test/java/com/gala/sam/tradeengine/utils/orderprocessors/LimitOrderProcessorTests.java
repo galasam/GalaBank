@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue;
 import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue.SortingMethod;
@@ -23,6 +24,7 @@ import com.gala.sam.tradeengine.utils.orderprocessors.OrderProcessorUtils;
 import java.util.List;
 import java.util.SortedSet;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -30,6 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+@Category(UnitTest.class)
 @RunWith(SpringRunner.class)
 public class LimitOrderProcessorTests {
 
