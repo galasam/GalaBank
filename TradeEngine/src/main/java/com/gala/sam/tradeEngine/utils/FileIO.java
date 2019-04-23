@@ -21,8 +21,9 @@ public class FileIO {
 
   public static void writeTestFile(String filename, List<String> contents)
       throws FileNotFoundException, UnsupportedEncodingException {
-    @Cleanup PrintWriter writer = new PrintWriter(filename, "UTF-8");
-    contents.forEach(writer::println);
+    try (PrintWriter writer = new PrintWriter(filename, "UTF-8")) {
+      contents.forEach(writer::println);
+    }
   }
 
 }
