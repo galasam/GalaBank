@@ -29,7 +29,7 @@ public class OrderRequestDeserializer extends StdDeserializer<AbstractOrderReque
 
   @Override
   public AbstractOrderRequest deserialize(JsonParser jsonParser,
-      DeserializationContext ctx) throws IOException, JsonProcessingException {
+      DeserializationContext ctx) throws IOException {
     JsonNode root = jsonParser.getCodec().readTree(jsonParser);
     OrderType orderType = OrderType.valueOf(root.get("type").asText());
     int clientId = root.get("clientId").asInt();
