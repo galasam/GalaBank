@@ -1,7 +1,7 @@
 package com.gala.sam.tradeengine.utils.ordervalidators;
 
 import com.gala.sam.orderrequestlibrary.orderrequest.MarketOrderRequest;
-import com.gala.sam.tradeengine.utils.ordervalidators.validatorHelpers.BaseOrderValidatorHelper;
+import com.gala.sam.tradeengine.utils.ordervalidators.validatorhelpers.BaseOrderValidatorHelper;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

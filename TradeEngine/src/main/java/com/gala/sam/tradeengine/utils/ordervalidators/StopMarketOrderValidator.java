@@ -1,8 +1,8 @@
 package com.gala.sam.tradeengine.utils.ordervalidators;
 
 import com.gala.sam.orderrequestlibrary.orderrequest.StopMarketOrderRequest;
-import com.gala.sam.tradeengine.utils.ordervalidators.validatorHelpers.BaseOrderValidatorHelper;
-import com.gala.sam.tradeengine.utils.ordervalidators.validatorHelpers.StopOrderValidatorHelper;
+import com.gala.sam.tradeengine.utils.ordervalidators.validatorhelpers.BaseOrderValidatorHelper;
+import com.gala.sam.tradeengine.utils.ordervalidators.validatorhelpers.StopOrderValidatorHelper;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
