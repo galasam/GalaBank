@@ -1,4 +1,4 @@
-package com.gala.sam.tradeengine.intergration;
+package com.gala.sam.tradeengine.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gala.sam.orderrequestlibrary.OrderRequestResponse;
 import com.gala.sam.orderrequestlibrary.OrderRequestResponse.ResponseType;
+import com.gala.sam.tradeengine.IntegrationTest;
 import com.gala.sam.tradeengine.domain.PublicMarketStatus;
 import com.gala.sam.tradeengine.domain.PublicMarketStatus.Ticker;
 import com.gala.sam.tradeengine.domain.Trade;
@@ -19,6 +20,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +33,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Category(IntegrationTest.class)
 public class EndToEndTests {
 
   @Autowired
