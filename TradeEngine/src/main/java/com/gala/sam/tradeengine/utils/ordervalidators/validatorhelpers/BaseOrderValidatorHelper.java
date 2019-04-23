@@ -16,7 +16,7 @@ public class BaseOrderValidatorHelper {
     return errors;
   }
 
-  static private List<String> findErrorsInClientId(int clientId) {
+  private static List<String> findErrorsInClientId(int clientId) {
     List<String> errors = new ArrayList<>();
     if (clientId < 0) {
       errors.add("clientId price is negative.");
@@ -24,7 +24,7 @@ public class BaseOrderValidatorHelper {
     return errors;
   }
 
-  static private List<String> findErrorsInQuantity(int quantity) {
+  private static List<String> findErrorsInQuantity(int quantity) {
     List<String> errors = new ArrayList<>();
     if (quantity < 0) {
       errors.add("quantity price is negative");
