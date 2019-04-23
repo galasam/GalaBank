@@ -15,7 +15,7 @@ public class StopLimitOrderValidator implements IOrderValidator<StopLimitOrderRe
     List<String> errors = BaseOrderValidatorHelper.findErrors(order);
     errors.addAll(StopOrderValidatorHelper.findErrors(order));
     errors.addAll(findErrorsInLimitPrice(order.getLimit()));
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       log.debug("StopLimitOrderValidator has found {} errors on order {} : {}",
           errors.size(), order, errors);
     }
