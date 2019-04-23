@@ -15,11 +15,11 @@ public class OrderRequestResponse {
 
   ResponseType responseType;
 
-  public static OrderRequestResponse Success() {
+  public static OrderRequestResponse success() {
     return new OrderRequestResponse(ResponseType.SUCCESS);
   }
 
-  public static OrderRequestResponse Error() {
+  public static OrderRequestResponse error() {
     return new OrderRequestResponse(ResponseType.ERROR);
   }
 
