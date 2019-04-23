@@ -3,7 +3,10 @@ package com.gala.sam.tradeengine.utils.ordervalidators.validatorhelpers;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BaseOrderValidatorHelper {
 
   public static List<String> findErrors(AbstractOrderRequest order) {
