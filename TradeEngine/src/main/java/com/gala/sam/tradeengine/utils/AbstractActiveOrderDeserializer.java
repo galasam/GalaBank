@@ -27,7 +27,7 @@ public class AbstractActiveOrderDeserializer extends StdDeserializer<AbstractAct
 
   @Override
   public AbstractActiveOrder deserialize(JsonParser jsonParser,
-      DeserializationContext ctx) throws IOException, JsonProcessingException {
+      DeserializationContext ctx) throws IOException {
     JsonNode root = jsonParser.getCodec().readTree(jsonParser);
     OrderType orderType = OrderType.valueOf(root.get("type").asText());
     int orderId = root.get("orderId").asInt();
