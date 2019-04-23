@@ -2,18 +2,19 @@ package com.gala.sam.orderCapture;
 
 import com.gala.sam.orderCapture.service.TradeEngineGateway;
 import com.netflix.discovery.EurekaClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@RequiredArgsConstructor
 public class AppConfig {
 
   public static final String TRADE_ENGINE_HOSTNAME = "TRADE-ENGINE";
 
-  @Autowired
-  EurekaClient discoveryClient;
+  final EurekaClient discoveryClient;
 
   @Bean
   public RestTemplate restTemplate() {
