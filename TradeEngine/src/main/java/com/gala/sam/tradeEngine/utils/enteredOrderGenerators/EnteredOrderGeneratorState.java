@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class EnteredOrderGeneratorState {
 
-  private static final int InitialOrderIndex = 1;
-  private int currentOrderIndex = InitialOrderIndex;
+  private static final int INITIAL_ORDER_INDEX = 1;
+  private int currentOrderIndex = INITIAL_ORDER_INDEX;
 
   private void incrementOrderIndex() {
     currentOrderIndex++;
@@ -19,6 +19,6 @@ public class EnteredOrderGeneratorState {
   }
 
   public void reset() {
-    currentOrderIndex = InitialOrderIndex;
+    currentOrderIndex = INITIAL_ORDER_INDEX;
   }
 }
