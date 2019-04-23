@@ -1,4 +1,4 @@
-package com.gala.sam.tradeengine.intergration;
+package com.gala.sam.tradeengine.integration;
 
 import com.gala.sam.orderrequestlibrary.OrderCSVParser;
 import com.gala.sam.tradeengine.domain.Trade;

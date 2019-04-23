@@ -1,4 +1,4 @@
-package com.gala.sam.tradeengine.intergration;
+package com.gala.sam.tradeengine.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
