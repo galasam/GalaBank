@@ -89,7 +89,9 @@ public class MarketOrderProcessorTests {
 
     //Then: queueIfTimeInForce is not called and a trade is made
     verify(marketUtils, never()).queueIfGTC(any(), any(), any());
-    verify(marketUtils, never()).queueIfGTC(any(), any(), any());
+    verify(marketUtils)
+        .tryMakeTrade(any(), eq(marketOrder), eq(limitOrderBest), eq(limitOrderBest.getLimit()),
+            eq(tickerData));
     verify(orderProcessorUtils)
         .continueProcessingMarketOrderIfNotFulfilled(eq(marketOrder), eq(process));
     verify(orderProcessorUtils).removeOrderIfFulfilled(any(), any(), any());
