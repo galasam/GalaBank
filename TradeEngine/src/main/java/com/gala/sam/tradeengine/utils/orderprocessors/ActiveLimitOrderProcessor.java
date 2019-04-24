@@ -66,7 +66,7 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
       if (oppositeTypeLimitOrders.isEmpty()) {
         log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}",
             limitOrder.getOrderId());
-        marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
+        marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, persistenceHelper::saveOrderToDatabase);
       } else {
         LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
         log.debug("Limit order queue not empty, so extracted top order: {}",
@@ -82,28 +82,28 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
         if (limitsMatch) {
           log.debug("Limits match so completing trade with order: {}",
               otherLimitOrder.getOrderId());
-          marketUtils.tryMakeTrade(trade -> this.addTradeToStateAndPersist(trades, trade), limitOrder, otherLimitOrder,
+          marketUtils.tryMakeTrade(trade -> persistenceHelper.addTradeToStateAndPersist(trades, trade), limitOrder, otherLimitOrder,
               otherLimitOrder.getLimit(),
               tickerData);
           orderProcessorUtils.removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder,
-              this::deleteOrderFromDatabase);
+              persistenceHelper::deleteOrderFromDatabase);
           orderProcessorUtils
               .continueProcessingLimitOrderIfNotFulfilled(trades, limitOrder, tickerData, marketOrders,
                   sameTypeLimitOrders, oppositeTypeLimitOrders, this);
         } else {
           log.debug("Limits do not match, so no trade.");
-          marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
+          marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, persistenceHelper::saveOrderToDatabase);
         }
       }
     } else {
       MarketOrder marketOrder = marketOrders.first();
       log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
           .toString());
-      marketUtils.tryMakeTrade(trade -> this.addTradeToStateAndPersist(trades, trade), limitOrder, marketOrder,
+      marketUtils.tryMakeTrade(trade -> persistenceHelper.addTradeToStateAndPersist(trades, trade), limitOrder, marketOrder,
           limitOrder.getLimit(),
           tickerData);
       orderProcessorUtils.removeOrderIfFulfilled(marketOrders, marketOrder,
-          this::deleteOrderFromDatabase);
+          persistenceHelper::deleteOrderFromDatabase);
       orderProcessorUtils
           .continueProcessingLimitOrderIfNotFulfilled(trades, limitOrder, tickerData, marketOrders,
               sameTypeLimitOrders, oppositeTypeLimitOrders, this);

@@ -22,7 +22,7 @@ public class StopOrderProcessor extends AbstractOrderProcessor<AbstractStopOrder
   public void process(MarketState marketState, AbstractStopOrder order) {
     log.debug("Adding order to stop orders: " + order.getOrderId());
     marketState.getStopOrders().add(order);
-    saveOrderToDatabase(order);
+    persistenceHelper.saveOrderToDatabase(order);
   }
 
 }

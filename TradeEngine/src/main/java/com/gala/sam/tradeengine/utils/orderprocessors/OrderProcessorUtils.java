@@ -30,15 +30,12 @@ public class OrderProcessorUtils {
     }
   }
 
-  public void continueProcessingMarketOrderIfNotFulfilled(List<Trade> trades,
-      MarketOrder order, TickerData tickerData, SortedSet<LimitOrder> limitOrders,
-      SortedSet<MarketOrder> marketOrders,
+  public void continueProcessingMarketOrderIfNotFulfilled(MarketOrder order,
       MarketOrderProcessingContinuer marketOrderProcessingContinuer) {
     if (!order.isFullyFulfilled()) {
       log.debug("New limit order {} is not fully satisfied, so continue processing it.",
           order.getOrderId());
-      marketOrderProcessingContinuer
-          .processDirectedMarketOrder(trades, order, tickerData, limitOrders, marketOrders);
+      marketOrderProcessingContinuer.start();
     } else {
       log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
     }
@@ -63,7 +60,6 @@ public class OrderProcessorUtils {
 
   public interface MarketOrderProcessingContinuer {
 
-    void processDirectedMarketOrder(List<Trade> trades, MarketOrder marketOrder,
-        TickerData tickerData, SortedSet<LimitOrder> limitOrders, SortedSet<MarketOrder> marketOrders);
+    void start();
   }
 }
