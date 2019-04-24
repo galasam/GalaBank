@@ -15,16 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderProcessorUtils {
 
-  public void continueProcessingLimitOrderIfNotFulfilled(List<Trade> trades, LimitOrder order,
-      TickerData tickerData, SortedSet<MarketOrder> marketOrders,
-      SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders,
+  public void continueProcessingLimitOrderIfNotFulfilled(LimitOrder order,
       LimitOrderProcessingContinuer limitOrderProcessingContinuer) {
     if (!order.isFullyFulfilled()) {
       log.debug("New limit order {} is not fully satisfied, so continue processing it.",
           order.getOrderId());
-      limitOrderProcessingContinuer
-          .processDirectedLimitOrder(trades, order, tickerData, marketOrders,
-              sameTypeLimitOrders, oppositeTypeLimitOrders);
+      limitOrderProcessingContinuer.start();
     } else {
       log.debug("New limit order {} is fully satisfied, so drop it.", order.getOrderId());
     }
@@ -52,10 +48,7 @@ public class OrderProcessorUtils {
 
   public interface LimitOrderProcessingContinuer {
 
-    void processDirectedLimitOrder(List<Trade> trades, LimitOrder limitOrder, TickerData tickerData,
-        SortedSet<MarketOrder> marketOrders,
-        SortedSet<LimitOrder> sameTypeLimitOrders,
-        SortedSet<LimitOrder> oppositeTypeLimitOrders);
+    void start();
   }
 
   public interface MarketOrderProcessingContinuer {

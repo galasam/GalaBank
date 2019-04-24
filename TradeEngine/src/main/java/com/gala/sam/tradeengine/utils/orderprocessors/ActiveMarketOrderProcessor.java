@@ -38,15 +38,20 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
     process.start();
   }
 
-  @RequiredArgsConstructor
   class ActiveMarketOrderProcess implements MarketOrderProcessingContinuer {
 
     final private MarketState marketState;
     final private MarketOrder marketOrder;
-    private TickerData tickerData;
+    final private TickerData tickerData;
+
+    ActiveMarketOrderProcess(
+        MarketState marketState, MarketOrder marketOrder) {
+      this.marketState = marketState;
+      this.marketOrder = marketOrder;
+      this.tickerData = marketState.getTickerQueueGroup(marketOrder);
+    }
 
     public void start() {
-      tickerData = marketState.getTickerQueueGroup(marketOrder);
       if (marketOrder.getDirection() == Direction.BUY) {
         log.debug("Order: {} processed as Buy order", marketOrder.getOrderId());
         processDirectedMarketOrder(tickerData.getSellLimitOrders(), tickerData.getBuyMarketOrders());
