@@ -42,8 +42,7 @@ public class MarketUtils {
   }
 
   public void tryMakeTrade(Consumer<Trade> saveTrade, AbstractActiveOrder a, AbstractActiveOrder b,
-      float limit,
-      TickerData ticketData) {
+      float limit, TickerData ticketData) {
     log.debug("Setting last executed price of {} as {}", ticketData.getName(),
         ticketData.getLastExecutedTradePrice());
     ticketData.setLastExecutedTradePrice(limit);

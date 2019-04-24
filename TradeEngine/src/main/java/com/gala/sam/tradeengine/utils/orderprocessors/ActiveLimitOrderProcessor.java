@@ -1,29 +1,29 @@
 package com.gala.sam.tradeengine.utils.orderprocessors;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
 import com.gala.sam.tradeengine.domain.datastructures.TickerData;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.MarketOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.utils.MarketUtils;
 import com.gala.sam.tradeengine.utils.exception.OrderDirectionNotSupportedException;
 import com.gala.sam.tradeengine.utils.orderprocessors.OrderProcessorUtils.LimitOrderProcessingContinuer;
-import java.util.List;
 import java.util.SortedSet;
+import java.util.function.Consumer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder> implements
-    LimitOrderProcessingContinuer {
+public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder> {
 
   private final OrderProcessorUtils orderProcessorUtils;
 
-  public ActiveLimitOrderProcessor(MarketUtils marketUtils,
+  ActiveLimitOrderProcessor(MarketUtils marketUtils,
       IOrderRepository orderRepository,
       ITradeRepository tradeRepository,
       OrderProcessorUtils orderProcessorUtils) {
@@ -34,80 +34,94 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
   @Override
   public void process(MarketState marketState, LimitOrder order) {
     log.debug("Order: {} will be processed as Active Limit order", order.getOrderId());
-    processLimitOrder(marketState, order);
+    ActiveLimitOrderProcess process = new ActiveLimitOrderProcess(marketState, order);
+    process.start();
   }
 
-  private void processLimitOrder(MarketState marketState, LimitOrder limitOrder) {
-    TickerData tickerData = marketState.getTickerQueueGroup(limitOrder);
-    if (limitOrder.getDirection() == Direction.BUY) {
-      log.debug("Order: {} will be processed as Buy order", limitOrder.getOrderId());
-      processDirectedLimitOrder(marketState.getTrades(), limitOrder, tickerData,
-          tickerData.getSellMarketOrders(),
-          tickerData.getBuyLimitOrders(),
-          tickerData.getSellLimitOrders());
-    } else if (limitOrder.getDirection() == Direction.SELL) {
-      log.debug("Order: {} will be processed as Sell order", limitOrder.getOrderId());
-      processDirectedLimitOrder(marketState.getTrades(), limitOrder, tickerData,
-          tickerData.getBuyMarketOrders(),
-          tickerData.getSellLimitOrders(),
-          tickerData.getBuyLimitOrders());
-    } else {
-      log.error("Order {} has unsupported direction {} so will not be processed",
-          limitOrder.getOrderId(), limitOrder.getDirection());
+  class ActiveLimitOrderProcess implements LimitOrderProcessingContinuer {
+
+    final private MarketState marketState;
+    final private LimitOrder limitOrder;
+    final private TickerData tickerData;
+
+    ActiveLimitOrderProcess(
+        MarketState marketState, LimitOrder limitOrder) {
+      this.marketState = marketState;
+      this.limitOrder = limitOrder;
+      this.tickerData = marketState.getTickerQueueGroup(limitOrder);
     }
-  }
 
-  public void processDirectedLimitOrder(List<Trade> trades, LimitOrder limitOrder,
-      TickerData tickerData, SortedSet<MarketOrder> marketOrders,
-      SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders) {
-    if (marketOrders.isEmpty()) {
-      log.debug("Market order queue empty, so no possible market order matches for limit order: {}",
-          limitOrder.getOrderId());
-      if (oppositeTypeLimitOrders.isEmpty()) {
-        log.debug("Limit order queue empty, so no possible limit order matches for limit order: {}",
-            limitOrder.getOrderId());
-        marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
+    public void start() {
+      if (limitOrder.getDirection() == Direction.BUY) {
+        log.debug("Order: {} will be processed as Buy order", limitOrder.getOrderId());
+        processDirectedLimitOrder(tickerData.getSellMarketOrders(),
+            tickerData.getBuyLimitOrders(),
+            tickerData.getSellLimitOrders());
+      } else if (limitOrder.getDirection() == Direction.SELL) {
+        log.debug("Order: {} will be processed as Sell order", limitOrder.getOrderId());
+        processDirectedLimitOrder(tickerData.getBuyMarketOrders(),
+            tickerData.getSellLimitOrders(),
+            tickerData.getBuyLimitOrders());
       } else {
-        LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
-        log.debug("Limit order queue not empty, so extracted top order: {}",
-            otherLimitOrder.toString());
-        final boolean limitsMatch;
-        try {
-          limitsMatch = limitOrder.limitMatches(otherLimitOrder);
-        } catch (OrderDirectionNotSupportedException e) {
-          log.error("During matching an exception was raised so order {} will not be processed: {}",
-              limitOrder.getOrderId(), e.toString());
-          return;
-        }
-        if (limitsMatch) {
-          log.debug("Limits match so completing trade with order: {}",
-              otherLimitOrder.getOrderId());
-          marketUtils.tryMakeTrade(trade -> this.addTradeToStateAndPersist(trades, trade), limitOrder, otherLimitOrder,
-              otherLimitOrder.getLimit(),
-              tickerData);
-          orderProcessorUtils.removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder,
-              this::deleteOrderFromDatabase);
-          orderProcessorUtils
-              .continueProcessingLimitOrderIfNotFulfilled(trades, limitOrder, tickerData, marketOrders,
-                  sameTypeLimitOrders, oppositeTypeLimitOrders, this);
-        } else {
-          log.debug("Limits do not match, so no trade.");
-          marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders, this::saveOrderToDatabase);
-        }
+        log.error("Order {} has unsupported direction {} so will not be processed",
+            limitOrder.getOrderId(), limitOrder.getDirection());
       }
-    } else {
-      MarketOrder marketOrder = marketOrders.first();
-      log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
-          .toString());
-      marketUtils.tryMakeTrade(trade -> this.addTradeToStateAndPersist(trades, trade), limitOrder, marketOrder,
-          limitOrder.getLimit(),
-          tickerData);
-      orderProcessorUtils.removeOrderIfFulfilled(marketOrders, marketOrder,
-          this::deleteOrderFromDatabase);
-      orderProcessorUtils
-          .continueProcessingLimitOrderIfNotFulfilled(trades, limitOrder, tickerData, marketOrders,
-              sameTypeLimitOrders, oppositeTypeLimitOrders, this);
+    }
 
+    void processDirectedLimitOrder(SortedSet<MarketOrder> marketOrders,
+        SortedSet<LimitOrder> sameTypeLimitOrders, SortedSet<LimitOrder> oppositeTypeLimitOrders) {
+      if (marketOrders.isEmpty()) {
+        log.debug(
+            "Market order queue empty, so no possible market order matches for limit order: {}",
+            limitOrder.getOrderId());
+        if (oppositeTypeLimitOrders.isEmpty()) {
+          log.debug(
+              "Limit order queue empty, so no possible limit order matches for limit order: {}",
+              limitOrder.getOrderId());
+          marketUtils
+              .queueIfGTC(limitOrder, sameTypeLimitOrders, persistenceHelper::saveOrderToDatabase);
+        } else {
+          LimitOrder otherLimitOrder = oppositeTypeLimitOrders.first();
+          log.debug("Limit order queue not empty, so extracted top order: {}",
+              otherLimitOrder.toString());
+          final boolean limitsMatch;
+          try {
+            limitsMatch = limitOrder.limitMatches(otherLimitOrder);
+          } catch (OrderDirectionNotSupportedException e) {
+            log.error(
+                "During matching an exception was raised so order {} will not be processed: {}",
+                limitOrder.getOrderId(), e.toString());
+            return;
+          }
+          if (limitsMatch) {
+            log.debug("Limits match so completing trade with order: {}",
+                otherLimitOrder.getOrderId());
+            Consumer<Trade> saveTrade = trade -> persistenceHelper
+                .addTradeToStateAndPersist(marketState.getTrades(), trade);
+            marketUtils
+                .tryMakeTrade(saveTrade, limitOrder, otherLimitOrder, otherLimitOrder.getLimit(),
+                    tickerData);
+            orderProcessorUtils.removeOrderIfFulfilled(oppositeTypeLimitOrders, otherLimitOrder,
+                persistenceHelper::deleteOrderFromDatabase);
+            orderProcessorUtils.continueProcessingLimitOrderIfNotFulfilled(limitOrder, this);
+          } else {
+            log.debug("Limits do not match, so no trade.");
+            marketUtils.queueIfGTC(limitOrder, sameTypeLimitOrders,
+                persistenceHelper::saveOrderToDatabase);
+          }
+        }
+      } else {
+        MarketOrder marketOrder = marketOrders.first();
+        log.debug("Market order queue not empty, so trading with oldest order: {}", marketOrder
+            .toString());
+        Consumer<Trade> saveTrade = trade -> persistenceHelper
+            .addTradeToStateAndPersist(marketState.getTrades(), trade);
+        marketUtils
+            .tryMakeTrade(saveTrade, limitOrder, marketOrder, limitOrder.getLimit(), tickerData);
+        orderProcessorUtils.removeOrderIfFulfilled(marketOrders, marketOrder,
+            persistenceHelper::deleteOrderFromDatabase);
+        orderProcessorUtils.continueProcessingLimitOrderIfNotFulfilled(limitOrder, this);
+      }
     }
   }
 }
