@@ -1,11 +1,11 @@
 package com.gala.sam.tradeengine.integration;
 
-import com.gala.sam.tradeengine.IntegrationTest;
-import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.orderrequestlibrary.orderrequest.LimitOrderRequest;
 import com.gala.sam.orderrequestlibrary.orderrequest.MarketOrderRequest;
+import com.gala.sam.tradeengine.IntegrationTest;
+import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.service.MarketService;

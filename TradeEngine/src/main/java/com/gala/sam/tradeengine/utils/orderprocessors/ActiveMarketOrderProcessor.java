@@ -1,19 +1,17 @@
 package com.gala.sam.tradeengine.utils.orderprocessors;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
 import com.gala.sam.tradeengine.domain.datastructures.TickerData;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.MarketOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.utils.MarketUtils;
 import com.gala.sam.tradeengine.utils.orderprocessors.OrderProcessorUtils.MarketOrderProcessingContinuer;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Consumer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -54,10 +52,12 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
     public void start() {
       if (marketOrder.getDirection() == Direction.BUY) {
         log.debug("Order: {} processed as Buy order", marketOrder.getOrderId());
-        processDirectedMarketOrder(tickerData.getSellLimitOrders(), tickerData.getBuyMarketOrders());
+        processDirectedMarketOrder(tickerData.getSellLimitOrders(),
+            tickerData.getBuyMarketOrders());
       } else if (marketOrder.getDirection() == Direction.SELL) {
         log.debug("Order: {} processed as Sell order", marketOrder.getOrderId());
-        processDirectedMarketOrder(tickerData.getBuyLimitOrders(), tickerData.getSellMarketOrders());
+        processDirectedMarketOrder(tickerData.getBuyLimitOrders(),
+            tickerData.getSellMarketOrders());
       } else {
         log.error("Order {} has unsupported direction {} so will not be processed",
             marketOrder.getOrderId(), marketOrder.getDirection());
@@ -74,8 +74,10 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
         LimitOrder limitOrder = limitOrders.first();
         log.debug("Limit order queue not empty, so trading with best limit order: {}",
             limitOrder.toString());
-        Consumer<Trade> saveTrade = trade -> persistenceHelper.addTradeToStateAndPersist(marketState.getTrades(), trade);
-        marketUtils.tryMakeTrade(saveTrade, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
+        Consumer<Trade> saveTrade = trade -> persistenceHelper
+            .addTradeToStateAndPersist(marketState.getTrades(), trade);
+        marketUtils
+            .tryMakeTrade(saveTrade, marketOrder, limitOrder, limitOrder.getLimit(), tickerData);
         orderProcessorUtils.removeOrderIfFulfilled(limitOrders, limitOrder,
             persistenceHelper::deleteOrderFromDatabase);
         orderProcessorUtils

@@ -1,5 +1,7 @@
 package com.gala.sam.tradeengine.utils;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
 import com.gala.sam.tradeengine.domain.datastructures.TickerData;
@@ -8,8 +10,6 @@ import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.MarketOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import java.util.Collection;

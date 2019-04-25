@@ -1,9 +1,9 @@
 package com.gala.sam.tradeengine.integration;
 
 import com.gala.sam.orderrequestlibrary.OrderCSVParser;
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeengine.IntegrationTest;
 import com.gala.sam.tradeengine.domain.Trade;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.service.MarketService;

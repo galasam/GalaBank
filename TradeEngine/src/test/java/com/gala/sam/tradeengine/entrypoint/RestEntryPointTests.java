@@ -6,13 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gala.sam.orderrequestlibrary.OrderRequestResponse;
 import com.gala.sam.orderrequestlibrary.OrderRequestResponse.ResponseType;
-import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
-import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.orderrequestlibrary.orderrequest.LimitOrderRequest;
-import com.gala.sam.tradeengine.entrypoint.RestEntryPoint;
+import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
+import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.service.MarketService;
 import java.util.Optional;
 import org.junit.Test;

@@ -6,6 +6,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue;
@@ -13,9 +15,6 @@ import com.gala.sam.tradeengine.domain.datastructures.LimitOrderQueue.SortingMet
 import com.gala.sam.tradeengine.domain.datastructures.TickerData;
 import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
-import com.gala.sam.tradeengine.utils.MarketUtils;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Consumer;

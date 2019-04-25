@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderCSVParser {
 
-  OrderCSVParser() {}
+  OrderCSVParser() {
+  }
 
   private static final String CSV_DELIMETER = ",";
 

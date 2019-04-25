@@ -1,11 +1,8 @@
 package com.gala.sam.tradeengine.utils.orderprocessors;
 
-import com.gala.sam.tradeengine.domain.Trade;
-import com.gala.sam.tradeengine.domain.datastructures.TickerData;
 import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.MarketOrder;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
