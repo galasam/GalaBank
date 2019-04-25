@@ -38,9 +38,9 @@ public class ActiveMarketOrderProcessor extends AbstractOrderProcessor<MarketOrd
 
   class ActiveMarketOrderProcess implements MarketOrderProcessingContinuer {
 
-    final private MarketState marketState;
-    final private MarketOrder marketOrder;
-    final private TickerData tickerData;
+    private final MarketState marketState;
+    private final MarketOrder marketOrder;
+    private final TickerData tickerData;
 
     ActiveMarketOrderProcess(
         MarketState marketState, MarketOrder marketOrder) {

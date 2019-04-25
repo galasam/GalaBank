@@ -12,7 +12,7 @@ import org.junit.experimental.categories.Category;
 @Category(UnitTest.class)
 public class TradeCSVParserTests {
 
-  private final static String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
+  private static final String csvOutputHeader = "BUY ORDER,SELL ORDER,MATCH QTY,MATCH PRICE,TICKER";
 
   @Test
   public void canEncodeTradeToCSV() {

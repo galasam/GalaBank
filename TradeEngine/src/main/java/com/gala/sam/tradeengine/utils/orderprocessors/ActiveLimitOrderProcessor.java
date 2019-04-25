@@ -39,9 +39,9 @@ public class ActiveLimitOrderProcessor extends AbstractOrderProcessor<LimitOrder
 
   class ActiveLimitOrderProcess implements LimitOrderProcessingContinuer {
 
-    final private MarketState marketState;
-    final private LimitOrder limitOrder;
-    final private TickerData tickerData;
+    private final MarketState marketState;
+    private final LimitOrder limitOrder;
+    private final TickerData tickerData;
 
     ActiveLimitOrderProcess(
         MarketState marketState, LimitOrder limitOrder) {

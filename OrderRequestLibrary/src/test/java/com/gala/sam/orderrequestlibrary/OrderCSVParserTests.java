@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class OrderCSVParserTests {
 
-  private final static String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
+  private static final String csvInputHeader = "ORDER ID,GROUP ID,DIRECTION,QUANTITY,TICKER,TYPE,LIMIT PRICE,TIME IN FORCE,TRIGGER PRICE";
 
   @Test
   public void canDecodeCSVMarketOrder() {
