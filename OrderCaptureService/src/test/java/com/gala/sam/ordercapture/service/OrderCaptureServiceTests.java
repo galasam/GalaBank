@@ -56,7 +56,8 @@ public class OrderCaptureServiceTests {
     given(orderCSVParser.decodeCSV(csv)).willReturn(orderRequests);
 
     TradeEngineGateway tradeEngineGateway = mock(TradeEngineGateway.class);
-    given(tradeEngineGateway.enterOrder(firstOrderRequest)).willReturn(OrderRequestResponse.success());
+    given(tradeEngineGateway.enterOrder(firstOrderRequest))
+        .willReturn(OrderRequestResponse.success());
 
     //When: entered
     OrderCaptureService orderCaptureService = new OrderCaptureService(orderCSVParser,
@@ -69,7 +70,6 @@ public class OrderCaptureServiceTests {
     then(tradeEngineGateway).should(times(1)).enterOrder(any());
     then(tradeEngineGateway).should().enterOrder(firstOrderRequest);
   }
-
 
 
 }

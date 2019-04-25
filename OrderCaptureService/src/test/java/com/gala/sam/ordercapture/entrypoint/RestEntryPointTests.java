@@ -47,7 +47,7 @@ public class RestEntryPointTests {
         .contentType(MediaType.APPLICATION_JSON)
         .content(orderRequestJsonString))
         .andReturn();
-    
+
     //Then: Service is called once with correct args and result returned to users
     then(orderCaptureService).should(times(1)).enterOrder(any());
     then(orderCaptureService).should().enterOrder(orderRequestJsonString);
