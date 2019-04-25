@@ -31,7 +31,8 @@ public class OrderCSVParserTests {
         .build();
 
     //When: CSV is decoded
-    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
+    OrderCSVParser orderCSVParser = new OrderCSVParser();
+    List<AbstractOrderRequest> orders = orderCSVParser.decodeCSV(csvInput);
 
     //Then: A single order should be returned correctly
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
@@ -56,7 +57,8 @@ public class OrderCSVParserTests {
         .build();
 
     //When: CSV is decoded
-    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
+    OrderCSVParser orderCSVParser = new OrderCSVParser();
+    List<AbstractOrderRequest> orders = orderCSVParser.decodeCSV(csvInput);
 
     //Then: A single order should be returned correctly
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
@@ -81,7 +83,8 @@ public class OrderCSVParserTests {
         .build();
 
     //When: CSV is decoded
-    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
+    OrderCSVParser orderCSVParser = new OrderCSVParser();
+    List<AbstractOrderRequest> orders = orderCSVParser.decodeCSV(csvInput);
 
     //Then: A single order should be returned correctly
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
@@ -107,7 +110,8 @@ public class OrderCSVParserTests {
         .build();
 
     //When: CSV is decoded
-    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
+    OrderCSVParser orderCSVParser = new OrderCSVParser();
+    List<AbstractOrderRequest> orders = orderCSVParser.decodeCSV(csvInput);
 
     //Then: A single order should be returned correctly
     Assert.assertEquals("Decoder should decode a stop limit order", 1, orders.size());
@@ -123,7 +127,8 @@ public class OrderCSVParserTests {
     final String csvInput = csvInputHeader + "\n" + orderInput;
 
     //When: CSV is decoded
-    List<AbstractOrderRequest> orders = OrderCSVParser.decodeCSV(csvInput);
+    OrderCSVParser orderCSVParser = new OrderCSVParser();
+    List<AbstractOrderRequest> orders = orderCSVParser.decodeCSV(csvInput);
 
     //Then: No orders should be returned.
     Assert.assertEquals("Decoder should decode a stop limit order", 0, orders.size());
