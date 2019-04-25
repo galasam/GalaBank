@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderCSVParser {
 
-  private OrderCSVParser() {}
+  OrderCSVParser() {}
 
   private static final String CSV_DELIMETER = ",";
 
@@ -57,7 +57,7 @@ public class OrderCSVParser {
     INPUT_HEADINGS.put(TRIGGER_PRICE, 8);
   }
 
-  public static List<AbstractOrderRequest> decodeCSV(String csv) {
+  public List<AbstractOrderRequest> decodeCSV(String csv) {
     return decodeCSV(new ArrayList<>(Arrays.asList(csv.split("\n"))));
   }
 
