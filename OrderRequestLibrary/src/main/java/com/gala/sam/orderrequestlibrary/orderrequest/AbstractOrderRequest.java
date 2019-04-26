@@ -7,12 +7,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Value;
 import lombok.experimental.NonFinal;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
+@NonFinal
+@Value
 @JsonDeserialize(using = OrderRequestDeserializer.class)
 public abstract class AbstractOrderRequest {
 
