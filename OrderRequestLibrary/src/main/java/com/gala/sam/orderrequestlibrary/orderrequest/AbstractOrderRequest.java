@@ -3,11 +3,15 @@ package com.gala.sam.orderrequestlibrary.orderrequest;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.gala.sam.orderrequestlibrary.OrderRequestDeserializer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.NonFinal;
 
-@Data
-@NonFinal
+@Getter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @JsonDeserialize(using = OrderRequestDeserializer.class)
 public abstract class AbstractOrderRequest {
