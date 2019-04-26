@@ -32,12 +32,7 @@ public class OrderRequestDeserializerTests {
         .ticker("Greggs")
         .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
-    ObjectCodec codec = mock(ObjectCodec.class);
-    JsonParser jsonParser = mock(JsonParser.class);
-    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
-    given(jsonParser.getCodec()).willReturn(codec);
+    JsonParser jsonParser = getJsonParser(orderRequest);
 
     //When: it is deserialized
     OrderRequestDeserializer deserializer = new OrderRequestDeserializer();
@@ -61,12 +56,7 @@ public class OrderRequestDeserializerTests {
         .ticker("Greggs")
         .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
-    ObjectCodec codec = mock(ObjectCodec.class);
-    JsonParser jsonParser = mock(JsonParser.class);
-    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
-    given(jsonParser.getCodec()).willReturn(codec);
+    JsonParser jsonParser = getJsonParser(orderRequest);
 
     //When: it is deserialized
     OrderRequestDeserializer deserializer = new OrderRequestDeserializer();
@@ -90,12 +80,7 @@ public class OrderRequestDeserializerTests {
         .ticker("Greggs")
         .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
-    ObjectCodec codec = mock(ObjectCodec.class);
-    JsonParser jsonParser = mock(JsonParser.class);
-    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
-    given(jsonParser.getCodec()).willReturn(codec);
+    JsonParser jsonParser = getJsonParser(orderRequest);
 
     //When: it is deserialized
     OrderRequestDeserializer deserializer = new OrderRequestDeserializer();
@@ -120,12 +105,7 @@ public class OrderRequestDeserializerTests {
         .ticker("Greggs")
         .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
-    ObjectCodec codec = mock(ObjectCodec.class);
-    JsonParser jsonParser = mock(JsonParser.class);
-    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
-    given(jsonParser.getCodec()).willReturn(codec);
+    JsonParser jsonParser = getJsonParser(orderRequest);
 
     //When: it is deserialized
     OrderRequestDeserializer deserializer = new OrderRequestDeserializer();
@@ -150,12 +130,7 @@ public class OrderRequestDeserializerTests {
         .ticker("Greggs")
         .build();
 
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
-    ObjectCodec codec = mock(ObjectCodec.class);
-    JsonParser jsonParser = mock(JsonParser.class);
-    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
-    given(jsonParser.getCodec()).willReturn(codec);
+    JsonParser jsonParser = getJsonParser(orderRequest);
 
     //When: it is deserialized
     OrderRequestDeserializer deserializer = new OrderRequestDeserializer();
@@ -165,5 +140,14 @@ public class OrderRequestDeserializerTests {
     Assert.assertEquals("Order request is correct", orderRequest, output);
   }
 
+  private JsonParser getJsonParser(AbstractOrderRequest orderRequest) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode jsonRoot = mapper.valueToTree(orderRequest);
+    ObjectCodec codec = mock(ObjectCodec.class);
+    JsonParser jsonParser = mock(JsonParser.class);
+    given(codec.readTree(jsonParser)).willReturn(jsonRoot);
+    given(jsonParser.getCodec()).willReturn(codec);
+    return jsonParser;
+  }
 
 }
