@@ -6,9 +6,11 @@ import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeIn
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "StopMarketOrder")
 @DiscriminatorValue("StopMarketOrder")
 public class StopMarketOrder extends AbstractStopOrder {

@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@JsonDeserialize(using = AbstractActiveOrderDeserializer.class)
 @EqualsAndHashCode(callSuper = true)
+@JsonDeserialize(using = AbstractActiveOrderDeserializer.class)
 public abstract class AbstractActiveOrder extends AbstractOrder {
 
   public AbstractActiveOrder(OrderType type, int orderId, int clientId, Direction direction,
@@ -20,3 +20,4 @@ public abstract class AbstractActiveOrder extends AbstractOrder {
   }
 
 }
+
