@@ -10,7 +10,8 @@ import java.util.List;
 
 public class FileIO {
 
-  private FileIO() {}
+  private FileIO() {
+  }
 
   public static boolean fileExists(String filename) {
     return new java.io.File(filename).exists();

@@ -10,7 +10,6 @@ import com.gala.sam.tradeengine.domain.enteredorder.StopLimitOrder;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.utils.MarketUtils;
-import com.gala.sam.tradeengine.utils.orderprocessors.StopOrderProcessor;
 import java.util.List;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

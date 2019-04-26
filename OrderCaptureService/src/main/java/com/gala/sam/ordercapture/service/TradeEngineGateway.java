@@ -1,5 +1,6 @@
 package com.gala.sam.ordercapture.service;
 
+import com.gala.sam.ordercapture.utils.exception.NoAvailableTradeEngineException;
 import com.gala.sam.ordercapture.utils.exception.OrderNotEnteredException;
 import com.gala.sam.orderrequestlibrary.OrderRequestResponse;
 import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
@@ -14,14 +15,12 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class TradeEngineGateway {
 
-  protected final String serviceHostName;
+  private final String serviceHostName;
   private final RestTemplate restTemplate;
   private final EurekaClient discoveryClient;
 
-  public OrderRequestResponse enterOrder(AbstractOrderRequest order) {
-    InstanceInfo serverInstance = discoveryClient
-        .getNextServerFromEureka(serviceHostName, false);
-    String url = serverInstance.getHomePageUrl() + "/enter-order";
+  OrderRequestResponse enterOrder(AbstractOrderRequest order) {
+    String url = getURL();
 
     ResponseEntity<OrderRequestResponse> restResponseObject = restTemplate
         .postForEntity(url, order, OrderRequestResponse.class);
@@ -35,6 +34,15 @@ public class TradeEngineGateway {
           order.toString());
       throw new OrderNotEnteredException(order);
     }
+  }
+
+  private String getURL() {
+    InstanceInfo serverInstance = discoveryClient
+        .getNextServerFromEureka(serviceHostName, false);
+    if (serverInstance == null) {
+      throw new NoAvailableTradeEngineException(serviceHostName);
+    }
+    return serverInstance.getHomePageUrl() + "/enter-order";
   }
 
 }

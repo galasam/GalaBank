@@ -3,17 +3,16 @@ package com.gala.sam.tradeengine.service;
 import static com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction.BUY;
 import static org.mockito.BDDMockito.given;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeengine.UnitTest;
 import com.gala.sam.tradeengine.domain.PublicMarketStatus;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
 import com.gala.sam.tradeengine.domain.datastructures.TickerData;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.TimeInForce;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
-import com.gala.sam.tradeengine.service.MarketService;
 import com.gala.sam.tradeengine.utils.MarketUtils;
 import com.gala.sam.tradeengine.utils.enteredordergenerators.EnteredOrderGeneratorFactory;
 import com.gala.sam.tradeengine.utils.orderprocessors.OrderProcessorFactory;
@@ -38,6 +37,7 @@ public class MarketStatusReturnTests {
 
   @TestConfiguration
   static class Config {
+
     @Autowired
     ITradeRepository tradeRepository;
     @Autowired

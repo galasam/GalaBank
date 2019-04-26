@@ -1,7 +1,6 @@
 package com.gala.sam.orderrequestlibrary.orderrequest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import com.gala.sam.orderrequestlibrary.OrderRequestDeserializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;

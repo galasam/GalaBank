@@ -1,7 +1,7 @@
 package com.gala.sam.tradeengine.utils.enteredordergenerators;
 
-import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.orderrequestlibrary.orderrequest.LimitOrderRequest;
+import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

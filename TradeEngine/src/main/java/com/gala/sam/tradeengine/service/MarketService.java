@@ -2,6 +2,8 @@ package com.gala.sam.tradeengine.service;
 
 import static com.gala.sam.tradeengine.utils.MarketUtils.updateMarketStateFromTradeRepository;
 
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
+import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.domain.PublicMarketStatus;
 import com.gala.sam.tradeengine.domain.Trade;
 import com.gala.sam.tradeengine.domain.datastructures.MarketState;
@@ -12,8 +14,6 @@ import com.gala.sam.tradeengine.domain.enteredorder.AbstractOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.AbstractStopOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.LimitOrder;
 import com.gala.sam.tradeengine.domain.enteredorder.MarketOrder;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest;
-import com.gala.sam.orderrequestlibrary.orderrequest.AbstractOrderRequest.Direction;
 import com.gala.sam.tradeengine.repository.IOrderRepository;
 import com.gala.sam.tradeengine.repository.ITradeRepository;
 import com.gala.sam.tradeengine.utils.MarketUtils;
@@ -62,7 +62,8 @@ public class MarketService {
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends AbstractOrderRequest, S extends AbstractOrder> Optional<S> enterOrder(T orderRequest) {
+  public <T extends AbstractOrderRequest, S extends AbstractOrder> Optional<S> enterOrder(
+      T orderRequest) {
     log.info("Processing Order Time-step with order request: {}", orderRequest);
 
     final S order;
@@ -77,7 +78,7 @@ public class MarketService {
         log.debug("Order request was validated: {}", orderRequest);
       }
 
-      IEnteredOrderGenerator<T,S> enteredOrderGenerator = enteredOrderGeneratorFactory
+      IEnteredOrderGenerator<T, S> enteredOrderGenerator = enteredOrderGeneratorFactory
           .getEnteredOrderGenerator(orderRequest.getType());
 
       order = enteredOrderGenerator.generateConcreteOrder(orderRequest);
@@ -122,7 +123,8 @@ public class MarketService {
     log.debug("Trades: " + marketState.getTrades().toString());
   }
 
-  private <T extends AbstractOrder> void handleOrderWithTimer(AbstractOrderProcessor<T> orderProcessor, T order) {
+  private <T extends AbstractOrder> void handleOrderWithTimer(
+      AbstractOrderProcessor<T> orderProcessor, T order) {
     StopWatch orderProcessorTimer = new StopWatch();
     orderProcessorTimer.start();
     orderProcessor.process(marketState, order);
